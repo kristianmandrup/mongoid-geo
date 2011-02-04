@@ -1,0 +1,80 @@
+h1. Mongoid geo
+
+A Geo extension for Mongoid. 
+
+h2. Status
+
+This gem has so far just the initial design and has not been tested. Feel free to help in the effort. Thanks!
+
+h2. Fields
+
+When setting a geo-location array, the setter should try to convert the value to an array of floats 
+
+<pre>
+  class Person
+    field :location, :type => Array
+
+    def location= args
+      @location = args.kind_of?(String) ? args.split(",").map(&:to_f) : args
+    end
+  end  
+</pre>
+
+With _mongoid-geo_, becomes:
+
+<pre>
+  class Person
+    field :location, :type => Array, :geo => true
+  end  
+</pre>
+
+h2. Criteria
+
+Support Mongoid 1.7 sphere distance calculations
+
+h3. near
+
+<pre>
+  # places: { $nearSphere: [50, 40] }
+  places.near(:sphere) 
+</pre>
+
+h3. nearMax
+
+<pre>
+  # places: { $nearSphere: [50, 40] , $maxDistanceSphere: 3 }  
+  places.nearMax(:sphere) => [[50, 40], 3]  
+
+  # places: { $near: [50, 40] , $maxDistance: 3 }  
+  places.nearMax => [[50, 40], 3]  
+</pre>
+
+h3. withinBox
+
+<pre>
+  # places: {"$within" : {"$boxSphere" : box}
+  places.where(:location.withinBox(:sphere) => [[50, 40], [30,55]])
+
+  # places: {"$within" : {"$box" : box}
+  places.where(:location.withinBox => [[50, 40], [30,55]])
+</pre>
+
+TODO
+
+<pre>
+  box = Struct.new :lower_left => [50, 40], :upper_right => [30,55]
+  places.where(:location.withinBox => box)  
+</pre>
+
+h3. withinCenter
+
+<pre>
+  center = [50, 40]
+  radius = 4
+  
+  # places: {"$within" : {"$centerSphere" : [center, radius]}  
+  places.where(:location.withinCenter(:sphere) => [center, radius])  
+
+  # places: {"$within" : {"$center" : [center, radius]}
+  places.where(:location.withinCenter => [center, radius])  
+</pre>
