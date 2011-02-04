@@ -18,6 +18,10 @@ module Mongoid #:nodoc:
         @op_b = opts[:op_b]        
       end
 
+      def make_hash v
+        {"$#{op_a}" => {v.first}, {"$#{op_b}" => {v.last}}
+      end
+
       def hash
         [@op_a, @op_b, @key].hash
       end

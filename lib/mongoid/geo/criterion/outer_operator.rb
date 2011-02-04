@@ -18,6 +18,10 @@ module Mongoid #:nodoc:
         @outer_op = opts[:outer_op]        
       end
 
+      def make_hash v
+        {"$#{outer_op}" => {"$#{operator}" => {v}}
+      end
+
       def hash
         [@outer_op, [@operator, @key].hash
       end

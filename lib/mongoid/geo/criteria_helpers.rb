@@ -9,14 +9,14 @@ module Mongoid #:nodoc:
             case k
             when Mongoid::Criterion::Complex
               hsh[k.key] ||= {}
-              hsh[k.key].merge!({"$#{k.operator}" => v})
+              hsh[k.key].merge!(k.make_hash(v))
             when Mongoid::Criterion::OuterOperator
               hsh[k.key] ||= {}
-              hsh[k.key].merge!({"$#{k.outer_op}" => {"$#{k.operator}" => {v}})
+              hsh[k.key].merge!(k.make_hash(v))
             when Mongoid::Criterion::TwinOperator
               raise "TwinOperator expects an array with a value for each of the twin operators" if !v.kind_of(Array) && !v.size == 2
               hsh[k.key] ||= {}              
-              hsh[k.key].merge!({"$#{k.op_a}" => {v.first}, {"$#{k.op_b}" => {v.last}})
+              hsh[k.key].merge!(k.make_hash(v))
             else
               hsh[k] = v
             end
