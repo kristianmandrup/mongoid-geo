@@ -5,18 +5,57 @@ A Geo extension for Mongoid.
 "MongoDB Geospatial Indexing":http://www.mongodb.org/display/DOCS/Geospatial+Indexing
 
 * Supports Mongoid 1.7 sphere distance calculations and 
-* Adds a set of geo related inflections
 * Adds nearSphere inclusion method
+* Adds a set of geo related inflections
+* Adds an exta option for defining a "geo" field, to have the generated attr_writer parse and convert strings etc. to float arrays.
 
-h2. Status
+h2. Mongoid 2 geo features
 
-This gem has so far just the initial design and has not been tested. Feel free to help in the effort. Thanks!
+h3. Find addresses near a point
 
-h2. Fields
+<pre>
+  Address.near(:latlng => [37.761523, -122.423575, 1])
+</pre>
+
+h3. Find locations within a circle
+
+<pre>
+  base.where(:location.within => { "$center" => [ [ 50, -40 ], 1 ] })  
+</pre>
+
+h3. Create geo-spatial index
+
+<pre>
+  class Person
+    field :locations, :type => Array
+    index [[ :locations, Mongo::GEO2D ]], :min => -180, :max => 180      
+  end
+
+  # to ensure indexes are created, either:
+  Mongoid.autocreate_indexes = true
+
+  # or in the mongoid.yml
+  autocreate_indexes: true  
+</pre>
+
+These are the only geo features I could find are currently built-in for Mongoid 2. 
+_Mongoid Geo_ implements the following extra features...
+
+h1. Mongoid Geo features
+
+The following briefly demonstrates all the features that Mongoid Geo currently provides
+
+h2. Geo index
+
+Old/Manual way: @index [[ :locations, Mongo::GEO2D ]], :min => -180, :max => 180@
+
+Using new _geo_index_ class method : @geo_index :locations@
+
+h2. Special geo-array attribute writer 
 
 When setting a geo-location array, the setter should try to convert the value to an array of floats 
 
-Old/Manual style:
+Old/Manual way:
 
 <pre>
   class Person
@@ -28,11 +67,13 @@ Old/Manual style:
   end  
 </pre>
 
-With _mongoid-geo_, becomes:
+With the new @:geo@ option supplied by _mongoid-geo_ :
 
 <pre>
   class Person
     field :locations, :type => Array, :geo => true
+    
+    geo_index :locations
   end  
   
    p = Person.new
@@ -43,9 +84,17 @@ With _mongoid-geo_, becomes:
    assert([45.1, -3.4], p.locations)   
 </pre>
 
-h2. Extra Geo Inclusions
 
-Find all addresses near a point using spherical distance calculation
+h2. Mongoid Geo extra inclusions
+
+Find addresses near a point using spherical distance calculation
+
+<pre>
+  Address.nearSphere(:locations => [ 72, -44 ])
+</pre>
+
+
+h2. Mongoid Geo extra inflections
 
 h3. nearSphere
 
@@ -53,8 +102,6 @@ h3. nearSphere
   base.where(:locations.nearSphere => [ 72, -44 ])
   # => :locations => { "$nearSphere" : [ 72, -44 ] }
 </pre>
-
-h2. Extra Geo Inflections
 
 h3. nearMax
 

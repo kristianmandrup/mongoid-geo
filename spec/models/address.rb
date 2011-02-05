@@ -12,8 +12,5 @@ class Address
   field :locations, :type => Array, :geo => true
   key :street
 
-  # embeds_many :locations
-  # embedded_in :addressable, :polymorphic => true do
-
-  # accepts_nested_attributes_for :locations
+  geo_index :locations
 end
