@@ -18,10 +18,14 @@ module Mongoid #:nodoc:
         @outer_op = opts[:outer_op]        
       end
 
-      def make_hash v
-        v = extract_box(v) if !v.kind_of?(Array) && operator =~ /box/
+      def make_hash v                               
+        if operator =~ /box/
+          v = extract_box(v) if !v.kind_of?(Array)
+          v = [to_points(v.first), to_points(v.last)]
+        end
+        
         v = extract_circle(v) if !v.kind_of?(Array) && operator =~ /center/
-        {"$#{outer_op}" => {"$#{operator}" => v } }
+        {"$#{outer_op}" => {"$#{operator}" => to_points(v) } }
       end
 
       def hash
@@ -39,6 +43,10 @@ module Mongoid #:nodoc:
       
       protected
 
+      def to_points v
+        v.extend(Mongoid::Geo::Point).to_points
+      end
+
       def extract_circle(v)
         case v
         when Hash
@@ -49,12 +57,12 @@ module Mongoid #:nodoc:
       end
       
       def extract_box v
-        case v
+        box = case v
         when Hash
           [v[:lower_left], v[:upper_right]]
         else
           v.respond_to?(:lower_left) ? [v.lower_left, v.upper_right] : raise("Can't extract box from: #{v}, must have :lower_left and :upper_right methods or equivalent hash keys in Hash")
-        end
+        end        
       end
     end
   end

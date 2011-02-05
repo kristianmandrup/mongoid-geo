@@ -20,7 +20,7 @@ module Mongoid #:nodoc:
 
       def make_hash v     
         v = extract_nearMax(v) if !v.kind_of?(Array) && op_b =~ /max/i
-        {"$#{op_a}" => v.first, "$#{op_b}" => v.last }
+        {"$#{op_a}" => to_points(v.first), "$#{op_b}" => to_points(v.last) }
       end
 
       def hash
@@ -35,10 +35,13 @@ module Mongoid #:nodoc:
         return false unless other.is_a?(self.class)        
         self.op_a == other.op_a && self.op_b == other.op_b && self.key == other.key 
       end
-      
+            
       protected
       
-      protected
+      def to_points v
+        return v if v.kind_of? Fixnum 
+        v.extend(Mongoid::Geo::Point).to_points
+      end
 
       def extract_nearMax(v)
         case v

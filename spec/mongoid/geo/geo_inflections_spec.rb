@@ -20,7 +20,7 @@ describe Mongoid::Criterion::Inclusion do
   describe "#nearMax" do
   
     let(:criteria) do
-      base.where(:locations.nearMax => [[ 72, -44 ], 5])
+      base.where(:locations.nearMax => [{:latitude => 72, :longitude => -44 }, 5])
     end
   
     it "adds the $near and $maxDistance modifiers to the selector" do
@@ -33,7 +33,7 @@ describe Mongoid::Criterion::Inclusion do
   describe "#nearMax sphere and flat" do
   
     let(:criteria) do
-      base.where(:locations.nearMax(:flat, :sphere) => [[ 72, -44 ], 5])
+      base.where(:locations.nearMax(:flat, :sphere) => [{:lat => 72, :lng => -44 }, 5])
     end
   
     it "adds the $near and $maxDistance modifiers to the selector" do
@@ -44,9 +44,16 @@ describe Mongoid::Criterion::Inclusion do
 
   # this could be used to optimize calculation speed
   describe "#nearMax hash values" do
+
+    let(:point) do
+      b = (Struct.new :lat, :lng).new
+      b.lat = 72
+      b.lng = -44
+      b
+    end
   
     let(:criteria) do
-      base.where(:locations.nearMax => {:point => [72, -44], :distance =>  5})
+      base.where(:locations.nearMax => {:point => point, :distance =>  5})
     end
   
     it "adds the $near and $maxDistance modifiers to the selector" do
@@ -100,6 +107,23 @@ describe Mongoid::Criterion::Inclusion do
         { :locations => { "$within" => { "$box" => [point_a, point_b] } } }
     end
   end  
+
+  describe "#withinBox, one hash point" do  
+    let(:point_a) do 
+      {:lat => 72, :lng => -44 }
+    end
+    let(:point_b) { [ 71, -45 ] }      
+    
+    let(:criteria) do
+      base.where(:locations.withinBox => [point_a, point_b])
+    end
+  
+    it "adds the $near and $maxDistance modifiers to the selector" do
+      criteria.selector.should ==
+        { :locations => { "$within" => { "$box" => [[72, -44], [ 71, -45 ]] } } }
+    end
+  end  
+
 
   describe "#withinBox hash box" do  
     let(:point_a) { [ 72, -44 ] }

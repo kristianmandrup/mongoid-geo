@@ -105,7 +105,7 @@ h3. nearSphere
 
 h3. nearMax
 
-Find all addresses near a point using spherical distance calculation
+Find points near a given point within a maximum distance
 
 <pre>
   base.where(:locations.nearMax => [[ 72, -44 ], 5])
@@ -113,6 +113,40 @@ Find all addresses near a point using spherical distance calculation
 
   base.where(:locations.nearMax(:sphere) => [[ 72, -44 ], 5])
   # => { $nearSphere: [50, 40] , $maxDistanceSphere: 3 }
+
+  base.where(:locations.nearMax(:sphere, :flat) => [[ 72, -44 ], 5])
+  # => { $nearSphere: [50, 40] , $maxDistance: 3 }
+</pre>
+
+You can also use a Hash to define the nearMax
+
+<pre> 
+  places.where(:location.nearMax => {:point => [ 72, -44 ], :distance => 5})  
+</pre>
+
+Or use an Object (which must have the methods #point and #distance that return the point and max distance from that point)
+
+<pre>
+  near_max_ = (Struct.new :point, :distance).new
+  near_max.point = [50, 40]
+  near_max.distance = [30,55]
+    
+  places.where(:location.nearMax => near_max)  
+</pre>
+
+Note: For the points, you can also use a hash or an object with the methods/keys, either :lat, lng or :latitude, :longitude
+
+Example:
+
+<pre>
+  center = (Struct.new :lat, :lng).new
+  center.lat = 72
+  center.lng = -44  
+  places.where(:location.withinCenter => [center, radius])    
+  
+  # OR
+  
+  places.where(:location.withinCenter => [{:lat => 72, :lng => -44}, radius])      
 </pre>
 
 h3. withinBox
@@ -120,24 +154,29 @@ h3. withinBox
 <pre>
   box = [[50, 40], [30,55]]
   base.where(:locations.withinBox => box)
-  # => locations: {"$within" : {"$box" : box}
+  # => locations: {"$within" : {"$box" : [[50, 40], [30,55]]}
 
   base.where(:locations.withinBox(:sphere) => box)
-  # => locations: {"$within" : {"$boxSphere" : box}
+  # => locations: {"$within" : {"$boxSphere" : [[50, 40], [30,55]]}
 </pre>
 
 You can also use a Hash to define the box
 
 <pre> 
   places.where(:location.withinBox => {:lower_left => [50, 40], :upper_right => [30,55]})  
+  
+  # or mix and match
+  
+  places.where(:location.withinBox => {:lower_left => {:lat => 50, :lng => 40}, :upper_right => [30,55] } )      
 </pre>
 
 Or use an Object (which must have the methods #lower_left and #upper_right that return the points of the bounding box)
 
 <pre>
   box = (Struct.new :lower_left, :upper_right).new
-  box.lower_left = [50, 40]
-  box.upper_right = [30,55]  
+  box.lower_left =  [50, 40]
+  box.upper_right = [30, 55]
+    
   places.where(:location.withinBox => box)  
 </pre>
 
@@ -146,15 +185,15 @@ h3. withinCenter
 <pre>
   center = [50, 40]
   radius = 4
-  
-  # places: {"$within" : {"$centerSphere" : [center, radius]}  
-  places.where(:location.withinCenter(:sphere) => [center, radius])  
 
-  # places: {"$within" : {"$center" : [center, radius]}
   places.where(:location.withinCenter => [center, radius])  
+  # => places: {"$within" : {"$center" : [[50, 40], 4]}  
+
+  places.where(:location.withinCenter(:sphere) => [center, radius])    
+  # => places: {"$within" : {"$centerSphere" : [[50, 40], 4]}  
 </pre>
 
-You can also use a Hash to define the box
+You can also use a Hash to define the circle
 
 <pre> 
   places.where(:location.withinCenter => {:center => [50, 40], :radius => 4})  
@@ -166,5 +205,6 @@ Or use an Object (which must have the methods #lower_left and #upper_right that 
   circle = (Struct.new :center, :radius).new
   circle.center = [50, 40]
   circle.radius = 4
+  
   places.where(:location.withinCenter => circle)  
 </pre>
