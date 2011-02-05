@@ -1,2 +1,2 @@
-require 'geo/criteria'
-require 'geo/fields'
+require 'mongoid/geo/criteria'
+require 'mongoid/geo/fields'

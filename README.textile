@@ -2,6 +2,12 @@ h1. Mongoid geo
 
 A Geo extension for Mongoid. 
 
+"MongoDB Geospatial Indexing":http://www.mongodb.org/display/DOCS/Geospatial+Indexing
+
+* Supports Mongoid 1.7 sphere distance calculations and 
+* Adds a set of geo related inflections
+* Adds nearSphere inclusion method
+
 h2. Status
 
 This gem has so far just the initial design and has not been tested. Feel free to help in the effort. Thanks!
@@ -10,12 +16,14 @@ h2. Fields
 
 When setting a geo-location array, the setter should try to convert the value to an array of floats 
 
+Old/Manual style:
+
 <pre>
   class Person
-    field :location, :type => Array
+    field :locations, :type => Array
 
-    def location= args
-      @location = args.kind_of?(String) ? args.split(",").map(&:to_f) : args
+    def locations= args
+      @locations = args.kind_of?(String) ? args.split(",").map(&:to_f) : args
     end
   end  
 </pre>
@@ -24,45 +32,65 @@ With _mongoid-geo_, becomes:
 
 <pre>
   class Person
-    field :location, :type => Array, :geo => true
+    field :locations, :type => Array, :geo => true
   end  
+  
+   p = Person.new
+   # set via String or Strings
+   p.locations = "45.1, -3.4"
+   p.locations = "45.1", "-3.4"   
+
+   assert([45.1, -3.4], p.locations)   
 </pre>
 
-h2. Criteria
+h2. Extra Geo Inclusions
 
-Support Mongoid 1.7 sphere distance calculations
+Find all addresses near a point using spherical distance calculation
 
-h3. near
+h3. nearSphere
 
 <pre>
-  # places: { $nearSphere: [50, 40] }
-  places.near(:sphere) 
+  base.where(:locations.nearSphere => [ 72, -44 ])
+  # => :locations => { "$nearSphere" : [ 72, -44 ] }
 </pre>
+
+h2. Extra Geo Inflections
 
 h3. nearMax
 
-<pre>
-  # places: { $nearSphere: [50, 40] , $maxDistanceSphere: 3 }  
-  places.nearMax(:sphere) => [[50, 40], 3]  
+Find all addresses near a point using spherical distance calculation
 
-  # places: { $near: [50, 40] , $maxDistance: 3 }  
-  places.nearMax => [[50, 40], 3]  
+<pre>
+  base.where(:locations.nearMax => [[ 72, -44 ], 5])
+  # => { $near: [50, 40] , $maxDistance: 3 }
+
+  base.where(:locations.nearMax(:sphere) => [[ 72, -44 ], 5])
+  # => { $nearSphere: [50, 40] , $maxDistanceSphere: 3 }
 </pre>
 
 h3. withinBox
 
 <pre>
-  # places: {"$within" : {"$boxSphere" : box}
-  places.where(:location.withinBox(:sphere) => [[50, 40], [30,55]])
+  box = [[50, 40], [30,55]]
+  base.where(:locations.withinBox => box)
+  # => locations: {"$within" : {"$box" : box}
 
-  # places: {"$within" : {"$box" : box}
-  places.where(:location.withinBox => [[50, 40], [30,55]])
+  base.where(:locations.withinBox(:sphere) => box)
+  # => locations: {"$within" : {"$boxSphere" : box}
 </pre>
 
-TODO
+You can also use a Hash to define the box
+
+<pre> 
+  places.where(:location.withinBox => {:lower_left => [50, 40], :upper_right => [30,55]})  
+</pre>
+
+Or use an Object (which must have the methods #lower_left and #upper_right that return the points of the bounding box)
 
 <pre>
-  box = Struct.new :lower_left => [50, 40], :upper_right => [30,55]
+  box = (Struct.new :lower_left, :upper_right).new
+  box.lower_left = [50, 40]
+  box.upper_right = [30,55]  
   places.where(:location.withinBox => box)  
 </pre>
 
@@ -77,4 +105,19 @@ h3. withinCenter
 
   # places: {"$within" : {"$center" : [center, radius]}
   places.where(:location.withinCenter => [center, radius])  
+</pre>
+
+You can also use a Hash to define the box
+
+<pre> 
+  places.where(:location.withinCenter => {:center => [50, 40], :radius => 4})  
+</pre>
+
+Or use an Object (which must have the methods #lower_left and #upper_right that return the points of the bounding box)
+
+<pre>
+  circle = (Struct.new :center, :radius).new
+  circle.center = [50, 40]
+  circle.radius = 4
+  places.where(:location.withinCenter => circle)  
 </pre>

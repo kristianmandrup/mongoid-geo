@@ -13,8 +13,8 @@ module Mongoid #:nodoc:
             when Mongoid::Criterion::OuterOperator
               hsh[k.key] ||= {}
               hsh[k.key].merge!(k.make_hash(v))
-            when Mongoid::Criterion::TwinOperator
-              raise "TwinOperator expects an array with a value for each of the twin operators" if !v.kind_of(Array) && !v.size == 2
+            when Mongoid::Criterion::TwinOperators
+              raise "TwinOperators expects an array with a value for each of the twin operators" if !v.kind_of?(Array) && !v.size == 2
               hsh[k.key] ||= {}              
               hsh[k.key].merge!(k.make_hash(v))
             else

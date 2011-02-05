@@ -9,8 +9,9 @@ class Address
   field :city
   field :state
   field :post_code
-  field :latlng, :type => Array
+  field :locations, :type => Array, :geo => true
   key :street
+
   # embeds_many :locations
   # embedded_in :addressable, :polymorphic => true do
 

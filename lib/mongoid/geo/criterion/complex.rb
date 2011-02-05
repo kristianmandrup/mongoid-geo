@@ -12,7 +12,7 @@ module Mongoid #:nodoc:
     class Complex
       
       def make_hash v
-        {"$#{k.operator}" => v}
+        {"$#{operator}" => v}
       end
     end
   end

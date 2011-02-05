@@ -1,4 +1,5 @@
 require 'mongoid/geo/criterion/complex'
+require 'mongoid/geo/criterion/inclusion'
 require 'mongoid/geo/criterion/outer_operator'
 require 'mongoid/geo/criterion/twin_operators'
 require 'mongoid/geo/inflections'

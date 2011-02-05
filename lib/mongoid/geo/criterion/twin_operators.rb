@@ -19,7 +19,7 @@ module Mongoid #:nodoc:
       end
 
       def make_hash v
-        {"$#{op_a}" => {v.first}, {"$#{op_b}" => {v.last}}
+        {"$#{op_a}" => v.first, "$#{op_b}" => v.last }
       end
 
       def hash

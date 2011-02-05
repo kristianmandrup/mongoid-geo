@@ -19,11 +19,13 @@ module Mongoid #:nodoc:
       end
 
       def make_hash v
-        {"$#{outer_op}" => {"$#{operator}" => {v}}
+        v = extract_box(v) if !v.kind_of?(Array) && operator =~ /box/
+        v = extract_circle(v) if !v.kind_of?(Array) && operator =~ /center/
+        {"$#{outer_op}" => {"$#{operator}" => v } }
       end
 
       def hash
-        [@outer_op, [@operator, @key].hash
+        [@outer_op, [@operator, @key]].hash
       end
 
       def eql?(other)
@@ -33,6 +35,26 @@ module Mongoid #:nodoc:
       def ==(other)
         return false unless other.is_a?(self.class)        
         self.outer_op == other.outer_op && self.key == other.key && self.operator == other.operator
+      end
+      
+      protected
+
+      def extract_circle(v)
+        case v
+        when Hash
+          [v[:center], v[:radius]]
+        else
+          v.respond_to?(:center) ? [v.center, v.radius] : raise("Can't extract box from: #{v}, must have :center and :radius methods or hash keys")
+        end
+      end
+      
+      def extract_box v
+        case v
+        when Hash
+          [v[:lower_left], v[:upper_right]]
+        else
+          v.respond_to?(:lower_left) ? [v.lower_left, v.upper_right] : raise("Can't extract box from: #{v}, must have :lower_left and :upper_right methods or hash keys")
+        end
       end
     end
   end

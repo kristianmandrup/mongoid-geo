@@ -12,20 +12,20 @@ module Mongoid #:nodoc:
         # withinCenter
         # - {"$within" : {"$center" : [center, radius]}}})          
 
-        def near calc
-          Criterion::Complex.new(:operator => get_op(calc, 'near'), :key => self)          
+        def nearSphere
+          Criterion::Complex.new(:operator => 'nearSphere', :key => self)          
         end
 
-        def nearMax calc
+        def nearMax calc = :flat
           Criterion::TwinOperators.new(:op_a => get_op(calc, 'near'), :op_b => get_op(calc, 'maxDistance'), :key => self)
         end
 
-        def withinBox calc
-          Criterion::InnerKey.new(:outer_op => 'within', :operator => get_op(calc, 'box'), :key => self)
+        def withinBox calc = :flat
+          Criterion::OuterOperator.new(:outer_op => 'within', :operator => get_op(calc, 'box'), :key => self)
         end
 
-        def withinCenter calc
-          Criterion::InnerKey.new(:outer_operator => 'within', :operator => get_op(calc, 'center'), :key => self)
+        def withinCenter calc = :flat
+          Criterion::OuterOperator.new(:outer_op => 'within', :operator => get_op(calc, 'center'), :key => self)
         end 
         
         private
