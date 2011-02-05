@@ -24,5 +24,10 @@ describe Mongoid::Fields do
       address.locations = [23.5, -50]
       address.locations.should == [23.5, -50]
     end
+    
+    it "should handle nil values" do
+      address.locations = nil
+      address.locations.should be_nil
+    end
   end
 end

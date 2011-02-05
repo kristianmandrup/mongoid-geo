@@ -5,11 +5,14 @@ module Mongoid #:nodoc
       def create_accessors(name, meth, options = {})
         generated_field_methods.module_eval do
           define_method(meth) { read_attribute(name) }
-          options
           define_method("#{meth}=") do |value| 
-            value = if options[:type] == Array && options[:geo]
-              value.kind_of?(String) ? value.split(",") : value
-            end.map(&:to_f)
+            if options[:type] == Array && options[:geo]
+              value = case value
+                when String then value.split(",").map(&:to_f)
+                when Array then value.map(&:to_f)
+                else value
+              end
+            end
             write_attribute(name, value) 
           end
           define_method("#{meth}?") do
