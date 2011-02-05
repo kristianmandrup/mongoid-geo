@@ -29,6 +29,51 @@ describe Mongoid::Criterion::Inclusion do
     end
   end  
 
+  # this could be used to optimize calculation speed
+  describe "#nearMax sphere and flat" do
+  
+    let(:criteria) do
+      base.where(:locations.nearMax(:flat, :sphere) => [[ 72, -44 ], 5])
+    end
+  
+    it "adds the $near and $maxDistance modifiers to the selector" do
+      criteria.selector.should ==
+        { :locations => { "$near" => [ 72, -44 ], "$maxDistanceSphere" => 5 } }
+    end
+  end  
+
+  # this could be used to optimize calculation speed
+  describe "#nearMax hash values" do
+  
+    let(:criteria) do
+      base.where(:locations.nearMax => {:point => [72, -44], :distance =>  5})
+    end
+  
+    it "adds the $near and $maxDistance modifiers to the selector" do
+      criteria.selector.should ==
+        { :locations => { "$near" => [ 72, -44 ], "$maxDistance" => 5 } }
+    end
+  end  
+
+  # this could be used to optimize calculation speed
+  describe "#nearMax hash values" do
+    let(:point_distance) do
+      b = (Struct.new :point, :distance).new
+      b.point = [72, -44]
+      b.distance = 5
+      b
+    end
+  
+    let(:criteria) do
+      base.where(:locations.nearMax => point_distance)
+    end
+  
+    it "adds the $near and $maxDistance modifiers to the selector" do
+      criteria.selector.should ==
+        { :locations => { "$near" => [ 72, -44 ], "$maxDistance" => 5 } }
+    end
+  end  
+
   describe "#nearMax sphere" do
   
     let(:criteria) do

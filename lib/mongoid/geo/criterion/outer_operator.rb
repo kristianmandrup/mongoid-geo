@@ -44,7 +44,7 @@ module Mongoid #:nodoc:
         when Hash
           [v[:center], v[:radius]]
         else
-          v.respond_to?(:center) ? [v.center, v.radius] : raise("Can't extract box from: #{v}, must have :center and :radius methods or hash keys")
+          v.respond_to?(:center) ? [v.center, v.radius] : raise("Can't extract box from: #{v}, must have :center and :radius methods or equivalent hash keys in Hash")
         end
       end
       
@@ -53,7 +53,7 @@ module Mongoid #:nodoc:
         when Hash
           [v[:lower_left], v[:upper_right]]
         else
-          v.respond_to?(:lower_left) ? [v.lower_left, v.upper_right] : raise("Can't extract box from: #{v}, must have :lower_left and :upper_right methods or hash keys")
+          v.respond_to?(:lower_left) ? [v.lower_left, v.upper_right] : raise("Can't extract box from: #{v}, must have :lower_left and :upper_right methods or equivalent hash keys in Hash")
         end
       end
     end

@@ -18,7 +18,8 @@ module Mongoid #:nodoc:
         @op_b = opts[:op_b]        
       end
 
-      def make_hash v
+      def make_hash v     
+        v = extract_nearMax(v) if !v.kind_of?(Array) && op_b =~ /max/i
         {"$#{op_a}" => v.first, "$#{op_b}" => v.last }
       end
 
@@ -34,6 +35,20 @@ module Mongoid #:nodoc:
         return false unless other.is_a?(self.class)        
         self.op_a == other.op_a && self.op_b == other.op_b && self.key == other.key 
       end
+      
+      protected
+      
+      protected
+
+      def extract_nearMax(v)
+        case v
+        when Hash
+          [v[:point], v[:distance]]
+        else
+          v.respond_to?(:point) ? [v.point, v.distance] : raise("Can't extract nearMax values from: #{v}, must have :point and :maxDistance methods or equivalent hash keys in Hash")
+        end
+      end
+      
     end
   end
 end

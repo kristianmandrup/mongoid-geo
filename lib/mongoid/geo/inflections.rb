@@ -16,8 +16,16 @@ module Mongoid #:nodoc:
           Criterion::Complex.new(:operator => 'nearSphere', :key => self)          
         end
 
-        def nearMax calc = :flat
-          Criterion::TwinOperators.new(:op_a => get_op(calc, 'near'), :op_b => get_op(calc, 'maxDistance'), :key => self)
+        def nearMax *calcs
+          calcs = (!calcs || calcs.empty?) ? [:flat] : calcs
+          case calcs.size
+          when 1
+            Criterion::TwinOperators.new(:op_a => get_op(calcs.first, 'near'), :op_b => get_op(calcs.first, 'maxDistance'), :key => self)
+          when 2
+            Criterion::TwinOperators.new(:op_a => get_op(calcs.first, 'near'), :op_b => get_op(calcs.last, 'maxDistance'), :key => self)            
+          else
+            raise "method nearMax takes one or two symbols as arguments, each symbol must be either :flat or :sphere"
+          end
         end
 
         def withinBox calc = :flat
