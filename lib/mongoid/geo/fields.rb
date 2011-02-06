@@ -8,11 +8,15 @@ module Mongoid #:nodoc
           define_method("#{meth}=") do |value| 
             if options[:type] == Array && options[:geo]
               value = case value
-                when String then value.split(",").map(&:to_f)
-                when Array then value.map(&:to_f)
-                else value
+              when String 
+                value.split(",").map(&:to_f)
+              when Array 
+                value.compact.extend(Mongoid::Geo::Point).to_points
+              else
+                !value.nil? ? value.extend(Mongoid::Geo::Point).to_point : value
               end
             end
+            value = value[0..1] if !value.nil?
             write_attribute(name, value) 
           end
           define_method("#{meth}?") do

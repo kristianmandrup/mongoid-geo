@@ -21,11 +21,11 @@ module Mongoid #:nodoc:
       def make_hash v                               
         if operator =~ /box/
           v = extract_box(v) if !v.kind_of?(Array)
-          v = [to_points(v.first), to_points(v.last)]
+          v = [to_point(v.first), to_point(v.last)]
         end
         
         v = extract_circle(v) if !v.kind_of?(Array) && operator =~ /center/
-        {"$#{outer_op}" => {"$#{operator}" => to_points(v) } }
+        {"$#{outer_op}" => {"$#{operator}" => v } }
       end
 
       def hash
@@ -42,11 +42,9 @@ module Mongoid #:nodoc:
       end
       
       protected
-
-      def to_points v
-        v.extend(Mongoid::Geo::Point).to_points
-      end
-
+      
+      include Mongoid::Geo::PointConversion
+      
       def extract_circle(v)
         case v
         when Hash

@@ -1,6 +1,6 @@
 require "mongoid/spec_helper"
 
-describe Mongoid::Criterion::Inclusion do
+describe Mongoid::Extensions::Symbol::Inflections do
 
   let(:base) do
     Mongoid::Criteria.new(Address)
@@ -8,24 +8,24 @@ describe Mongoid::Criterion::Inclusion do
   
   describe "#nearSphere" do
     let(:criteria) do
-      base.where(:locations.nearSphere => [ 72, -44 ])
+      base.where(:location.nearSphere => [ 72, -44 ])
     end
 
     it "returns a selector matching a ne clause" do
       criteria.selector.should ==
-        { :locations => { "$nearSphere" => [ 72, -44 ] } }
+        { :location => { "$nearSphere" => [ 72, -44 ] } }
     end
   end
 
   describe "#nearMax" do
   
     let(:criteria) do
-      base.where(:locations.nearMax => [{:latitude => 72, :longitude => -44 }, 5])
+      base.where(:location.nearMax => [{:latitude => 72, :longitude => -44 }, 5])
     end
   
     it "adds the $near and $maxDistance modifiers to the selector" do
       criteria.selector.should ==
-        { :locations => { "$near" => [ 72, -44 ], "$maxDistance" => 5 } }
+        { :location => { "$near" => [ 72, -44 ], "$maxDistance" => 5 } }
     end
   end  
 
@@ -33,12 +33,12 @@ describe Mongoid::Criterion::Inclusion do
   describe "#nearMax sphere and flat" do
   
     let(:criteria) do
-      base.where(:locations.nearMax(:flat, :sphere) => [{:lat => 72, :lng => -44 }, 5])
+      base.where(:location.nearMax(:flat, :sphere) => [{:lat => 72, :lng => -44 }, 5])
     end
   
     it "adds the $near and $maxDistance modifiers to the selector" do
       criteria.selector.should ==
-        { :locations => { "$near" => [ 72, -44 ], "$maxDistanceSphere" => 5 } }
+        { :location => { "$near" => [ 72, -44 ], "$maxDistanceSphere" => 5 } }
     end
   end  
 
@@ -53,12 +53,12 @@ describe Mongoid::Criterion::Inclusion do
     end
   
     let(:criteria) do
-      base.where(:locations.nearMax => {:point => point, :distance =>  5})
+      base.where(:location.nearMax => {:point => point, :distance =>  5})
     end
   
     it "adds the $near and $maxDistance modifiers to the selector" do
       criteria.selector.should ==
-        { :locations => { "$near" => [ 72, -44 ], "$maxDistance" => 5 } }
+        { :location => { "$near" => [ 72, -44 ], "$maxDistance" => 5 } }
     end
   end  
 
@@ -72,24 +72,24 @@ describe Mongoid::Criterion::Inclusion do
     end
   
     let(:criteria) do
-      base.where(:locations.nearMax => point_distance)
+      base.where(:location.nearMax => point_distance)
     end
   
     it "adds the $near and $maxDistance modifiers to the selector" do
       criteria.selector.should ==
-        { :locations => { "$near" => [ 72, -44 ], "$maxDistance" => 5 } }
+        { :location => { "$near" => [ 72, -44 ], "$maxDistance" => 5 } }
     end
   end  
 
   describe "#nearMax sphere" do
   
     let(:criteria) do
-      base.where(:locations.nearMax(:sphere) => [[ 72, -44 ], 5])
+      base.where(:location.nearMax(:sphere) => [[ 72, -44 ], 5])
     end
   
     it "adds the $near and $maxDistance modifiers to the selector" do
       criteria.selector.should ==
-        { :locations => { "$nearSphere" => [ 72, -44 ], "$maxDistanceSphere" => 5 } }
+        { :location => { "$nearSphere" => [ 72, -44 ], "$maxDistanceSphere" => 5 } }
     end
   end  
 
@@ -99,12 +99,12 @@ describe Mongoid::Criterion::Inclusion do
     let(:point_b) { [ 71, -45 ] }      
     
     let(:criteria) do
-      base.where(:locations.withinBox => [point_a, point_b])
+      base.where(:location.withinBox => [point_a, point_b])
     end
   
     it "adds the $near and $maxDistance modifiers to the selector" do
       criteria.selector.should ==
-        { :locations => { "$within" => { "$box" => [point_a, point_b] } } }
+        { :location => { "$within" => { "$box" => [point_a, point_b] } } }
     end
   end  
 
@@ -115,12 +115,12 @@ describe Mongoid::Criterion::Inclusion do
     let(:point_b) { [ 71, -45 ] }      
     
     let(:criteria) do
-      base.where(:locations.withinBox => [point_a, point_b])
+      base.where(:location.withinBox => [point_a, point_b])
     end
   
     it "adds the $near and $maxDistance modifiers to the selector" do
       criteria.selector.should ==
-        { :locations => { "$within" => { "$box" => [[72, -44], [ 71, -45 ]] } } }
+        { :location => { "$within" => { "$box" => [[72, -44], [ 71, -45 ]] } } }
     end
   end  
 
@@ -133,12 +133,12 @@ describe Mongoid::Criterion::Inclusion do
     end
     
     let(:criteria) do
-      base.where(:locations.withinBox => box)
+      base.where(:location.withinBox => box)
     end
   
     it "adds the $near and $maxDistance modifiers to the selector" do
       criteria.selector.should ==
-        { :locations => { "$within" => { "$box" => [point_a, point_b] } } }
+        { :location => { "$within" => { "$box" => [point_a, point_b] } } }
     end
   end  
 
@@ -153,12 +153,12 @@ describe Mongoid::Criterion::Inclusion do
     end
     
     let(:criteria) do
-      base.where(:locations.withinBox => box)
+      base.where(:location.withinBox => box)
     end
   
     it "adds the $near and $maxDistance modifiers to the selector" do
       criteria.selector.should ==
-        { :locations => { "$within" => { "$box" => [point_a, point_b] } } }
+        { :location => { "$within" => { "$box" => [point_a, point_b] } } }
     end
   end  
 
@@ -167,23 +167,23 @@ describe Mongoid::Criterion::Inclusion do
     let(:point_b) { [ 71, -45 ] }      
     
     let(:criteria) do
-      base.where(:locations.withinBox(:sphere) => [point_a, point_b])
+      base.where(:location.withinBox(:sphere) => [point_a, point_b])
     end
   
     it "adds the $near and $maxDistance modifiers to the selector" do
       criteria.selector.should ==
-        { :locations => { "$within" => { "$boxSphere" => [point_a, point_b] } } }
+        { :location => { "$within" => { "$boxSphere" => [point_a, point_b] } } }
     end
   end  
   
   describe "#withinCenter" do  
     let(:criteria) do
-      base.where(:locations.withinCenter => [[ 72, -44 ], 5])
+      base.where(:location.withinCenter => [[ 72, -44 ], 5])
     end
   
     it "adds the $within and $center modifiers to the selector" do
       criteria.selector.should ==
-        { :locations => { "$within" => { "$center" => [[ 72, -44 ], 5]} }}
+        { :location => { "$within" => { "$center" => [[ 72, -44 ], 5]} }}
     end
   end  
 
@@ -194,12 +194,12 @@ describe Mongoid::Criterion::Inclusion do
     end
     
     let(:criteria) do
-      base.where(:locations.withinCenter => [[ 72, -44 ], 5])
+      base.where(:location.withinCenter => [[ 72, -44 ], 5])
     end
   
     it "adds the $within and $center modifiers to the selector" do
       criteria.selector.should ==
-        { :locations => { "$within" => { "$center" => [[ 72, -44 ], 5]} }}
+        { :location => { "$within" => { "$center" => [[ 72, -44 ], 5]} }}
     end
   end  
 
@@ -213,24 +213,24 @@ describe Mongoid::Criterion::Inclusion do
     end
     
     let(:criteria) do
-      base.where(:locations.withinCenter => [[ 72, -44 ], 5])
+      base.where(:location.withinCenter => [[ 72, -44 ], 5])
     end
   
     it "adds the $within and $center modifiers to the selector" do
       criteria.selector.should ==
-        { :locations => { "$within" => { "$center" => [[ 72, -44 ], 5]} }}
+        { :location => { "$within" => { "$center" => [[ 72, -44 ], 5]} }}
     end
   end  
 
 
   describe "#withinCenter sphere" do  
     let(:criteria) do
-      base.where(:locations.withinCenter(:sphere) => [[ 72, -44 ], 5])
+      base.where(:location.withinCenter(:sphere) => [[ 72, -44 ], 5])
     end
   
     it "adds the $within and $center modifiers to the selector" do
       criteria.selector.should ==
-        { :locations => { "$within" => { "$centerSphere" => [[ 72, -44 ], 5]} }}
+        { :location => { "$within" => { "$centerSphere" => [[ 72, -44 ], 5]} }}
     end
   end  
 

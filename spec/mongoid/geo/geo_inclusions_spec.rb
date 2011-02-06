@@ -9,12 +9,12 @@ describe Mongoid::Criterion::Inclusion do
   describe "#near" do
 
     let(:criteria) do
-      base.nearSphere(:field => [ 72, -44 ])
+      base.nearSphere(:location => [ 72, -44 ])
     end
 
     it "adds the $near modifier to the selector" do
       criteria.selector.should ==
-        { :field => { "$nearSphere" => [ 72, -44 ] } }
+        { :location => { "$nearSphere" => [ 72, -44 ] } }
     end
   end
 end

@@ -20,7 +20,7 @@ module Mongoid #:nodoc:
 
       def make_hash v     
         v = extract_nearMax(v) if !v.kind_of?(Array) && op_b =~ /max/i
-        {"$#{op_a}" => to_points(v.first), "$#{op_b}" => to_points(v.last) }
+        {"$#{op_a}" => to_point(v.first), "$#{op_b}" => to_point(v.last) }
       end
 
       def hash
@@ -37,12 +37,9 @@ module Mongoid #:nodoc:
       end
             
       protected
-      
-      def to_points v
-        return v if v.kind_of? Fixnum 
-        v.extend(Mongoid::Geo::Point).to_points
-      end
 
+      include Mongoid::Geo::PointConversion
+      
       def extract_nearMax(v)
         case v
         when Hash

@@ -9,7 +9,7 @@ class Address
   field :city
   field :state
   field :post_code
-  field :locations, :type => Array, :geo => true
+  field :location, :type => Array, :geo => true
   key :street
 
   geo_index :locations
