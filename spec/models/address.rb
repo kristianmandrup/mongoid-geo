@@ -12,5 +12,5 @@ class Address
   field :location, :type => Array, :geo => true
   key :street
 
-  geo_index :locations
+  geo_index :location
 end

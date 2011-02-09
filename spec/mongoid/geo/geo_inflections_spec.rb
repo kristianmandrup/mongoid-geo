@@ -189,12 +189,12 @@ describe Mongoid::Extensions::Symbol::Inflections do
 
   describe "#withinCenter hash circle" do  
     let(:center) { [ 72, -44 ] }
-    let(:box) do
+    let(:circle) do
       {:center => center, :radius => 5}
     end
     
     let(:criteria) do
-      base.where(:location.withinCenter => [[ 72, -44 ], 5])
+      base.where(:location.withinCenter => circle)
     end
   
     it "adds the $within and $center modifiers to the selector" do
