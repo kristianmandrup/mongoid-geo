@@ -1,0 +1,6 @@
+h3. Feb 18, 2011
+
+Removed fields.rb from the require so to use it you have to require it manually like this:
+
+@require 'mongoid/geo/fields'@
+

@@ -7,7 +7,7 @@ Mongoid.configure.master = Mongo::Connection.new.db('mongoid-geo')
 Mongoid.database.collections.each do |coll|
   coll.remove
 end
-
+require 'mongoid/geo/fields'
 require 'models/address'
 require 'models/person'
 
