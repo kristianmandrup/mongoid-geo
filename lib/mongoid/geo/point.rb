@@ -17,11 +17,19 @@ module Mongoid::Geo
       when Array
         self.map(&:to_f)
       else
-        return [self.lat, self.lng] if self.respond_to? :lat
-        return [self.latitude, self.longitude] if self.respond_to? :latitude
-        self.to_f
-        # raise 'Object must contain either #lat, #lng or #latitude, #longitude methods to be converted to a geo point'
+        obj   = self.send(:location) if respond_to? :location
+        obj ||= self.send(:position) if self.respond_to? :position
+        obj ||= self
+        get_the_location obj        
       end
+    end
+
+    private
+    
+    def get_the_location obj
+      return [obj.lat, obj.lng] if obj.respond_to? :lat
+      return [obj.latitude, obj.longitude] if obj.respond_to? :latitude
+      obj.to_f
     end
   end
 end

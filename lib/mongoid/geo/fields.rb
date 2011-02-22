@@ -14,9 +14,9 @@ module Mongoid #:nodoc
                 value.compact.extend(Mongoid::Geo::Point).to_points
               else
                 !value.nil? ? value.extend(Mongoid::Geo::Point).to_point : value
-              end
+              end 
               value = value[0..1] if !value.nil?
-            end            
+            end
             write_attribute(name, value) 
           end
           define_method("#{meth}?") do

@@ -94,6 +94,9 @@ With the new @:geo@ option supplied by _mongoid-geo_ :
    assert([45.1, -3.4], p.location)   
 </pre>
 
+h2. News update
+
+Added support for setting location attribute using object with either #location or #position attribute that has lat/lng attributes within (see fields spec).
 
 h2. Mongoid Geo extra inclusions
 
