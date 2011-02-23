@@ -102,7 +102,13 @@ With the new @:geo@ option supplied by _mongoid-geo_ :
   field :location, :type => Array, :geo => true, :lat => :latitude, :lng => :longitude
 
   assert(45.1 , p.latitude)
-  assert(-3.4 , p.longitude)  
+  assert(-3.4 , p.longitude) 
+  
+  # or set the array attributes using symmetric setter convenience methods!
+  p.latitude   = 44
+  assert(44 , p.latitude)   
+  
+  # PURE MAGIC!!!
 </pre>
 
 h2. News update

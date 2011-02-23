@@ -82,6 +82,8 @@ describe Mongoid::Fields do
       address.pos = position
       address.pos.should == [72, -44]
       address.latitude.should == 72
+      address.latitude = 45
+      address.latitude.should == 45
       address.longitude.should == -44
     end
 

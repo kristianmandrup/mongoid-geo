@@ -5,11 +5,22 @@ module Mongoid #:nodoc
       def create_accessors(name, meth, options = {})
         generated_field_methods.module_eval do
           define_method(meth) { read_attribute(name) }
-          define_method(meth) { read_attribute(name) }
+
           if options[:type] == Array && options[:geo]
-            define_method(options[:lat] || "lat") { read_attribute(name)[0] }
-            define_method(options[:lng] || "lng") { read_attribute(name)[1] }
+            lat_meth = options[:lat] || "lat"
+            lng_meth = options[:lng] || "lng"
+
+            define_method(lat_meth) { read_attribute(name)[0] }
+            define_method(lng_meth) { read_attribute(name)[1] }
+                        
+            define_method "#{lat_meth}=" do |value|
+              send(name)[0] = value
+            end            
+            define_method "#{lng_meth}=" do |value|
+              send(name)[1] = value
+            end            
           end
+
           define_method("#{meth}=") do |value|
             if options[:type] == Array && options[:geo]
               value = case value
@@ -24,6 +35,7 @@ module Mongoid #:nodoc
             end            
             write_attribute(name, value) 
           end
+
           define_method("#{meth}?") do
             attr = read_attribute(name)
             (options[:type] == Boolean) ? attr == true : attr.present?
