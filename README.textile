@@ -92,6 +92,17 @@ With the new @:geo@ option supplied by _mongoid-geo_ :
 
    # for each of the above, the following holds
    assert([45.1, -3.4], p.location)   
+
+   # also by default adds #lat and #lng convenience methods (thanks to TeuF)
+   
+   assert(45.1 , p.lat)
+   assert(-3.4 , p.lng)
+
+   # the #lat and #lng convenience methods can also be customized with the :lat and :lng options
+  field :location, :type => Array, :geo => true, :lat => :latitude, :lng => :longitude
+
+  assert(45.1 , p.latitude)
+  assert(-3.4 , p.longitude)  
 </pre>
 
 h2. News update

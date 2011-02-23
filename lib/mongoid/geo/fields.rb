@@ -5,18 +5,23 @@ module Mongoid #:nodoc
       def create_accessors(name, meth, options = {})
         generated_field_methods.module_eval do
           define_method(meth) { read_attribute(name) }
-          define_method("#{meth}=") do |value| 
+          define_method(meth) { read_attribute(name) }
+          if options[:type] == Array && options[:geo]
+            define_method(options[:lat] || "lat") { read_attribute(name)[0] }
+            define_method(options[:lng] || "lng") { read_attribute(name)[1] }
+          end
+          define_method("#{meth}=") do |value|
             if options[:type] == Array && options[:geo]
               value = case value
-              when String 
+              when String
                 value.split(",").map(&:to_f)
-              when Array 
+              when Array
                 value.compact.extend(Mongoid::Geo::Point).to_points
               else
                 !value.nil? ? value.extend(Mongoid::Geo::Point).to_point : value
-              end 
+              end
               value = value[0..1] if !value.nil?
-            end
+            end            
             write_attribute(name, value) 
           end
           define_method("#{meth}?") do

@@ -71,9 +71,18 @@ describe Mongoid::Fields do
       address.location.should == [72, -44]
     end
 
-    it 'should work with point object that has position attribute' do
+    it 'should work with point object that has position attribute add should add #lat and #lng methods' do
       address.location = position
       address.location.should == [72, -44]
+      address.lat.should == 72
+      address.lng.should == -44
+    end
+
+    it 'should work with point object that has position attribute and should add #latitude and #longitude methods' do
+      address.pos = position
+      address.pos.should == [72, -44]
+      address.latitude.should == 72
+      address.longitude.should == -44
     end
 
     it 'should work with point object that has #latitude and #longitude methods' do
