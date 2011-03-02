@@ -111,9 +111,32 @@ With the new @:geo@ option supplied by _mongoid-geo_ :
   # PURE MAGIC!!!
 </pre>
 
-h2. News update
+h2. News update (March 2)
 
-Added support for setting location attribute using object with either #location or #position attribute that has lat/lng attributes within (see fields spec).
+* Added support for geoNear queries!!!
+
+<pre>
+class Address
+  include Mongoid::Document
+  extend Mongoid::Geo::Near
+
+  field :location, :type => Array, :geo => true
+  ...
+end  
+
+# Find all addresses sorted nearest to a specific address loation 
+nearest_addresses = Address.geoNear(another_address, :location)
+
+class Position
+  include Mongoid::Document
+
+  field :pos, :type => Array, :geo => true
+  ...
+end  
+
+# Find all positions sorted nearest to the address loation 
+nearest_positions = Position.geoNear(another_address.location, :pos)
+</pre>
 
 h2. Mongoid Geo extra inclusions
 
