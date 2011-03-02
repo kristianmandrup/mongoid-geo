@@ -12,6 +12,10 @@ module Mongoid #:nodoc:
         # withinCenter
         # - {"$within" : {"$center" : [center, radius]}}})          
 
+        def geoNear
+          Criterion::Complex.new(:operator => 'geoNearSphere', :key => self)
+        end
+
         def nearSphere
           Criterion::Complex.new(:operator => 'nearSphere', :key => self)          
         end

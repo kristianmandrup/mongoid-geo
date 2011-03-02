@@ -1,6 +1,7 @@
 class Address
   include Mongoid::Document
-
+  extend Mongoid::Geo::Near
+  
   attr_accessor :mode
 
   field :address_type

@@ -12,8 +12,13 @@ Gem::Specification.new do |s|
 
   s.add_development_dependency  "rspec"
 
-  s.add_dependency              "mongoid",  '>= 2.0.0.rc.6'
-  s.add_dependency              "bson_ext", '>= 1.1.6'
+  s.add_dependency              "mongoid",        '>= 2.0.0.rc.6'
+  s.add_dependency              "bson_ext",       '>= 1.1.6'
 
-  s.version                     = "0.1.8"
+  s.add_dependency              'active_support', '>= 3.0.1'
+  s.add_dependency              'rack',           '>= 1.0'
+  s.add_dependency              'hashie',         '>= 1.0'
+
+
+  s.version                     = "0.1.9"
 end
