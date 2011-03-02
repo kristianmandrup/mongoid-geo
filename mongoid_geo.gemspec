@@ -10,14 +10,14 @@ Gem::Specification.new do |s|
   s.required_rubygems_version   = ">= 1.3.6"
   s.files                       = Dir["lib/**/*"] + ["MIT-LICENSE", "Rakefile", "README.textile"]
 
-  s.add_development_dependency  "rspec"
+  s.add_development_dependency  "rspec",          '>= 2.4'
 
   s.add_dependency              "mongoid",        '>= 2.0.0.rc.6'
   s.add_dependency              "bson_ext",       '>= 1.1.6'
 
-  s.add_dependency              'active_support', '~> 3.0.4'
+  s.add_dependency              'active_support', '>= 3.0.4'
   s.add_dependency              'rack',           '>= 1.0'
   s.add_dependency              'hashie',         '>= 1.0'
 
-  s.version                     = "0.1.9"
+  s.version                     = "0.2.0"
 end
