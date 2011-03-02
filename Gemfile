@@ -10,8 +10,8 @@ gem "bson_ext", ">= 1.1.6"
 group :test, :development do
   gem "rspec-rails",  "~> 2.5"
 
-  # gem "rails", ">= 3.0.1"
-  # gem 'ffaker',     ">= 1.2.0"
+  # gem "rails",    ">= 3.0.1"
+  # gem 'ffaker',   ">= 1.2.0"
   # gem 'steak'
   # gem "capybara", ">= 0.4.0"
   # gem 'delorean'
