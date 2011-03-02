@@ -6,10 +6,7 @@ module Mongoid #:nodoc
         generated_field_methods.module_eval do
           define_method(meth) { read_attribute(name) }
 
-          if options[:type] == Array && options[:geo]
-            puts "geo:"
-            # instance_eval { self.send :extend, Mongoid::Geo::Near }
-            
+          if options[:type] == Array && options[:geo]            
             lat_meth = options[:lat] || "lat"
             lng_meth = options[:lng] || "lng"
 
