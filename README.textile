@@ -136,6 +136,9 @@ end
 
 # Find all positions sorted nearest to the address loation 
 nearest_positions = Position.geoNear(another_address.location, :pos)
+
+# perform distance locations in Speherical mode inside Mongo DB (default is :plane)
+nearest_positions = Position.geoNear(another_address.location, :pos, :sphere)
 </pre>
 
 h2. Mongoid Geo extra inclusions

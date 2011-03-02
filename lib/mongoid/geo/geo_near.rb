@@ -8,9 +8,9 @@ require 'mongoid/geo/haversine'
 module Mongoid
   module Geo
     module Near
-      def geoNear(center, location_attribute)
+      def geoNear(center, location_attribute, mode = :plane)
         center = center.respond_to?(:collection) ? center.send(location_attribute) : center
-        query = create_query(self, center)
+        query = create_query(self, center, mode)
         create_result(query_result(self, query, center, location_attribute))
       end
 
