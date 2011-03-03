@@ -12,10 +12,16 @@ module Mongoid
     end
     
     module Models
+      # def to_models
+      #   map do |m|
+      #     m.to_model
+      #   end
+      # end
+
       def to_models
-        map do |m|
-          m.to_model
-        end
+        clazz = first.clazz
+        ids = map(&:_id)
+        clazz.where(:_id.in => ids).to_a
       end
     end
     

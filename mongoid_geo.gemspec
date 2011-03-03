@@ -18,5 +18,5 @@ Gem::Specification.new do |s|
   s.add_dependency              'active_support', '>= 3.0.4'
   s.add_dependency              'hashie',         '>= 1.0'
 
-  s.version                     = "0.2.2"
+  s.version                     = "0.2.2.1"
 end

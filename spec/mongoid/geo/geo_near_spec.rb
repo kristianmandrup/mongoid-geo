@@ -24,13 +24,21 @@ describe Mongoid::Geo::Near do
     end
 
     describe '#to_models' do
-      it "should limit number of results to 1" do
+      it "should return models" do
         address.location = "23.5, -47"
         models = Address.geoNear(address, :location, :num => 1).to_models
         models.first.lat.should == 45
       end
     end
 
+    describe '#to_model' do
+      it "should return model" do
+        address.location = "23.5, -47"
+        my_model = Address.geoNear(address, :location, :num => 1).first.to_model
+        my_model.lat.should == 45
+      end
+    end
+    
     describe 'option :num' do
       it "should limit number of results to 1" do
         address.location = "23.5, -47"

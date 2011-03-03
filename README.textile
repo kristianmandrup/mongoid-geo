@@ -144,10 +144,14 @@ nearest_positions = Position.geoNear(another_address.location, :pos, :mode => :s
 
 </pre>
 
-# if you need to operate on the Mongoid models referenced by the query result, simply call #to_models on it
-# Fx to get the city of the first model instance from the query result:
+If you need to operate on the Mongoid models referenced by the query result, simply call #to_models on it
+Fx to get the city of the first model instance from the query result:
 
 @nearest_city = Position.geoNear(another_address.location, :pos).to_models.first.city@
+
+You can also use a #to_model method on an individual query result like this:
+
+@nearest_city = Position.geoNear(another_address.location, :pos).first.to_model.city@
 
 h2. Mongoid Geo extra inclusions
 
