@@ -19,5 +19,5 @@ Gem::Specification.new do |s|
   s.add_dependency              'rack',           '>= 1.0'
   s.add_dependency              'hashie',         '>= 1.0'
 
-  s.version                     = "0.2.0"
+  s.version                     = "0.2.1"
 end
