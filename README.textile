@@ -138,8 +138,16 @@ end
 nearest_positions = Position.geoNear(another_address.location, :pos)
 
 # perform distance locations in Speherical mode inside Mongo DB (default is :plane)
-nearest_positions = Position.geoNear(another_address.location, :pos, :sphere)
+nearest_positions = Position.geoNear(another_address.location, :pos, :mode => :sphere)
+
+# other options supported are: :num, :maxDistance, distanceMultiplier, :query
+
 </pre>
+
+# if you need to operate on the Mongoid models referenced by the query result, simply call #to_models on it
+# Fx to get the city of the first model instance from the query result:
+
+@nearest_city = Position.geoNear(another_address.location, :pos).to_models.first.city@
 
 h2. Mongoid Geo extra inclusions
 
