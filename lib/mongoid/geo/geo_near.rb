@@ -1,7 +1,5 @@
 require 'net/http'
 require 'active_support'
-require 'haversine'
-require 'rack'
 require 'hashie'
 require 'mongoid/geo/haversine'
 

@@ -16,8 +16,7 @@ Gem::Specification.new do |s|
   s.add_dependency              "bson_ext",       '>= 1.1.6'
 
   s.add_dependency              'active_support', '>= 3.0.4'
-  s.add_dependency              'rack',           '>= 1.0'
   s.add_dependency              'hashie',         '>= 1.0'
 
-  s.version                     = "0.2.1"
+  s.version                     = "0.2.1.1"
 end
