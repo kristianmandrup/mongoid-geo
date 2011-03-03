@@ -15,8 +15,8 @@ Gem::Specification.new do |s|
   s.add_dependency              "mongoid",        '>= 2.0.0.rc.6'
   s.add_dependency              "bson_ext",       '>= 1.1.6'
 
-  s.add_dependency              'active_support', '>= 3.0.4'
-  s.add_dependency              'hashie',         '>= 1.0'
+  s.add_dependency              'activesupport',  '>= 3.0.4'
+  s.add_dependency              'hashie',         '>= 0.4.0'
 
   s.version                     = "0.2.2.1"
 end
