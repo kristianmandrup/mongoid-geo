@@ -153,6 +153,10 @@ You can also use a #to_model method on an individual query result like this:
 
 @nearest_city = Position.geoNear(another_address.location, :pos).first.to_model.city@
 
+# the model returned also has a distance accessor populated with the distance calculated by running the geoNear query 
+
+@nearest_distance = Position.geoNear(another_address.location, :pos).first.to_model.distance@
+
 h2. Mongoid Geo extra inclusions
 
 Find addresses near a point using spherical distance calculation

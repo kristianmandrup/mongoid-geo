@@ -28,6 +28,7 @@ describe Mongoid::Geo::Near do
         address.location = "23.5, -47"
         models = Address.geoNear(address, :location, :num => 1).to_models
         models.first.lat.should == 45
+        models.map(&:distance).first.should > 6000
       end
     end
 
@@ -36,6 +37,9 @@ describe Mongoid::Geo::Near do
         address.location = "23.5, -47"
         my_model = Address.geoNear(address, :location, :num => 1).first.to_model
         my_model.lat.should == 45
+        my_model.distance.should > 6000
+        lambda {my_model.distance = 500}.should raise_error
+        my_model.distance.should > 6000        
       end
     end
     

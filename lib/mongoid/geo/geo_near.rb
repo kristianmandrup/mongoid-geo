@@ -5,23 +5,35 @@ require 'mongoid/geo/haversine'
 
 module Mongoid
   module Geo
+    module Distance      
+      attr_reader :distance
+      
+      def set_distance dist
+        @distance = dist
+        @distance.freeze        
+      end
+    end
+    
     module Model
       def to_model
-        clazz.where(:_id => _id).first
+        m = clazz.where(:_id => _id).first.extend(Mongoid::Geo::Distance)
+        m.set_distance distance
+        m
       end
     end
     
     module Models
-      # def to_models
-      #   map do |m|
-      #     m.to_model
-      #   end
-      # end
-
       def to_models
         clazz = first.clazz
         ids = map(&:_id)
-        clazz.where(:_id.in => ids).to_a
+        distances = map(&:distance)
+        i = 0
+        clazz.where(:_id.in => ids).to_a.map do |m| 
+          m.extend(Mongoid::Geo::Distance)
+          m.set_distance distances[i]
+          i += 1
+          m
+        end
       end
     end
     

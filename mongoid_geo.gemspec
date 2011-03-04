@@ -16,8 +16,7 @@ Gem::Specification.new do |s|
   s.add_dependency              "bson_ext",       '>= 1.1.6'
 
   s.add_dependency              'activesupport',  '>= 3.0.4'
-  s.add_dependency              'hashie',         '>= 0.4.0'
-  # https://github.com/okiess/mongo-hashie ???
+  s.add_dependency              'hashie',         '>= 0.4.0'   # https://github.com/okiess/mongo-hashie ???
 
-  s.version                     = "0.2.3"
+  s.version                     = "0.2.4"
 end
