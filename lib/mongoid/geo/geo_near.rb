@@ -5,6 +5,10 @@ require 'mongoid/geo/haversine'
 
 module Mongoid
   module Geo
+    class << self
+      attr_accessor :mongo_db_version
+    end
+    
     module Distance      
       attr_reader :distance
       
@@ -25,12 +29,13 @@ module Mongoid
       def to_models
         clazz = first.clazz
         ids = map(&:_id)
-        distances = map(&:distance)
-        i = 0
+        distance_hash = self.inject({}) do |result, item| 
+          result[item._id] = item.distance
+          result
+        end
         clazz.where(:_id.in => ids).to_a.map do |m| 
           m.extend(Mongoid::Geo::Distance)
-          m.set_distance distances[i]
-          i += 1
+          m.set_distance distance_hash[m._id]
           m
         end
       end
@@ -70,7 +75,7 @@ module Mongoid
         lon,lat = center    
         query_result = clazz.collection.db.command(query)['results'].sort_by do |r|
           loc = r['obj'][location_attribute.to_s]
-          r['distance'] = Mongoid::Geo::Haversine.distance(lat, lon, loc[1], loc[0])
+          r['distance'] = Mongoid::Geo::Haversine.distance(lat, lon, loc[1], loc[0]) if Mongoid::Geo.mongo_db_version < 1.7
           r['clazz'] = clazz
         end
       end

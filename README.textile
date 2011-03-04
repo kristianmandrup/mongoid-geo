@@ -155,7 +155,11 @@ You can also use a #to_model method on an individual query result like this:
 
 # the model returned also has a distance accessor populated with the distance calculated by running the geoNear query 
 
-@nearest_distance = Position.geoNear(another_address.location, :pos).first.to_model.distance@
+@nearest_distance = Position.geoNear(another_address.location, :pos).first.to_model.distance@  
+
+You can now explicitly set/configure the Mongo DB version used. This will affect whether built-in Mongo DB distance calculation will be used or using standalone Ruby Haversine algorithm. By default the version is set to 1.5. See _geo_near_ specs for more details/info on this.
+
+@Mongoid::Geo.mongo_db_version = 1.7@
 
 h2. Mongoid Geo extra inclusions
 
