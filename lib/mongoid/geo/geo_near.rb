@@ -1,4 +1,4 @@
-require 'net/http'
+#require 'net/http'
 require 'active_support'
 require 'hashie'
 require 'mongoid/geo/haversine'
