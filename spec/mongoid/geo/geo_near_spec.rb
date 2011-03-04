@@ -36,10 +36,15 @@ describe Mongoid::Geo::Near do
       it "should return model" do
         address.location = "23.5, -47"
         my_model = Address.geoNear(address, :location, :num => 1).first.to_model
-        my_model.lat.should == 45
+        my_model.lat.should == 45      
+        first_dist = my_model.distance
         my_model.distance.should > 6000
         lambda {my_model.distance = 500}.should raise_error
         my_model.distance.should > 6000        
+
+        address.location = "27.5, 12"        
+        my_model = Address.geoNear(address, :location, :num => 1).first.to_model
+        my_model.distance.should_not == first_dist        
       end
     end
     

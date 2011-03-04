@@ -10,7 +10,6 @@ module Mongoid
       
       def set_distance dist
         @distance = dist
-        @distance.freeze        
       end
     end
     
