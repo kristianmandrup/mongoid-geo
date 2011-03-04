@@ -15,7 +15,6 @@ module Mongoid
          a = Math.sin(distance_lat/2)**2 + Math.cos(lat1_radians) * Math.cos(lat2_radians) * Math.sin(distance_lng/2) ** 2
          c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a))
 #         EARTH_RADIUS * c #
-
          c
       end
     end

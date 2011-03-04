@@ -45,7 +45,7 @@ module Mongoid
       def geoNear(center, location_attribute, options = {})
         center = center.respond_to?(:collection) ? center.send(location_attribute) : center
         query = create_query(self, center, options)
-        create_result(query_result(self, query, center, location_attribute)).extend(Mongoid::Geo::Models)
+        create_result(query_result(self, query, center, location_attribute, options)).extend(Mongoid::Geo::Models)
       end
 
       protected
@@ -73,7 +73,8 @@ module Mongoid
         nq
       end
 
-      def query_result clazz, query, center, location_attribute
+      def query_result clazz, query, center, location_attribute, options = {}
+        distanceMultiplier  = options[:distanceMultiplier]
         lon,lat = center
         query_result = clazz.collection.db.command(query)['results'].sort_by do |r|
           loc = r['obj'][location_attribute.to_s]

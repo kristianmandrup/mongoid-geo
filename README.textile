@@ -140,7 +140,7 @@ nearest_positions = Position.geoNear(another_address.location, :pos)
 # perform distance locations in Speherical mode inside Mongo DB (default is :plane)
 nearest_positions = Position.geoNear(another_address.location, :pos, :mode => :sphere)
 
-# other options supported are: :num, :maxDistance, distanceMultiplier, :query
+# other options supported are: :num, :maxDistance, :distanceMultiplier, :query
 
 # GeoNear distance returns distance in degrees. Use distanceMultiplier to return in Miles or KM.
 # set distanceMultiplier to 6371 to get distance in KM
