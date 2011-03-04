@@ -35,7 +35,7 @@ module Mongoid
         end
         clazz.where(:_id.in => ids).to_a.map do |m|
           m.extend(Mongoid::Geo::Distance)
-          m.set_distance distance_hash[m._id]
+          m.set_distance distance_hash[m._id.to_s]
           m
         end
       end
