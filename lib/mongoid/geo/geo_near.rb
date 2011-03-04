@@ -8,15 +8,15 @@ module Mongoid
     class << self
       attr_accessor :mongo_db_version
     end
-    
-    module Distance      
+
+    module Distance
       attr_reader :distance
-      
+
       def set_distance dist
         @distance = dist
       end
     end
-    
+
     module Model
       def to_model
         m = clazz.where(:_id => _id).first.extend(Mongoid::Geo::Distance)
@@ -24,23 +24,23 @@ module Mongoid
         m
       end
     end
-    
+
     module Models
       def to_models
         clazz = first.clazz
         ids = map(&:_id)
-        distance_hash = self.inject({}) do |result, item| 
+        distance_hash = self.inject({}) do |result, item|
           result[item._id] = item.distance
           result
         end
-        clazz.where(:_id.in => ids).to_a.map do |m| 
+        clazz.where(:_id.in => ids).to_a.map do |m|
           m.extend(Mongoid::Geo::Distance)
           m.set_distance distance_hash[m._id]
           m
         end
       end
     end
-    
+
     module Near
       def geoNear(center, location_attribute, options = {})
         center = center.respond_to?(:collection) ? center.send(location_attribute) : center
@@ -49,12 +49,12 @@ module Mongoid
       end
 
       protected
-    
+
       def create_query clazz, center, options = {}
         num                 = options[:num]
         maxDistance         = options[:maxDistance]
         query               = options[:query]
-        distanceMultiplier  = options[:distanceMultiplier]        
+        distanceMultiplier  = options[:distanceMultiplier]
         mode                = options[:mode] || :plane
 
         nq = BSON::OrderedHash.new.tap do |near_query|
@@ -62,20 +62,24 @@ module Mongoid
           near_query["near"]         = center
           near_query["num"]          = num if num
           near_query["maxDistance"]  = maxDistance if maxDistance
-          near_query["distanceMultiplier"]  = distanceMultiplier if distanceMultiplier
+          # mongodb < 1.7 returns degrees but with earth flat. in Mongodb 1.7 you can set sphere and let mongodb calculate the distance in Miles or KM
+          # for mongodb < 1.7 we need to run Haversine first before calculating degrees to Km or Miles. See below.
+          near_query["distanceMultiplier"]  = distanceMultiplier if distanceMultiplier && Mongoid::Geo.mongo_db_version >= 1.7
           near_query["query"]        = query if query
 
           # works in mongodb 1.7 but still in beta and not supported by mongodb
-          near_query["spherical"]  = true if mode == :sphere
+          near_query["spherical"]  = true if mode == :sphere && Mongoid::Geo.mongo_db_version >= 1.7
         end
         nq
-      end      
+      end
 
       def query_result clazz, query, center, location_attribute
-        lon,lat = center    
+        lon,lat = center
         query_result = clazz.collection.db.command(query)['results'].sort_by do |r|
           loc = r['obj'][location_attribute.to_s]
           r['distance'] = Mongoid::Geo::Haversine.distance(lat, lon, loc[1], loc[0]) if Mongoid::Geo.mongo_db_version < 1.7
+          # Calculate distance in KM or Miles if mongodb < 1.7
+          r['distance'] = r['distance'] * distanceMultiplier if distanceMultiplier && Mongoid::Geo.mongo_db_version < 1.7
           r['clazz'] = clazz
         end
       end
@@ -88,7 +92,7 @@ module Mongoid
           res._id = qr['obj']['_id'].to_s
           result.push(res)
         end
-      end    
-    end  
+      end
+    end
   end
 end

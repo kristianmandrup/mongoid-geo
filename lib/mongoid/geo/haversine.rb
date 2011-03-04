@@ -2,7 +2,7 @@ module Mongoid
   module Geo
     class Haversine
       #EARTH_RADIUS = 3963.19 # miles
-      EARTH_RADIUS = 6371 # kilometers
+#      EARTH_RADIUS = 6371 # kilometers
       RADIAN_PER_DEGREE = Math::PI / 180.0
 
       def self.distance(lat1, lng1, lat2, lng2)
@@ -14,7 +14,9 @@ module Mongoid
 
          a = Math.sin(distance_lat/2)**2 + Math.cos(lat1_radians) * Math.cos(lat2_radians) * Math.sin(distance_lng/2) ** 2
          c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a))
-         EARTH_RADIUS * c
+#         EARTH_RADIUS * c #
+
+         c
       end
     end
   end
