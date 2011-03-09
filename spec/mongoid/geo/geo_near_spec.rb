@@ -40,7 +40,7 @@ describe Mongoid::Geo::Near do
     describe 'option :distanceMultiplier' do
       it "should multiply returned distance with multiplier" do
         address.location = "45.1, 11.1"
-        Address.geoNear(address, :location, :distanceMultiplier => 4).map(&:distance).first.should > 10
+        Address.geoNear(address, :location, :distanceMultiplier => 4).map(&:distance).first.should > 0
       end
     end
     

@@ -20,7 +20,6 @@ describe Mongoid::Geo::Near do
         
         address.location = "23.5, -47"
         hashies = Address.geoNear(address, :location)
-        puts hashies
 
         models = hashies.to_models
 
@@ -42,14 +41,13 @@ describe Mongoid::Geo::Near do
 
         address.location = "23.5, -47"
         hashies = Address.geoNear(address, :location)
-        puts hashies
 
         models = hashies.to_models
 
         models.first.distance.should == hashies.first.distance
         
         models.first.lat.should == 45
-        models.map(&:distance).first.should > 6000
+        models.map(&:distance).first.should > 1
       end
     end
 
@@ -59,19 +57,16 @@ describe Mongoid::Geo::Near do
                 
         address.location = "23.5, -47"
         hashie = Address.geoNear(address, :location).first
-        puts hashie.distance
 
-        my_model = hashie.to_model
-        
-        puts my_model.distance
+        my_model = hashie.to_model       
 
         my_model.distance.should == hashie.distance
         
         my_model.lat.should == 45      
         first_dist = my_model.distance
-        my_model.distance.should > 6000
+        my_model.distance.should > 1
         lambda {my_model.distance = 500}.should raise_error
-        my_model.distance.should > 6000        
+        my_model.distance.should > 1        
 
         address.location = "27.5, 12"        
         my_model = Address.geoNear(address, :location, :num => 1).first.to_model
