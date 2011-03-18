@@ -27,18 +27,21 @@ module Mongoid
 
     module Models
       def to_models
-        clazz = first.clazz
-        ids = map(&:_id)
         distance_hash = self.inject({}) do |result, item|
           result[item._id] = item.distance
           result
         end
-        ret = clazz.where(:_id.in => ids).to_a.map do |m|
+        ret = to_criteria.to_a.map do |m|
           m.extend(Mongoid::Geo::Distance)
           m.set_distance distance_hash[m._id.to_s]
           m
         end
         ret.sort! {|a,b| a.distance <=> b.distance}
+      end
+      
+      def to_criteria
+        ids = map(&:_id)
+        first.clazz.where(:_id.in => ids)
       end
     end
 
