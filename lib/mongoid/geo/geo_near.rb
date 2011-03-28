@@ -89,12 +89,12 @@ module Mongoid
       end
 
       def create_result query_result
-        query_result.inject([]) do |result, qr|
+        query_result.map do |qr|
           res = Hashie::Mash.new(qr['obj'].to_hash).extend(Mongoid::Geo::Model)
           res.clazz = qr['clazz']
           res.distance = qr['distance']
           res._id = qr['obj']['_id'].to_s
-          result.push(res)
+          res
         end
       end
     end
