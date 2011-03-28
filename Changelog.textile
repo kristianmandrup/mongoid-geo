@@ -1,3 +1,7 @@
-h3. 3.0
+h3. v 0.3.2
+
+Remove bson_ext dependency
+
+h3. v 0.3
 
 Pulled fixes and refactorings from itzit

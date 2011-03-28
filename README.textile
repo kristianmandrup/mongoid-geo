@@ -51,6 +51,8 @@ Old/Manual way: @index [[ :location, Mongo::GEO2D ]], :min => -180, :max => 180@
 
 Using new _geo_index_ class method : @geo_index :location@
 
+Note: For embedded documents, you must define the index in the root collection class. (davemitchell)
+
 h2. Special geo-array attribute writer
 
 When setting a geo-location array, the setter should try to convert the value to an array of floats
