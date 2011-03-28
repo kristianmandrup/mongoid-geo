@@ -5,7 +5,6 @@ source "http://rubygems.org"
 # gem 'ruby-debug19'
 
 gem 'mongoid',  '~> 2.0.0.rc.6'
-gem "bson_ext", ">= 1.1.6"
 
 group :test, :development do
   gem "rspec",  ">= 2.4"
