@@ -27,10 +27,7 @@ module Mongoid
 
     module Models
       def to_models
-        distance_hash = self.inject({}) do |result, item|
-          result[item._id] = item.distance
-          result
-        end
+        distance_hash = Hash[ self.map {|item| [item._id, item.distance] } ]
         ret = to_criteria.to_a.map do |m|
           m.extend(Mongoid::Geo::Distance)
           m.set_distance distance_hash[m._id.to_s]
