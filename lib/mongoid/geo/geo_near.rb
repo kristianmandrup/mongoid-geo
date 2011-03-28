@@ -19,7 +19,7 @@ module Mongoid
 
     module Model
       def to_model
-        m = clazz.where(:_id => _id).first.extend(Mongoid::Geo::Distance)
+        m = klass.where(:_id => _id).first.extend(Mongoid::Geo::Distance)
         m.set_distance distance
         m
       end
@@ -40,7 +40,7 @@ module Mongoid
       
       def to_criteria
         ids = map(&:_id)
-        first.clazz.where(:_id.in => ids)
+        first.klass.where(:_id.in => ids)
       end
     end
 
@@ -53,7 +53,7 @@ module Mongoid
 
       protected
 
-      def create_query clazz, center, options = {}
+      def create_query klass, center, options = {}
         num                 = options[:num]
         maxDistance         = options[:maxDistance]
         query               = options[:query]
@@ -61,7 +61,7 @@ module Mongoid
         mode                = options[:mode] || :plane
 
         nq = BSON::OrderedHash.new.tap do |near_query|
-          near_query["geoNear"]      = clazz.to_s.tableize
+          near_query["geoNear"]      = klass.to_s.tableize
           near_query["near"]         = center
           near_query["num"]          = num if num
           near_query["maxDistance"]  = maxDistance if maxDistance
@@ -76,22 +76,22 @@ module Mongoid
         nq
       end
 
-      def query_result clazz, query, center, location_attribute, options = {}
+      def query_result klass, query, center, location_attribute, options = {}
         distanceMultiplier  = options[:distanceMultiplier]
         lon,lat = center
-        query_result = clazz.collection.db.command(query)['results'].sort_by do |r|
+        query_result = klass.collection.db.command(query)['results'].sort_by do |r|
           loc = r['obj'][location_attribute.to_s]
           r['distance'] = Mongoid::Geo::Haversine.distance(lat, lon, loc[1], loc[0]) if Mongoid::Geo.mongo_db_version < 1.7
           # Calculate distance in KM or Miles if mongodb < 1.7
           r['distance'] = r['distance'] * distanceMultiplier if distanceMultiplier && Mongoid::Geo.mongo_db_version < 1.7
-          r['clazz'] = clazz
+          r['klass'] = klass
         end
       end
 
       def create_result query_result
         query_result.map do |qr|
           res = Hashie::Mash.new(qr['obj'].to_hash).extend(Mongoid::Geo::Model)
-          res.clazz = qr['clazz']
+          res.klass = qr['klass']
           res.distance = qr['distance']
           res._id = qr['obj']['_id'].to_s
           res
