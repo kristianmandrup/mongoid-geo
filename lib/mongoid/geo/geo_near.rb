@@ -28,12 +28,14 @@ module Mongoid
     module Models
       def to_models
         distance_hash = Hash[ self.map {|item| [item._id, item.distance] } ]
+
         ret = to_criteria.to_a.map do |m|
           m.extend(Mongoid::Geo::Distance)
           m.set_distance distance_hash[m._id.to_s]
           m
         end
-        ret.sort! {|a,b| a.distance <=> b.distance}
+
+        ret.sort {|a,b| a.distance <=> b.distance}
       end
       
       def to_criteria
