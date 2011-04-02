@@ -19,7 +19,7 @@ module Mongoid
 
     module Model
       def to_model
-        m = klass.criteria(_id).first.extend(Mongoid::Geo::Distance)
+        m = klass.criteria.id(_id).first.extend(Mongoid::Geo::Distance)
         m.set_distance distance
         m
       end
