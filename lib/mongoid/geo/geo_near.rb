@@ -40,7 +40,7 @@ module Mongoid
       
       def to_criteria
         ids = map(&:_id)
-        first.klass.where(:_id.in => ids)
+        first.klass.criteria.id(ids)
       end
     end
 
