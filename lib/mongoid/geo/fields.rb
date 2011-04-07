@@ -4,7 +4,11 @@ module Mongoid #:nodoc
     module ClassMethods #:nodoc
       def create_accessors(name, meth, options = {})
         generated_field_methods.module_eval do
-          define_method(meth) { read_attribute(name) }
+          if [ Time, DateTime ].include?(options[:type])
+            define_method(meth) { Time.get(read_attribute(name)) }
+          else
+            define_method(meth) { read_attribute(name) }
+          end
 
           if options[:type] == Array && options[:geo]            
             lat_meth = options[:lat] || "lat"
