@@ -1,3 +1,7 @@
+h3. v.0.4
+
+Updated to work with Mongoid 2.0.1 (niedhui)
+
 h3. v 0.3.2
 
 Remove bson_ext dependency

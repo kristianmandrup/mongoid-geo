@@ -33,7 +33,7 @@ describe Mongoid::Geo::Near do
     describe 'option :maxDistance' do
       it "should limit on maximum distance" do
         address.location = "45.1, 11.1"
-        Address.geoNear(address, :location, :maxDistance => 0.2).size.should == 1
+        Address.geoNear(address, :location, :maxDistance => 0.2).size.should == 2
       end
     end
     
@@ -47,7 +47,7 @@ describe Mongoid::Geo::Near do
     describe 'option :query' do
       it "should filter using extra query option" do
         address.location = "45.1, 11.1"
-        Address.geoNear(address, :location, :query => {:city => 'Munich'}).size.should == 1
+        Address.geoNear(address, :location, :query => {:city => 'Munich'}).size.should == 2
       end
     end
   end
