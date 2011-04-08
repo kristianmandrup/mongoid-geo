@@ -113,6 +113,8 @@ describe Mongoid::Fields do
     it "should handle nil values" do
       address.location = nil
       address.location.should be_nil
+      address.lat.should      be_nil
+      address.lng.should      be_nil
     end 
   end
 end

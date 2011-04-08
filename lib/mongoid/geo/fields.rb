@@ -14,8 +14,8 @@ module Mongoid #:nodoc
             lat_meth = options[:lat] || "lat"
             lng_meth = options[:lng] || "lng"
 
-            define_method(lat_meth) { read_attribute(name)[0] }
-            define_method(lng_meth) { read_attribute(name)[1] }
+            define_method(lat_meth) { read_attribute(name).try(:[],0) }
+            define_method(lng_meth) { read_attribute(name).try(:[],1) }
                         
             define_method "#{lat_meth}=" do |value|
               send(name)[0] = value
