@@ -9,6 +9,12 @@ A Geo extension for Mongoid.
 * Adds a set of geo related inflections
 * Adds an exta option for defining a "geo" field, to have the generated attr_writer parse and convert strings etc. to float arrays.
 
+h2. Install gem
+
+<pre>
+gem "mongoid_geo"
+</pre>
+
 h2. Mongoid 2 geo features
 
 h3. Find addresses near a point
