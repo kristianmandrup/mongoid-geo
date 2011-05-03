@@ -27,8 +27,13 @@ module Mongoid::Geo
     private
     
     def get_the_location obj
-      return [obj.lat, obj.lng] if obj.respond_to? :lat
-      return [obj.latitude, obj.longitude] if obj.respond_to? :latitude
+      # if Mongoid::Geo.spherical
+      #   return [obj.lng, obj.lat] if obj.respond_to? :lat
+      #   return [obj.longitude, obj.latitude] if obj.respond_to? :latitude
+      # else
+        return [obj.lat, obj.lng] if obj.respond_to? :lat
+        return [obj.latitude, obj.longitude] if obj.respond_to? :latitude
+      # end
       obj.to_f
     end
   end

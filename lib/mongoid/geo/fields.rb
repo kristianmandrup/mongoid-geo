@@ -14,14 +14,14 @@ module Mongoid #:nodoc
             lat_meth = options[:lat] || "lat"
             lng_meth = options[:lng] || "lng"
 
-            define_method(lat_meth) { read_attribute(name).try(:[],0) }
-            define_method(lng_meth) { read_attribute(name).try(:[],1) }
+            define_method(lat_meth) { read_attribute(name).try(:[], Mongoid::Geo.lat_index) }
+            define_method(lng_meth) { read_attribute(name).try(:[], Mongoid::Geo.lng_index) }
                         
             define_method "#{lat_meth}=" do |value|
-              send(name)[0] = value
+              send(name)[Mongoid::Geo.lat_index] = value
             end            
             define_method "#{lng_meth}=" do |value|
-              send(name)[1] = value
+              send(name)[Mongoid::Geo.lng_index] = value
             end            
           end
 
@@ -36,7 +36,8 @@ module Mongoid #:nodoc
                 !value.nil? ? value.extend(Mongoid::Geo::Point).to_point : value
               end
               value = value[0..1] if !value.nil?
-            end            
+            end
+            value.reverse! if Mongoid::Geo.spherical && value
             write_attribute(name, value) 
           end
 

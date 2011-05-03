@@ -7,6 +7,21 @@ module Mongoid
   module Geo
     class << self
       attr_accessor :mongo_db_version
+      attr_accessor :spherical
+      
+      def spherical_mode mode = true, &block
+        @spherical = mode
+        yield if block
+        @spherical = !mode
+      end
+      
+      def lat_index
+        @spherical ? 1 : 0
+      end
+
+      def lng_index
+        @spherical ? 0 : 1
+      end
     end
 
     module Distance

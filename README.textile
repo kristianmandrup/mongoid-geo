@@ -110,7 +110,17 @@ With the new @:geo@ option supplied by _mongoid-geo_ :
   p.latitude   = 44
   assert(44 , p.latitude)
 
-  # PURE MAGIC!!!
+  # You can also reverse the lat/lng positioning of the array storage - this is fx useful for spherical calculations
+  
+  Mongoid::Geo.spherical_mode do
+    # Mongoid::Geo.lat_index.should == 1
+    # Mongoid::Geo.lng_index.should == 0
+    address.location = "23.5, -47"
+    address.location.should == [23.5, -47].reverse
+  end  
+
+  # or alternatively 
+  Mongoid::Geo.spherical = true
 </pre>
 
 h2. News update (March 2)
