@@ -38,6 +38,24 @@ module Mongoid::Geo
     end
   end
 end
+
+module Mongoid::GeoPoint
+  def lat= value
+    self[Mongoid::Geo.lat_index] = value
+  end            
+
+  def lng= value
+    self[Mongoid::Geo.lng_index] = value
+  end            
+
+  def lat
+    self[Mongoid::Geo.lat_index]
+  end            
+  
+  def lng
+    self[Mongoid::Geo.lng_index]
+  end            
+end
          
 module Mongoid::Geo
   module PointConversion
@@ -54,3 +72,9 @@ module Mongoid::Geo
     end
   end
 end  
+
+class Array
+  def to_geopoint                              
+    self.extend(Mongoid::GeoPoint)
+  end
+end

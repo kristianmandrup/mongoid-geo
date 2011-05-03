@@ -71,8 +71,7 @@ module Mongoid
       def create_query klass, center, options = {}
         num                 = options[:num]
         maxDistance         = options[:maxDistance]
-        query               = options[:query]
-        distanceMultiplier  = options[:distanceMultiplier]
+        query               = options[:query]        
         mode                = options[:mode] || :plane
 
         nq = BSON::OrderedHash.new.tap do |near_query|
@@ -80,10 +79,11 @@ module Mongoid
           near_query["near"]         = center
           near_query["num"]          = num if num
           near_query["maxDistance"]  = maxDistance if maxDistance
+
           # mongodb < 1.7 returns degrees but with earth flat. in Mongodb 1.7 you can set sphere and let mongodb calculate the distance in Miles or KM
           # for mongodb < 1.7 we need to run Haversine first before calculating degrees to Km or Miles. See below.
-          near_query["distanceMultiplier"]  = distanceMultiplier if distanceMultiplier && Mongoid::Geo.mongo_db_version >= 1.7
-          near_query["query"]        = query if query
+          near_query["distanceMultiplier"]  = distance_multiplier(options)
+          near_query["query"]               = query if query
 
           # works in mongodb 1.7 but still in beta and not supported by mongodb
           near_query["spherical"]  = true if mode == :sphere && Mongoid::Geo.mongo_db_version >= 1.7
@@ -94,14 +94,14 @@ module Mongoid
       def query_result klass, query, center, location_attribute, options = {}        
         query_result = query_results(klass, query).sort_by do |r|          
           # Calculate distance in KM or Miles if mongodb < 1.7
-          r[distance_meth] ||= calc_distance(r, center, location_attribute) if Mongoid::Geo.mongo_db_version < 1.7
+          r[distance_meth] ||= calc_distance(r, center, location_attribute, options) if Mongoid::Geo.mongo_db_version < 1.7
           r['klass'] = klass
         end
         query_result
       end
 
-      def create_result query_result
-        query_result.map do |qr|
+      def create_result qres
+        qres.map do |qr|
           res = Hashie::Mash.new(qr['obj'].to_hash).extend(Mongoid::Geo::Model)
           res.klass = qr['klass']
           res.distance = qr[distance_meth]
@@ -111,6 +111,24 @@ module Mongoid
       end
       
       private
+
+      def distance_multiplier options
+        distanceMultiplier  = options[:distanceMultiplier]
+        return distanceMultiplier if distanceMultiplier && Mongoid::Geo.mongo_db_version >= 1.7
+        return unit_multiplier[options[:unit]] if options[:unit]        
+      end
+
+      def unit_multiplier
+        {
+          :feet => 0.305,
+          :ft => 0.305,
+          :m => 1,
+          :meters => 1,
+          :km => 6371,
+          :m => 3959,
+          :miles => 3959
+        }
+      end
       
       def query_results klass, query 
         exec_query(klass, query)['results']
@@ -120,10 +138,12 @@ module Mongoid
         klass.collection.db.command(query)
       end
 
-      def calc_distance r, center, location_attribute        
-        loc   = r['obj'][location_attribute.to_s]
-        dist  = Mongoid::Geo::Haversine.distance(center.lat, center.lng, loc.lat, loc.lng) 
-        dist  *= distanceMultiplier if distanceMultiplier 
+      def calc_distance r, center, location_attribute, options
+        distanceMultiplier  = distance_multiplier(options)
+        loc   = r['obj'][location_attribute.to_s].to_geopoint
+        center = center.to_geopoint
+        dist  = Mongoid::Geo::Haversine.distance(center.lat, center.lng, loc.lat, loc.lng)
+        dist  = dist * distanceMultiplier if distanceMultiplier
       end
       
       def distance_meth
