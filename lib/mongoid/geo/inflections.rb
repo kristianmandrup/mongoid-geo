@@ -13,11 +13,13 @@ module Mongoid #:nodoc:
         # - {"$within" : {"$center" : [center, radius]}}})          
 
         def geoNear
-          Criterion::Complex.new(:operator => 'geoNearSphere', :key => self)
+          Criterion::Complex.new(:operator => 'geoNearSphere', :key => self)          
         end
 
         def nearSphere
-          Criterion::Complex.new(:operator => 'nearSphere', :key => self)          
+          Mongoid::Geo.spherical_mode do
+            Criterion::Complex.new(:operator => 'nearSphere', :key => self)          
+          end
         end
 
         def nearMax *calcs

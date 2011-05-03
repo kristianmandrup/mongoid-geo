@@ -11,7 +11,7 @@ module Mongoid #:nodoc:
       # @param [ Hash ] attributes The fields with lat/long values.
       #
       # @return [ Criteria ] A new criteria with the added selector.
-      def nearSphere(attributes = {})
+      def nearSphere(attributes = {})        
         update_selector(attributes, "$nearSphere")
       end
     end

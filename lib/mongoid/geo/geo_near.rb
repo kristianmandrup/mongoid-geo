@@ -91,26 +91,43 @@ module Mongoid
         nq
       end
 
-      def query_result klass, query, center, location_attribute, options = {}
-        distanceMultiplier  = options[:distanceMultiplier]
-        lon,lat = center
-        query_result = klass.collection.db.command(query)['results'].sort_by do |r|
-          loc = r['obj'][location_attribute.to_s]
-          r['distance'] = Mongoid::Geo::Haversine.distance(lat, lon, loc[1], loc[0]) if Mongoid::Geo.mongo_db_version < 1.7
+      def query_result klass, query, center, location_attribute, options = {}        
+        query_result = query_results(klass, query).sort_by do |r|          
           # Calculate distance in KM or Miles if mongodb < 1.7
-          r['distance'] = r['distance'] * distanceMultiplier if distanceMultiplier && Mongoid::Geo.mongo_db_version < 1.7
+          r[distance_meth] ||= calc_distance(r, center, location_attribute) if Mongoid::Geo.mongo_db_version < 1.7
           r['klass'] = klass
         end
+        query_result
       end
 
       def create_result query_result
         query_result.map do |qr|
           res = Hashie::Mash.new(qr['obj'].to_hash).extend(Mongoid::Geo::Model)
           res.klass = qr['klass']
-          res.distance = qr['distance']
+          res.distance = qr[distance_meth]
           res._id = qr['obj']['_id'].to_s
           res
         end
+      end
+      
+      private
+      
+      def query_results klass, query 
+        exec_query(klass, query)['results']
+      end
+
+      def exec_query klass, query
+        klass.collection.db.command(query)
+      end
+
+      def calc_distance r, center, location_attribute        
+        loc   = r['obj'][location_attribute.to_s]
+        dist  = Mongoid::Geo::Haversine.distance(center.lat, center.lng, loc.lat, loc.lng) 
+        dist  *= distanceMultiplier if distanceMultiplier 
+      end
+      
+      def distance_meth
+        Mongoid::Geo.mongo_db_version >= 1.7 ? 'dis' : 'distance'
       end
     end
   end
