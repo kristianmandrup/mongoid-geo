@@ -2,15 +2,16 @@ require "mongoid/spec_helper"
 
 Address.collection.create_index([['location', Mongo::GEO2D]], :min => -180, :max => 180)
 
-
-Address.create(:location => [45, 11], :city => 'Munich')
-Address.create(:location => [46, 12], :city => 'Berlin')
-
 describe Mongoid::Geo::Near do
 
   let(:address) do
     Address.new        
   end  
+  
+  before(:each) do
+    Address.create(:location => [45, 11], :city => 'Munich')
+    Address.create(:location => [46, 12], :city => 'Berlin')
+  end
 
   describe "geoNear" do
     it "should work with specifying specific center and different location attribute on collction" do
@@ -33,7 +34,9 @@ describe Mongoid::Geo::Near do
     describe 'option :maxDistance' do
       it "should limit on maximum distance" do
         address.location = "45.1, 11.1"
-        Address.geoNear(address, :location, :maxDistance => 0.2).size.should == 2
+        # db.runCommand({ geoNear : "points", near :[45.1, 11.1]}).results;
+        # dis: is 0.14141869255648362  and  1.2727947855285668 
+        Address.geoNear(address, :location, :maxDistance => 0.2).size.should == 1
       end
     end
     
@@ -47,7 +50,8 @@ describe Mongoid::Geo::Near do
     describe 'option :query' do
       it "should filter using extra query option" do
         address.location = "45.1, 11.1"
-        Address.geoNear(address, :location, :query => {:city => 'Munich'}).size.should == 2
+        # two record in the collection, only one's city is Munich
+        Address.geoNear(address, :location, :query => {:city => 'Munich'}).size.should == 1
       end
     end
   end

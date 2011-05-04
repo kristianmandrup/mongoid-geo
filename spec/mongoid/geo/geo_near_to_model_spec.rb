@@ -2,16 +2,17 @@ require "mongoid/spec_helper"
 
 Address.collection.create_index([['location', Mongo::GEO2D]], :min => -180, :max => 180)
 
-
-Address.create(:location => [45, 11], :city => 'Munich')
-Address.create(:location => [46, 12], :city => 'Berlin')
-Address.create(:location => [46, 11], :city => 'Berlin')
-
 describe Mongoid::Geo::Near do
 
   let(:address) do
     Address.new        
   end  
+  
+  before(:each) do
+    Address.create(:location => [45, 11], :city => 'Munich')
+    Address.create(:location => [46, 12], :city => 'Berlin')
+    Address.create(:location => [46, 11], :city => 'Berlin')
+  end
 
   describe "geoNear" do
     describe 'Mongo DB version 1.7+ uses internal distance calculations' do
