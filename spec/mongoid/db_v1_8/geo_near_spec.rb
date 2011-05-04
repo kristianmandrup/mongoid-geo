@@ -3,14 +3,16 @@ require "mongoid/spec_helper"
 Mongoid::Geo.mongo_db_version = 1.8
 Address.collection.create_index([['location', Mongo::GEO2D]], :min => -180, :max => 180)
 
-Address.create(:location => [45, 11], :city => 'Munich')
-Address.create(:location => [46, 12], :city => 'Berlin')
-
 describe Mongoid::Geo::Near do
 
   let(:address) do
     Address.new        
   end  
+  
+  before(:each) do
+    Address.create(:location => [45, 11], :city => 'Munich')
+    Address.create(:location => [46, 12], :city => 'Berlin')
+  end
 
   describe "geoNear" do
     it "should work with specifying specific center and different location attribute on collction" do
