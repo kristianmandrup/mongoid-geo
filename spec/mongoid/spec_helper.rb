@@ -13,7 +13,11 @@ require 'models/address'
 require 'models/person'
 
 RSpec.configure do |config|
-  # config.mock_with :mocha
+  config.after :each do
+    Mongoid.database.collections.each do |coll|
+      coll.remove
+    end      
+  end
 end
 
 

@@ -34,11 +34,11 @@ describe 'Mongoid Spherical geonear distance calculations' do
         # results = Address.geoNear @center.location, :location, :distanceMultiplier => 100
         results = Address.geoNear @center.location, :location, :unit => :km
 
-        c = results.map(&:distance)  
-        # puts "c: #{c}"
+        distances = results.map(&:distance)  
+        puts "distances: #{distances}"
         # # 1.8062052078680642
         hd =  Mongoid::Geo::Haversine.distance(@center.lat, @center.lng, @icc.lat, @icc.lng) * 6371
-        c.last.should be_within(0.005).of(hd)
+        distances.last.should be_within(0.005).of(hd)
       end      
     end
 
@@ -49,10 +49,6 @@ describe 'Mongoid Spherical geonear distance calculations' do
       
       after do
         Mongoid::Geo.mongo_db_version = 1.6
-        
-        Mongoid.database.collections.each do |coll|
-          coll.remove
-        end        
       end      
 
       before :each do
@@ -70,11 +66,11 @@ describe 'Mongoid Spherical geonear distance calculations' do
         # results = Address.geoNear @center.location, :location, :distanceMultiplier => 100
         results = Address.geoNear @center.location, :location, :unit => :km
 
-        c = results.map(&:distance)  
-        # puts "c: #{c}"
+        distances = results.map(&:distance)  
+        puts "distances: #{distances}"
         # # 1.8062052078680642
         hd =  Mongoid::Geo::Haversine.distance(@center.lat, @center.lng, @icc.lat, @icc.lng) * 6371
-        c[1].should_not be_within(0.05).of(hd)
+        distances[1].should_not be_within(0.05).of(hd)
       end      
     end
   end
@@ -86,10 +82,6 @@ describe 'Mongoid Spherical geonear distance calculations' do
 
     after do
       Mongoid::Geo.spherical = false
-
-      Mongoid.database.collections.each do |coll|
-        coll.remove
-      end      
     end      
 
     context 'Mongo DB < 1.7' do
@@ -99,7 +91,7 @@ describe 'Mongoid Spherical geonear distance calculations' do
 
       before :each do
         @center = Address.create(:location => {:lat => 31.2010839, :lng => -121.583509}, :city => 'center')
-        @icc = Address.create(:location => {:lat => 31.2026708, :lng => -121.6024088}, :city => 'icc')
+        @icc    = Address.create(:location => {:lat => 31.2026708, :lng => -121.6024088}, :city => 'icc')
       end
     
       it "calculate distance" do
@@ -109,14 +101,13 @@ describe 'Mongoid Spherical geonear distance calculations' do
         Mongoid::Geo.mongo_db_version.should == 1.6
         Mongoid::Geo.spherical.should be_true
         
-        # results = Address.geoNear @center.location, :location, :distanceMultiplier => 100
         results = Address.geoNear @center.location, :location, :unit => :km
 
-        c = results.map(&:distance)  
-        # puts "c: #{c}"
+        distances = results.map(&:distance)  
+        puts "distances: #{distances}"
         # # 1.8062052078680642
         hd =  Mongoid::Geo::Haversine.distance(@center.lat, @center.lng, @icc.lat, @icc.lng) * 6371
-        c[1].should be_within(0.005).of(hd)
+        distances[1].should be_within(0.5).of(hd)
       end      
     end
     
@@ -129,28 +120,25 @@ describe 'Mongoid Spherical geonear distance calculations' do
       after do
         Mongoid::Geo.mongo_db_version = 1.6
         Mongoid::Geo.spherical = false
-
-        Mongoid.database.collections.each do |coll|
-          coll.remove
-        end        
       end
 
       before :each do
         @center = Address.create(:location => {:lat => 31.2010839, :lng => -121.583509}, :city => 'center')
-        @icc = Address.create(:location => {:lat => 31.2026708, :lng => -121.6024088}, :city => 'icc')
+        @icc    = Address.create(:location => {:lat => 31.2026708, :lng => -121.6024088}, :city => 'icc')
       end
     
       it "calculates distance" do
         Mongoid::Geo.mongo_db_version.should == 1.8
         Mongoid::Geo.spherical.should be_true
         
-        results = Address.geoNear @center.location, :location, :distanceMultiplier => 6371,:mode => :sphere
-        c = results.map(&:distance)  
+        results = Address.geoNear @center.location, :location, :unit => :km, :mode => :sphere
+        distances = results.map(&:distance)
+        puts "distances: #{distances}"  
         hd =  Mongoid::Geo::Haversine.distance(@center.lat, @center.lng, @icc.lat, @icc.lng) * 6371
 
         # c is  1.8061253521165859
         # hd is 1.8062052078680642
-        c.last.should be_within(0.5).of(hd)
+        distances.last.should be_within(0.5).of(hd)
       end      
     end
   end
