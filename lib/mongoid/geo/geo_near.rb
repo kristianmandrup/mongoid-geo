@@ -10,9 +10,10 @@ module Mongoid
       attr_accessor :spherical
       
       def spherical_mode mode = true, &block
-        @spherical = mode
-        yield if block
-        @spherical = !mode
+        @spherical,old_spherical,result = mode, @spherical,@spherical
+        result = yield if block
+        @spherical = old_spherical
+        result
       end
       
       def lat_index
@@ -94,7 +95,7 @@ module Mongoid
       def query_result klass, query, center, location_attribute, options = {}        
         query_result = query_results(klass, query).sort_by do |r|          
           # Calculate distance in KM or Miles if mongodb < 1.7
-          r[distance_meth] ||= calc_distance(r, center, location_attribute) if Mongoid::Geo.mongo_db_version < 1.7
+          r[distance_meth] ||= calc_distance(r, center, location_attribute,options) if Mongoid::Geo.mongo_db_version < 1.7
           r['klass'] = klass
         end
         query_result
@@ -120,10 +121,12 @@ module Mongoid
         klass.collection.db.command(query)
       end
 
-      def calc_distance r, center, location_attribute        
-        loc   = r['obj'][location_attribute.to_s]
-        dist  = Mongoid::Geo::Haversine.distance(center.lat, center.lng, loc.lat, loc.lng) 
-        dist  *= distanceMultiplier if distanceMultiplier 
+      def calc_distance r, center, location_attribute, options        
+        loc   = r['obj'][location_attribute.to_s].extend(Mongoid::Geo::Point).to_points
+        center = center.extend(Mongoid::Geo::Point).to_points
+        dist  = Mongoid::Geo::Haversine.distance(center.first, center.last, loc.first, loc.last) 
+        dist  *= options[:distanceMultiplier] if options[:distanceMultiplier ]
+        dist
       end
       
       def distance_meth
