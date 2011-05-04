@@ -9,6 +9,7 @@ Gem::Specification.new do |s|
   s.homepage                    = "https://github.com/kristianmandrup/mongoid-geo"
   s.required_rubygems_version   = ">= 1.3.6"
   s.files                       = Dir["lib/**/*"] + ["MIT-LICENSE", "Rakefile", "README.textile"]
+  s.date                        = "2011-05-03"
 
   s.add_development_dependency  "rspec",          '>= 2.4'
 
