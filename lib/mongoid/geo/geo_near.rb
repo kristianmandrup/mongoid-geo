@@ -116,7 +116,9 @@ module Mongoid
       def distance_multiplier options
         distanceMultiplier  = options[:distanceMultiplier]
         return distanceMultiplier if distanceMultiplier && Mongoid::Geo.mongo_db_version >= 1.7
-        return unit_multiplier[options[:unit]] if options[:unit]        
+
+        return radian_multiplier[options[:unit]] if options[:unit] && Mongoid::Geo.mongo_db_version >= 1.7      
+        unit_multiplier[options[:unit]] if options[:unit]
       end
 
       def unit_multiplier
@@ -125,9 +127,27 @@ module Mongoid
           :ft => 0.305,
           :m => 1,
           :meters => 1,
+          :meter => 1,
           :km => 6371,
-          :m => 3959,
+          :kms => 6371,
+          :mil => 3959,
+          :mile => 3959,
           :miles => 3959
+        }
+      end
+
+      def radian_multiplier
+        { 
+          :feet => 364491.8,
+          :ft => 364491.8,
+          :m => 111170,
+          :meter => 111170,
+          :meters => 111170,
+          :km => 111.17,
+          :kms => 111.17,
+          :mil => 69.407,
+          :mile => 69.407,
+          :miles => 69.407
         }
       end
       
