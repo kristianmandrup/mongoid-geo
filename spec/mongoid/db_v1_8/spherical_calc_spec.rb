@@ -31,7 +31,7 @@ describe 'Mongoid Spherical geonear distance calculations' do
         Mongoid::Geo.mongo_db_version.should == 1.6
         Mongoid::Geo.spherical.should be_false
         
-        # results = Address.geoNear @center.location, :location, :distanceMultiplier => 100
+        # results = Address.geoNear @center.location, :location, :distanceMultiplier => 111.17
         results = Address.geoNear @center.location, :location, :unit => :km
 
         distances = results.map(&:distance)  
@@ -63,7 +63,7 @@ describe 'Mongoid Spherical geonear distance calculations' do
         Mongoid::Geo.mongo_db_version.should == 1.8
         Mongoid::Geo.spherical.should be_false
         
-        # results = Address.geoNear @center.location, :location, :distanceMultiplier => 100
+        # results = Address.geoNear @center.location, :location, :distanceMultiplier => 111.17
         results = Address.geoNear @center.location, :location, :unit => :km
 
         distances = results.map(&:distance)  
