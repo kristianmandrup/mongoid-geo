@@ -1,3 +1,8 @@
+h3. v.0.4.3
+
+Fixes to geoNear calculations to ensure it works in spherical mode and multiple versions of Mongo DB 
+-- Special thanks to *niedhui* 
+
 h3. v.0.4.2
 
 Support for spherical data save mode for lat/lng array using Mongoid::Geo.spherical

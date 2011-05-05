@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
   s.homepage                    = "https://github.com/kristianmandrup/mongoid-geo"
   s.required_rubygems_version   = ">= 1.3.6"
   s.files                       = Dir["lib/**/*"] + ["MIT-LICENSE", "Rakefile", "README.textile"]
-  s.date                        = "2011-05-03"
+  s.date                        = Time.mktime(2011, "may", 4) # fix
 
   s.add_development_dependency  "rspec",          '>= 2.4'
 
@@ -19,5 +19,5 @@ Gem::Specification.new do |s|
   s.add_dependency              'activesupport',  '>= 3.0.4'
   s.add_dependency              'hashie',         '>= 0.4.0'   # https://github.com/okiess/mongo-hashie ???
 
-  s.version                     = "0.4.2"
+  s.version                     = "0.4.3"
 end
