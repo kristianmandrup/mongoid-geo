@@ -56,7 +56,7 @@ describe 'Mongoid Spherical geonear distance calculations' do
         @icc = Address.create(:location => {:lat => 31.2026708, :lng => -121.6024088}, :city => 'icc')
       end
     
-      it "calculate distance wrong since not using spherical mode with Mongo 1.8" do
+      it "calculate distance" do
         # d1 = Geokit::LatLng.distance_between(@center.location,@icc.location,{:units=> :kms}) # 1.8078417965905265
         # d2 = Geokit::LatLng.distance_between(@center.location,@icc.location,{:units=> :kms,:formula => :flat}) # 1.5037404243943175
 
@@ -70,7 +70,7 @@ describe 'Mongoid Spherical geonear distance calculations' do
         puts "distances: #{distances}"
         # # 1.8062052078680642
         hd =  Mongoid::Geo::Haversine.distance(@center.lat, @center.lng, @icc.lat, @icc.lng) * 6371
-        distances[1].should_not be_within(0.05).of(hd)
+        distances[1].should be_within(0.5).of(hd)
       end      
     end
   end
