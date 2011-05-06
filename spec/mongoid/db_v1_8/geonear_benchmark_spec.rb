@@ -7,7 +7,7 @@ def delta
   (rand(10000) / 10000.0) - 0.5
 end
 
-describe 'Mongoid Spherical geonear distance calculations' do
+describe 'Mongoid spherical geoNear distance calculations' do
   context "Spherical mode distance" do
     before do
       Mongoid::Geo.spherical = true
