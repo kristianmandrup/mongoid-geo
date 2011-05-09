@@ -26,6 +26,11 @@ module Mongoid #:nodoc
           end
 
           define_method("#{meth}=") do |value|
+            if options[:geo]
+              self.class.send :field, :distance, :type => Float
+              self.class.send :field, :fromLocation, :type => String
+            end
+
             if options[:type] == Array && options[:geo]
               value = case value
               when String
@@ -37,7 +42,7 @@ module Mongoid #:nodoc
               end
               value = value[0..1] if !value.nil?
             end
-            value.reverse! if Mongoid::Geo.spherical && value
+            value.reverse! if Mongoid::Geo.spherical && value && !value.kind_of?(BSON::ObjectId)
             write_attribute(name, value) 
           end
 

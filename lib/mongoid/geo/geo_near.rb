@@ -25,39 +25,38 @@ module Mongoid
       end
     end
 
-    module Distance
-      attr_reader :distance
-
-      def set_distance dist
-        @distance = dist
-      end
-    end
-
     module Model
       def to_model
         m = klass.where(:_id => _id).first.extend(Mongoid::Geo::Distance)
-        m.set_distance distance
+        m.distance = distance
         m
       end
     end
 
     module Models
-      def to_models
+      def to_models mode = nil
         distance_hash = Hash[ self.map {|item| [item._id, item.distance] } ]
+        from_hash = Hash[ self.map { |item| [item._id, item.fromLocation] } ]
 
         ret = to_criteria.to_a.map do |m|
-          m.extend(Mongoid::Geo::Distance)
-          m.set_distance distance_hash[m._id.to_s]
+          m.distance = distance_hash[m._id.to_s]
+          m.fromLocation = from_hash[m._id.to_s]
+          m.save if mode == :save
           m
         end
-
         ret.sort {|a,b| a.distance <=> b.distance}
       end
+
+      def as_criteria direction = :asc
+        to_models(:save)
+        ids = first.klass.where().map(&:_id)
+        Mongoid::Criteria.new(first.klass).where(:_id.in => ids, :fromLocation => first.fromLocation).send(direction, :distance)
+      end      
       
       def to_criteria
-        ids = map(&:_id)
-        first.klass.where(:_id.in => ids)
-      end
+        ids = map(&:_id)  
+        Mongoid::Criteria.new(first.klass).where(:_id.in => ids).desc(:distance)
+      end      
     end
 
     module Near
@@ -97,6 +96,7 @@ module Mongoid
           # Calculate distance in KM or Miles if mongodb < 1.7
           r[distance_meth] ||= calc_distance(r, center, location_attribute, options) if Mongoid::Geo.mongo_db_version < 1.7
           r['klass'] = klass
+          r['from'] = center.hash
         end
         query_result
       end
@@ -105,10 +105,11 @@ module Mongoid
         qres.map do |qr|
           res = Hashie::Mash.new(qr['obj'].to_hash).extend(Mongoid::Geo::Model)
           res.klass = qr['klass']
+          res.fromLocation = qr['from']
           res.distance = qr[distance_meth]
           res._id = qr['obj']['_id'].to_s
           res
-        end
+        end          
       end
       
       private

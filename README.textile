@@ -123,9 +123,9 @@ With the new @:geo@ option supplied by _mongoid-geo_ :
   Mongoid::Geo.spherical = true
 </pre>
 
-h2. News update (March 2)
+h2. News update (May 9, 2011)
 
-* Added support for geoNear queries!!!
+The geoNear queries can now convert the result into a Mongoid::Criteria, where distance from a given location is sorted in either descending or ascending (default) order
 
 <pre>
 class Address
@@ -145,18 +145,40 @@ class Position
   field :pos, :type => Array, :geo => true
   ...
 end
+</pre>
 
-# Find all positions sorted nearest to the address loation
-nearest_positions = Position.geoNear(another_address.location, :pos)
+Find all positions sorted nearest to the address loation
+@nearest_positions = Position.geoNear(another_address.location, :pos)@
 
-# perform distance locations in Speherical mode inside Mongo DB (default is :plane)
-nearest_positions = Position.geoNear(another_address.location, :pos, :mode => :sphere)
+Perform distance locations in Speherical mode inside Mongo DB (default is :plane)
+@nearest_positions = Position.geoNear(another_address.location, :pos, :mode => :sphere)@
 
-# other options supported are: :num, :maxDistance, :distanceMultiplier, :query
+Other options supported are: @:num, :maxDistance, :distanceMultiplier, :query@
 
-# GeoNear distance returns distance in degrees. Use distanceMultiplier to return in Miles or KM.
-# set distanceMultiplier to 6371 to get distance in KM
-# set distanceMultiplier to 3963.19 to get distance in Miles
+GeoNear distance returns distance in degrees. Use distanceMultiplier to return in Miles or KM.
+
+Set :distanceMultiplier to 6371 to get distance in KM
+Set :distanceMultiplier to 3963.19 to get distance in Miles
+
+You can also use the :unit option instead like this (supports :feet, :meters, :kms, :miles)
+
+results = Address.geoNear @center.location, :location, :unit => :km
+
+The query result is returned as an Array of Hashies
+
+The result can be then converted to a Mongoid::Criteria if needed
+
+pp results.as_criteria.to_a.map(&:distance)
+pp results.as_criteria(:desc).to_a.map(&:distance)
+
+Or converted to an array of Model instances
+
+pp results.to_models.map(&:distance) 
+
+Note that the :fromLocation field, stores the location the distance was last calculated as a hash of the Point it was calculated from
+
+@[23.5, -47].hash@ 
+
 </pre>
 
 If you need to operate on the Mongoid models referenced by the query result, simply call #to_models on it

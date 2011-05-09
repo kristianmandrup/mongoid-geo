@@ -14,7 +14,7 @@ class Address
 
   field :pos, :type => Array, :geo => true, :lat => :latitude, :lng => :longitude
 
-  key :street
+  # key :street
 
   geo_index :location
 end

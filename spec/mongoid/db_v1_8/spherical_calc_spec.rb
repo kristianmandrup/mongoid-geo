@@ -20,8 +20,10 @@ describe 'Mongoid Spherical geonear distance calculations' do
       end
 
       before :each do
-        @center = Address.create(:location => {:lat => 31.2010839, :lng => -121.583509}, :city => 'center')
-        @icc = Address.create(:location => {:lat => 31.2026708, :lng => -121.6024088}, :city => 'icc')
+        @center = Address.new(:location => {:lat => 31.2010839, :lng => -121.583509}, :city => 'center')
+        @center.save!
+        @icc = Address.new(:location => {:lat => 31.2026708, :lng => -121.6024088}, :city => 'icc')
+        @icc.save!
       end
     
       it "calculate distance" do
@@ -33,6 +35,13 @@ describe 'Mongoid Spherical geonear distance calculations' do
         
         # results = Address.geoNear @center.location, :location, :distanceMultiplier => 111.17
         results = Address.geoNear @center.location, :location, :unit => :km
+        
+        puts "as criteria, sort by descending distance"
+        pp results.as_criteria.to_a.map(&:distance)
+        pp results.as_criteria(:desc).to_a.map(&:distance)
+
+        puts "to models"        
+        pp results.to_models
 
         distances = results.map(&:distance)  
         puts "distances: #{distances}"
