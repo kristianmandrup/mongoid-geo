@@ -4,12 +4,15 @@ A Geo extension for Mongoid.
 
 "MongoDB Geospatial Indexing":http://www.mongodb.org/display/DOCS/Geospatial+Indexing
 
-* Supports Mongoid 1.7 sphere distance calculations and
+* Supports Mongo DB 1.7+ sphere distance calculations
 * Adds nearSphere inclusion method
 * Adds a set of geo related inflections
 * Adds an exta option for defining a "geo" field, to have the generated attr_writer parse and convert strings etc. to float arrays.
+* Calculate locations near a given point (geoNear)
 
 h2. Mongoid 2 geo features
+
+The following summarized what geo functionality is already provided by Mongoid 2.0 (as far as I could tell, May 9th, 2011)
 
 h3. Find addresses near a point
 
@@ -38,26 +41,29 @@ h3. Create geo-spatial index
   autocreate_indexes: true
 </pre>
 
-These are the only geo features I could find are currently built-in for Mongoid 2.
-_Mongoid Geo_ implements the following extra features...
+These are the only geo features I could find that are currently built-in for Mongoid 2.
+
+_Mongoid Geo_ implements some nice extra geo features:
 
 h1. Mongoid Geo features
 
-The following briefly demonstrates all the features that Mongoid Geo currently provides
+The following briefly demonstrates all the features that *mongoid-geo* provides:
 
 h2. Geo index
 
-Old/Manual way: @index [[ :location, Mongo::GEO2D ]], :min => -180, :max => 180@
+A new _geo_index_ class method 
 
-Using new _geo_index_ class method : @geo_index :location@
+Usage example:
+
+@geo_index :location@
 
 Note: For embedded documents, you must define the index in the root collection class. (davemitchell)
 
-h2. Special geo-array attribute writer
+h2. Geo option for Array GPS location field
 
-When setting a geo-location array, the setter should try to convert the value to an array of floats
+Objective: When setting a geo GPS location array, the setter should try to convert the value to an array of floats
 
-Old/Manual way:
+The "old" manual way:
 
 <pre>
   class Person
@@ -69,7 +75,9 @@ Old/Manual way:
   end
 </pre>
 
-With the new @:geo@ option supplied by _mongoid-geo_ :
+*mongoid-geo* provides a new @:geo@ option that can be used with any Array field:
+
+Usage example:
 
 <pre>
   class Person
@@ -121,11 +129,12 @@ With the new @:geo@ option supplied by _mongoid-geo_ :
 
   # or alternatively 
   Mongoid::Geo.spherical = true
+  
+  address.location = "23.5, -47"
+  address.location.should == [23.5, -47].reverse  
 </pre>
 
-h2. News update (May 9, 2011)
-
-The geoNear queries can now convert the result into a Mongoid::Criteria, where distance from a given location is sorted in either descending or ascending (default) order
+h2. geoNear
 
 <pre>
 class Address
@@ -148,46 +157,42 @@ end
 </pre>
 
 Find all positions sorted nearest to the address loation
+
 @nearest_positions = Position.geoNear(another_address.location, :pos)@
 
 Perform distance locations in Speherical mode inside Mongo DB (default is :plane)
+
 @nearest_positions = Position.geoNear(another_address.location, :pos, :mode => :sphere)@
 
 Other options supported are: @:num, :maxDistance, :distanceMultiplier, :query@
 
 GeoNear returns each distance calculated in degrees. Use the :distanceMultiplier or :unit option to return in the unit of your choice (see unit.rb).
 
-Set :distanceMultiplier to 6371 to get distance in KM
-Set :distanceMultiplier to 3963.19 to get distance in Miles
+Set @:distanceMultiplier = 6371@ to get distance in KMs
+Set @@:distanceMultiplier = @3963.19@ to get distance in Miles
 
-You can also use the :unit option instead like this (supports :feet, :meters, :kms, :miles)
+You can also use the :unit option instead like this (supports :feet, :meters, :kms, :miles):
 
-@results = Address.geoNear @center.location, :location, :unit => :km, :dist_order => :desc@
+@results = Address.geoNear @center.location, :location, :unit => :feet, :dist_order => :desc@
 
-The geoNear query result is returned as Mongoid::Criteria
+The _geoNear_ query result is returned as a _Mongoid::Criteria_
 
 @results.desc(:distance).map(&:distance)@
 
-Note that the :fromLocation field, stores the location the distance was last calculated as a hash of the Point it was calculated from
+Note that the @:fromLocation@ field, stores the location the distance was last calculated as a Hash of the GPS location point it was calculated from:
 
 @[23.5, -47].hash@ 
 
+This hash can be retrieved (and used for comparison?) using the @fromHash@ field 
+
+@from = results.first.fromHash@
+
+You can also at any time get the GPS location point which the distance of any result instance was calculated from, using the @fromPoint field
+
+@from = results.first.fromPoint@
 </pre>
 
-If you need to operate on the Mongoid models referenced by the query result, simply call #to_models on it
-Fx to get the city of the first model instance from the query result:
-
-@nearest_city = Position.geoNear(another_address.location, :pos).to_models.first.city@
-
-You can also use a #to_model method on an individual query result like this:
-
-@nearest_city = Position.geoNear(another_address.location, :pos).first.to_model.city@
-
-# the model returned also has a distance accessor populated with the distance calculated by running the geoNear query
-
-@nearest_distance = Position.geoNear(another_address.location, :pos).first.to_model.distance@
-
-You can now explicitly set/configure the Mongo DB version used. This will affect whether built-in Mongo DB distance calculation will be used or using standalone Ruby Haversine algorithm. By default the version is set to 1.5. See _geo_near_ specs for more details/info on this.
+You can now explicitly set/configure the Mongo DB version used. This will affect whether built-in Mongo DB distance calculation will be used or using standalone Ruby Haversine algorithm. By default the Mongo DB version is set to 1.8 (as of May 9, 2011) . See _geo_near_ specs for more details/info on this.
 
 @Mongoid::Geo.mongo_db_version = 1.7@
 

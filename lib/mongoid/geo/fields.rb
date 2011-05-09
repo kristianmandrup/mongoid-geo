@@ -28,7 +28,8 @@ module Mongoid #:nodoc
           define_method("#{meth}=") do |value|
             if options[:geo]
               self.class.send :field, :distance, :type => Float
-              self.class.send :field, :fromLocation, :type => String
+              self.class.send :field, :fromHash, :type => String
+              self.class.send :field, :fromPoint, :type => Array
             end
 
             if options[:type] == Array && options[:geo]

@@ -37,7 +37,9 @@ describe 'Mongoid Spherical geonear distance calculations' do
         results = Address.geoNear @center.location, :location, :unit => :km
         
         distances = results.asc(:distance).map(&:distance)  
-        puts "distances: #{distances}"
+        from = results.first.fromPoint
+
+        puts "distances: #{distances}, calculated from: #{from}"
         # # 1.8062052078680642
         hd =  Mongoid::Geo::Haversine.distance(@center.lat, @center.lng, @icc.lat, @icc.lng) * 6371
         distances.last.should be_within(0.005).of(hd)
