@@ -11,6 +11,7 @@ module Mongoid::Geo
       when Hash
         return [self[:lat], self[:lng]] if self[:lat]
         return [self[:latitude], self[:longitude]] if self[:latitude]
+        return [self['0'].to_f, self['1'].to_f] if self['0']
         raise "Hash must contain either :lat, :lng or :latitude, :longitude keys to be converted to a geo point"
       when nil
         nil
