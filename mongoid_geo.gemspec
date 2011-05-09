@@ -19,5 +19,5 @@ Gem::Specification.new do |s|
   s.add_dependency              'activesupport',  '>= 3.0.4'
   s.add_dependency              'hashie',         '>= 0.4.0'   # https://github.com/okiess/mongo-hashie ???
 
-  s.version                     = "0.5.0"
+  s.version                     = "0.5.1"
 end

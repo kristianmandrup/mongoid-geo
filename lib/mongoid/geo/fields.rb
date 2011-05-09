@@ -42,7 +42,7 @@ module Mongoid #:nodoc
               end
               value = value[0..1] if !value.nil?
             end
-            value.reverse! if Mongoid::Geo.spherical && value && !value.kind_of?(BSON::ObjectId)
+            value.reverse! if Mongoid::Geo.spherical && value && value.kind_of?(Array)
             write_attribute(name, value) 
           end
 

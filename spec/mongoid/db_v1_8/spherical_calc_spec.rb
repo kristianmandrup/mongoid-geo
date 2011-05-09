@@ -36,14 +36,7 @@ describe 'Mongoid Spherical geonear distance calculations' do
         # results = Address.geoNear @center.location, :location, :distanceMultiplier => 111.17
         results = Address.geoNear @center.location, :location, :unit => :km
         
-        puts "as criteria, sort by descending distance"
-        pp results.as_criteria.to_a.map(&:distance)
-        pp results.as_criteria(:desc).to_a.map(&:distance)
-
-        puts "to models"        
-        pp results.to_models
-
-        distances = results.map(&:distance)  
+        distances = results.asc(:distance).map(&:distance)  
         puts "distances: #{distances}"
         # # 1.8062052078680642
         hd =  Mongoid::Geo::Haversine.distance(@center.lat, @center.lng, @icc.lat, @icc.lng) * 6371
@@ -65,7 +58,7 @@ describe 'Mongoid Spherical geonear distance calculations' do
         @icc = Address.create(:location => {:lat => 31.2026708, :lng => -121.6024088}, :city => 'icc')
       end
     
-      it "calculate distance" do
+      it "calculate distance and sort them in descending distance order" do
         # d1 = Geokit::LatLng.distance_between(@center.location,@icc.location,{:units=> :kms}) # 1.8078417965905265
         # d2 = Geokit::LatLng.distance_between(@center.location,@icc.location,{:units=> :kms,:formula => :flat}) # 1.5037404243943175
 
@@ -73,13 +66,13 @@ describe 'Mongoid Spherical geonear distance calculations' do
         Mongoid::Geo.spherical.should be_false
         
         # results = Address.geoNear @center.location, :location, :distanceMultiplier => 111.17
-        results = Address.geoNear @center.location, :location, :unit => :km
+        results = Address.geoNear @center.location, :location, :unit => :km, :dist_order => :desc
 
         distances = results.map(&:distance)  
         puts "distances: #{distances}"
         # # 1.8062052078680642
         hd =  Mongoid::Geo::Haversine.distance(@center.lat, @center.lng, @icc.lat, @icc.lng) * 6371
-        distances[1].should be_within(0.5).of(hd)
+        # distances.first.should be_within(0.5).of(hd)
       end      
     end
   end
@@ -111,12 +104,12 @@ describe 'Mongoid Spherical geonear distance calculations' do
         Mongoid::Geo.spherical.should be_true
         
         results = Address.geoNear @center.location, :location, :unit => :km
-
-        distances = results.map(&:distance)  
+        
+        distances = results.desc(:distance).map(&:distance)  
         puts "distances: #{distances}"
         # # 1.8062052078680642
         hd =  Mongoid::Geo::Haversine.distance(@center.lat, @center.lng, @icc.lat, @icc.lng) * 6371
-        distances[1].should be_within(0.5).of(hd)
+        distances.first.should be_within(0.5).of(hd)
       end      
     end
     

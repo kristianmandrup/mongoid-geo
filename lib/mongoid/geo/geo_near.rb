@@ -47,10 +47,12 @@ module Mongoid
         ret.sort {|a,b| a.distance <=> b.distance}
       end
 
-      def as_criteria direction = :asc
-        to_models(:save)
-        ids = first.klass.where().map(&:_id)
-        Mongoid::Criteria.new(first.klass).where(:_id.in => ids, :fromLocation => first.fromLocation).send(direction, :distance)
+      def as_criteria direction = nil
+        to_models(:save) 
+        ids = first.klass.all.map(&:_id)
+        crit = Mongoid::Criteria.new(first.klass).where(:_id.in => ids, :fromLocation => first.fromLocation)
+        crit = crit.send(direction, :distance) if direction
+        crit
       end      
       
       def to_criteria
@@ -63,7 +65,7 @@ module Mongoid
       def geoNear(center, location_attribute, options = {})
         center = center.respond_to?(:collection) ? center.send(location_attribute) : center
         query = create_query(self, center, options)
-        create_result(query_result(self, query, center, location_attribute, options)).extend(Mongoid::Geo::Models)
+        create_result(query_result(self, query, center, location_attribute, options)).extend(Mongoid::Geo::Models).as_criteria(options[:dist_order])
       end
 
       protected

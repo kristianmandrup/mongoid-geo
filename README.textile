@@ -155,25 +155,18 @@ Perform distance locations in Speherical mode inside Mongo DB (default is :plane
 
 Other options supported are: @:num, :maxDistance, :distanceMultiplier, :query@
 
-GeoNear distance returns distance in degrees. Use distanceMultiplier to return in Miles or KM.
+GeoNear returns each distance calculated in degrees. Use the :distanceMultiplier or :unit option to return in the unit of your choice (see unit.rb).
 
 Set :distanceMultiplier to 6371 to get distance in KM
 Set :distanceMultiplier to 3963.19 to get distance in Miles
 
 You can also use the :unit option instead like this (supports :feet, :meters, :kms, :miles)
 
-results = Address.geoNear @center.location, :location, :unit => :km
+@results = Address.geoNear @center.location, :location, :unit => :km, :dist_order => :desc@
 
-The query result is returned as an Array of Hashies
+The geoNear query result is returned as Mongoid::Criteria
 
-The result can be then converted to a Mongoid::Criteria if needed
-
-pp results.as_criteria.to_a.map(&:distance)
-pp results.as_criteria(:desc).to_a.map(&:distance)
-
-Or converted to an array of Model instances
-
-pp results.to_models.map(&:distance) 
+@results.desc(:distance).map(&:distance)@
 
 Note that the :fromLocation field, stores the location the distance was last calculated as a hash of the Point it was calculated from
 
