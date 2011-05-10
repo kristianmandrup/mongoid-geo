@@ -18,9 +18,11 @@ module Mongoid #:nodoc
             define_method(lng_meth) { read_attribute(name).try(:[], Mongoid::Geo.lng_index) }
                         
             define_method "#{lat_meth}=" do |value|
+              write_attribute(name, [nil,nil]) if !read_attribute(name).present?
               send(name)[Mongoid::Geo.lat_index] = value
             end            
             define_method "#{lng_meth}=" do |value|
+              write_attribute(name, [nil,nil]) if !read_attribute(name).present?
               send(name)[Mongoid::Geo.lng_index] = value
             end            
           end
