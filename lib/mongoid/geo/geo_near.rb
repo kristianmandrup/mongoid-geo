@@ -39,9 +39,9 @@ module Mongoid
         from_hash = Hash[ self.map { |item| [item._id, item.fromPoint] } ]
 
         ret = to_criteria.to_a.map do |m|
-          m.distance = distance_hash[m._id.to_s]
-          m.fromPoint = from_hash[m._id.to_s]
-          m.fromHash = from_hash[m._id.to_s].hash
+          m[:distance] = distance_hash[m._id.to_s]
+          m[:fromPoint] = from_hash[m._id.to_s]
+          m[:fromHash] = from_hash[m._id.to_s].hash
           m.save if mode == :save
           m
         end
@@ -64,7 +64,7 @@ module Mongoid
 
     module Near
       def geoNear(center, location_attribute, options = {})
-        center = center.respond_to?(:collection) ? center.send(location_attribute) : center
+        center = center.respond_to?(:collection) ? eval("center.#{location_attribute}") : center
         query = create_query(self, center, options)
         create_result(query_result(self, query, center, location_attribute, options)).extend(Mongoid::Geo::Models).as_criteria(options[:dist_order])
       end
@@ -134,9 +134,10 @@ module Mongoid
         klass.collection.db.command(query)
       end
 
-      def calc_distance r, center, location_attribute, options        
+      def calc_distance r, center, location_attribute, options     
         distanceMultiplier = distance_multiplier(options)
-        loc     = r['obj'][location_attribute.to_s].extend(Mongoid::Geo::Point).to_points
+        loc     = location_attribute.to_s.split('.').inject(r['obj']) { |node,attribute| node[attribute] }.extend(Mongoid::Geo::Point).to_points
+        
         center  = center.extend(Mongoid::Geo::Point).to_points
         dist    = Mongoid::Geo::Haversine.distance(center.first, center.last, loc.first, loc.last) 
         dist    *= distanceMultiplier if distanceMultiplier
