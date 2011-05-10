@@ -55,6 +55,11 @@ describe Mongoid::Fields do
       address.location.should == [23.5, -49]
     end
     
+    it "should work with point Hash keys 0 and 1" do
+      address.location = {"0" => 41, "1" => -71}
+      address.location.should == [41, -71]
+    end
+    
     
     it "should work with point hashes using the first point only" do
       address.location = [{:lat => 23.5, :lng => -49}, {:lat => 72, :lng => -49}]
@@ -115,6 +120,21 @@ describe Mongoid::Fields do
       address.location.should be_nil
       address.lat.should      be_nil
       address.lng.should      be_nil
-    end 
+    end
+    
+    it "should allow lat then lon assignment when nil" do
+      address.location = nil
+      address.lat = 41
+      address.lng = -71
+      address.location.should == [41, -71]
+    end
+    
+    it "should allow lon then lat assignment when nil" do
+      address.location = nil
+      address.lng = -71
+      address.lat = 41
+      address.location.should == [41, -71]
+    end
+    
   end
 end
