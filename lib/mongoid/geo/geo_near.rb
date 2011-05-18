@@ -68,6 +68,7 @@ module Mongoid
         query = create_query(self, center, options)
         create_result(query_result(self, query, center, location_attribute, options)).extend(Mongoid::Geo::Models).as_criteria(options[:dist_order])
       end
+      alias_method :geo_near, :geoNear
 
       protected
 
