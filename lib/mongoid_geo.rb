@@ -5,6 +5,8 @@ module Mongoid
     autoload :Fields, 'mongoid/geo/fields'
     autoload :Criteria, 'mongoid/geo/criteria'
     autoload :Index, 'mongoid/geo/index'
-    autoload :GeoNear, 'mongoid/geo/geo_near'
+    autoload :Model, 'mongoid/geo/model'
+    autoload :Models, 'mongoid/geo/models'
+    autoload :Near, 'mongoid/geo/near'
   end
 end
