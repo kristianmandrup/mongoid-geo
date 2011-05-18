@@ -2,9 +2,13 @@
 require 'active_support'
 require 'hashie'
 require 'mongoid_geo/haversine'
+require 'mongoid_geo/model'
+require 'mongoid_geo/models'
 
 module Mongoid
   module Geo
+    extend Mongoid::Geo::Model
+    extend Mongoid::Geo::Models
     class << self
 
       def spherical_mode mode = true, &block
