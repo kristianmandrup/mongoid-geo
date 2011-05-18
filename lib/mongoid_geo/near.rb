@@ -1,7 +1,7 @@
 #require 'net/http'
 require 'active_support'
 require 'hashie'
-require 'mongoid/geo/haversine'
+require 'mongoid_geo/haversine'
 
 module Mongoid
   module Geo
