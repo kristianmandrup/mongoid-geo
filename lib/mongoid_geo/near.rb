@@ -6,8 +6,6 @@ require 'mongoid_geo/haversine'
 module Mongoid
   module Geo
     class << self
-      attr_accessor :mongo_db_version
-      attr_accessor :spherical
 
       def spherical_mode mode = true, &block
         @spherical, old_spherical, result = mode, @spherical, @spherical
