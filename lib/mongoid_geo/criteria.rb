@@ -1,0 +1,6 @@
+require 'mongoid_geo/criterion/complex'
+require 'mongoid_geo/criterion/inclusion'
+require 'mongoid_geo/criterion/outer_operator'
+require 'mongoid_geo/criterion/twin_operators'
+require 'mongoid_geo/inflections'
+require 'mongoid_geo/criteria_helpers'

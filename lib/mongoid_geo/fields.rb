@@ -10,17 +10,18 @@ module Mongoid #:nodoc
             define_method(meth) { read_attribute(name) }
           end
 
-          if options[:type] == Array && options[:geo]            
+          if options[:type] == Array && options[:geo]
             lat_meth = options[:lat] || "lat"
             lng_meth = options[:lng] || "lng"
 
             define_method(lat_meth) { read_attribute(name).try(:[], Mongoid::Geo.lat_index) }
             define_method(lng_meth) { read_attribute(name).try(:[], Mongoid::Geo.lng_index) }
-                        
+
             define_method "#{lat_meth}=" do |value|
               write_attribute(name, [nil,nil]) if !read_attribute(name).present?
               send(name)[Mongoid::Geo.lat_index] = value
-            end            
+            end
+
             define_method "#{lng_meth}=" do |value|
               write_attribute(name, [nil,nil]) if !read_attribute(name).present?
               send(name)[Mongoid::Geo.lng_index] = value

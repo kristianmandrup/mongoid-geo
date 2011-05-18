@@ -1,13 +1,13 @@
-require 'mongoid/geo/index'
+require 'mongoid_geo/index'
 
 module Mongoid
   module Geo
-    autoload :Point, 'mongoid/geo/point'
-    autoload :Unit, 'mongoid/geo/unit'
-    autoload :Fields, 'mongoid/geo/fields'
-    autoload :Criteria, 'mongoid/geo/criteria'
-    autoload :Model, 'mongoid/geo/model'
-    autoload :Models, 'mongoid/geo/models'
-    autoload :Near, 'mongoid/geo/near'
+    autoload :Point, 'mongoid_geo/point'
+    autoload :Unit, 'mongoid_geo/unit'
+    autoload :Fields, 'mongoid_geo/fields'
+    autoload :Criteria, 'mongoid_geo/criteria'
+    autoload :Model, 'mongoid_geo/model'
+    autoload :Models, 'mongoid_geo/models'
+    autoload :Near, 'mongoid_geo/near'
   end
 end
