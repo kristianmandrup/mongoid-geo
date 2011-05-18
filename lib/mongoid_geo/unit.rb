@@ -2,7 +2,7 @@ module Mongoid
   module Geo
     class Unit
       class << self
-        def key unit = :km
+        def key(unit = :km)
           unit = unit.to_sym
           methods.grep(/_unit/).each do |meth|
             return meth.to_s.chomp('_unit').to_sym if send(meth).include? unit
@@ -10,7 +10,7 @@ module Mongoid
           raise ArgumentError, "Unknown unit key: #{unit}"
         end
 
-        def distMultiplier unit = :km
+        def distMultiplier(unit = :km)
           unit_key = key(unit)
           return radian_multiplier[unit_key] if unit_key && Mongoid::Geo.mongo_db_version >= 1.7      
           unit_multiplier[unit_key] if unit_key
