@@ -23,7 +23,7 @@ module Mongoid
         formula = Mongoid::Geo.distance_formula
 
         case formula
-          when :sphere
+          when :spherical
             begin
               units_sphere_multiplier(units) * 
               Math.acos( 
