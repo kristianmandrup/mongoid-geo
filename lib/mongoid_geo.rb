@@ -1,3 +1,5 @@
+require 'mongoid/geo/index'
+
 module Mongoid
   module Geo
     autoload :Point, 'mongoid/geo/point'
@@ -9,5 +11,3 @@ module Mongoid
     autoload :Near, 'mongoid/geo/near'
   end
 end
-
-require 'mongoid/geo/index'
