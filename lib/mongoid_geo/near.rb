@@ -1,4 +1,3 @@
-#require 'net/http'
 require 'active_support'
 require 'hashie'
 require 'mongoid_geo/haversine'
@@ -9,23 +8,6 @@ module Mongoid
   module Geo
     extend Mongoid::Geo::Model
     extend Mongoid::Geo::Models
-    class << self
-
-      def spherical_mode mode = true, &block
-        @spherical, old_spherical, result = mode, @spherical, @spherical
-        result = yield if block
-        @spherical = old_spherical
-        result
-      end
-
-      def lat_index
-        @spherical ? 1 : 0
-      end
-
-      def lng_index
-        @spherical ? 0 : 1
-      end
-    end
 
     module Near
       def geoNear(center, location_attribute, options = {})

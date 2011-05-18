@@ -12,9 +12,28 @@ module Mongoid
     autoload :Criteria, 'mongoid_geo/criteria'
     autoload :Near, 'mongoid_geo/near'
 
-    def self.setup
-      yield self
-    end
+    class << self
 
+      def setup
+        yield self
+      end
+
+      def spherical_mode(&block)
+        mode = Mongoid::Geo.distance_formula
+        @spherical, old_spherical, result = mode, @spherical, @spherical
+        result = yield if block
+        @spherical = old_spherical
+        result
+      end
+
+      def lat_index
+        @spherical ? 1 : 0
+      end
+
+      def lng_index
+        @spherical ? 0 : 1
+      end
+
+    end
   end
 end
