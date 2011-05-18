@@ -19,8 +19,8 @@ module Mongoid
 
         return 0.0 if from == to #return 0.0 if points are have the same coordinates
 
-        units = Mongoid::Geo.default_units ||= :km
-        formula = Mongoid::Geo.distance_formula ||= :sphere
+        units = Mongoid::Geo.default_units
+        formula = Mongoid::Geo.distance_formula
 
         case formula
           when :sphere
