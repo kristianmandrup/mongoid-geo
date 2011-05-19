@@ -1,6 +1,16 @@
+h3. May 19, 2011
+
+- removed date field from gemspec
+
+h3. May 17, 2011
+
+Released version 0.5.4
+
+- alias methods using underscore '_' for methods such as #near_sphere
+
 h3. May 10, 2011
 
-Release version 0.5.3 (improvements by davemitchell)
+Released version 0.5.3 (improvements by davemitchell)
 
 - Accept hash with 0, 1 for lat,lng (support auto conversion from a multipart post as an array)
 - updated fields to support embedded location document
