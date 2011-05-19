@@ -1,25 +1,21 @@
-# encoding: UTF-8
-require 'rubygems'
-begin
-  require 'bundler/setup'
-rescue LoadError
-  puts 'You must `gem install bundler` and `bundle install` to run rake tasks'
+require "rubygems"
+require "bundler"
+Bundler.setup
+
+require "rake"
+require "rspec"
+require "rspec/core/rake_task"
+
+RSpec::Core::RakeTask.new(:spec) do |spec|
+  spec.pattern = "spec/**/*_spec.rb"
 end
 
-require 'rake'
-require 'rake/rdoctask'
+RSpec::Core::RakeTask.new("spec:unit") do |spec|
+  spec.pattern = "spec/unit/**/*_spec.rb"
+end
 
-require 'rspec/core'
-require 'rspec/core/rake_task'
-
-RSpec::Core::RakeTask.new(:spec)
+RSpec::Core::RakeTask.new("spec:functional") do |spec|
+  spec.pattern = "spec/functional/**/*_spec.rb"
+end
 
 task :default => :spec
-
-Rake::RDocTask.new(:rdoc) do |rdoc|
-  rdoc.rdoc_dir = 'rdoc'
-  rdoc.title    = 'Mongoid Geo'
-  rdoc.options << '--line-numbers' << '--inline-source'
-  rdoc.rdoc_files.include('README.rdoc')
-  rdoc.rdoc_files.include('lib/**/*.rb')
-end

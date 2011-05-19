@@ -6,6 +6,10 @@ module Mongoid
     mattr_accessor :distance_formula
     mattr_accessor :mongo_db_version
 
+    self.default_units ||= :miles
+    self.distance_formula ||= :spherical
+    self.mongo_db_version ||= 1.8
+
     autoload :Point, 'mongoid_geo/point'
     autoload :Unit, 'mongoid_geo/unit'
     autoload :Fields, 'mongoid_geo/fields'
@@ -13,7 +17,6 @@ module Mongoid
     autoload :Near, 'mongoid_geo/near'
 
     class << self
-
       def setup
         yield self
       end
@@ -33,7 +36,6 @@ module Mongoid
       def lng_index
         @spherical ? 0 : 1
       end
-
     end
   end
 end
