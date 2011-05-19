@@ -12,6 +12,7 @@ gem "SystemTimer"
 
 group :test, :development do
   gem "rspec",  ">= 2.4"
+  gem "mocha"
   gem "mongoid-rspec"
   gem "bundler", ">=1"
 end

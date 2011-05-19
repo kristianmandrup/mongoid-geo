@@ -58,23 +58,23 @@ module Mongoid
       
         protected
 
-        def feet_unit 
+        def feet_unit
           [:ft, :feet, :foot]
         end
       
-        def meters_unit 
+        def meters_unit
           [:m, :meter, :meters]
         end
 
-        def kms_unit 
+        def kms_unit
           [:km, :kms, :kilometer, :kilometers]
         end
 
-        def miles_unit 
+        def miles_unit
           [:mil, :mile, :miles]
         end
 
-        def radians_unit 
+        def radians_unit
           [:rad, :radians]
         end
       end
