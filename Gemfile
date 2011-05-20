@@ -5,8 +5,21 @@ source "http://rubygems.org"
 # gem 'ruby-debug19'
 
 gem 'mongoid',  '2.0.1'
-gem "bson", ">= 1.3" # for non jruby apps, require bson_ext in your Gemfile to boost performance
+gem 'bson', :platforms => :jruby
+gem 'bson_ext', :platforms => :mri
+gem 'activesupport'
+gem 'hashie'
 
-group :test, :development do
-  gem "rspec",  ">= 2.4"
+group :development do
+  gem "rspec", "~> 2.3.0"
+  gem "bundler", "~> 1.0.0"
+  gem "jeweler", "~> 1.5.2"
+  gem "rcov", ">= 0"
+end
+
+group :test do
+  gem 'rails'
+  gem 'rspec-rails'
+  gem 'capybara'
+  gem "rspec", "~> 2.3.0"
 end
