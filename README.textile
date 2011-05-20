@@ -317,8 +317,8 @@ You can also use a hash to define the circle, with @:center@ and @:radius@ keys
 <pre>
   places.where(:location.within_center => {:center => [50, 40], :radius => 4})
 </pre>
-
-Or use an object (which must have the methods #lower_left and #upper_right that return the points of the bounding box)
+                                              
+Or use an object (which must have the methods #center and #radius that return the center and radius of the circle))
 
 <pre>
   circle = (Struct.new :center, :radius).new
@@ -327,3 +327,16 @@ Or use an object (which must have the methods #lower_left and #upper_right that 
 
   places.where(:location.within_center => circle)
 </pre>
+               
+
+h2. Note on the specs
+
+The specs still use the old "Javascript" like method convention, such as _#nearSphere_ 
+Don't let that fool you ;)
+
+h2. Contribute
+
+*Please feel free to contribute to the project!*
+
+I aim to deliver a complete *geo* package for use with _Mongoid_. This gem should work nicely with _geo_calc_ and _geo_vectors_ that I'm also working on.
+Please help me with these gems also and help make sure they all play nice and work together!
