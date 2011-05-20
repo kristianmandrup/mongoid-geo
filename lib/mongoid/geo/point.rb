@@ -1,41 +1,19 @@
 module Mongoid::Geo
   module Point
-    # convert hash or object to [x, y] of floats
     def to_points
-      v = self.kind_of?(Array) ? self.map {|p| p.kind_of?(Fixnum) ? p.to_f : p.extend(Mongoid::Geo::Point).to_point } : self
-      v.flatten
+      coordinates = self.kind_of?(Array) ? self.map{|coordinate| coordinate.to_f} : self.to_point
+      coordinates.flatten
     end
 
     def to_point
       case self
       when Hash
-        return [self[:lat], self[:lng]] if self[:lat]
-        return [self[:latitude], self[:longitude]] if self[:latitude]
-        return [self['0'].to_f, self['1'].to_f] if self['0']
+        return [self[:lng]], self[:lat] if self[:lat] && self.has_key?(:lat) && self.has_key?(:lng)
+        return [self[:longitude], self[:latitude]] if self.has_key?(:longitude) && self.has_key?(:latitude)
         raise "Hash must contain either :lat, :lng or :latitude, :longitude keys to be converted to a geo point"
-      when nil
-        nil
-      when Array
-        self.map(&:to_f)
       else
-        obj   = self.send(:location) if respond_to? :location
-        obj ||= self.send(:position) if self.respond_to? :position
-        obj ||= self
-        get_the_location obj        
+        raise "Invalid Geo Input. Please use either a Hash or an Array. Remember that Longitude must always be the first value in an Array."
       end
-    end
-
-    private
-    
-    def get_the_location obj
-      # if Mongoid::Geo.spherical
-      #   return [obj.lng, obj.lat] if obj.respond_to? :lat
-      #   return [obj.longitude, obj.latitude] if obj.respond_to? :latitude
-      # else
-        return [obj.lat, obj.lng] if obj.respond_to? :lat
-        return [obj.latitude, obj.longitude] if obj.respond_to? :latitude
-      # end
-      obj.to_f
     end
   end
 end
