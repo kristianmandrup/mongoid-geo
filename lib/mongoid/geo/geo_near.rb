@@ -31,6 +31,7 @@ module Mongoid
         query = create_query(self, center, options)
         create_result(query_result(self, query, center, location_attribute, options))
       end
+      alias_method :geo_near, :geoNear
 
       protected
 

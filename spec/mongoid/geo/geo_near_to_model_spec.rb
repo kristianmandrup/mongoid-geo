@@ -20,19 +20,14 @@ describe Mongoid::Geo::Near do
         Mongoid::Geo.mongo_db_version = 1.7
         
         address.location = "23.5, -47"
-        hashies = Address.geoNear(address, :location)
-
-        models = hashies.to_models
-
-        models.first.distance.should == hashies.first.distance
-        
-        models.first.lat.should == 45
+        results = Address.geoNear(address, :location)
+        results.first.lat.should == 45
         
         # if Mongo DB < 1.7 installed but Mongoid Geo configured for 1.7 
         #models.map(&:distance).first.should == nil
 
         # if Mongo DB 1.7 installed but Mongoid Geo configured for 1.7 
-        models.map(&:distance).first.should be_within(0.0001).of(61.85669195123871) 
+        results.map(&:distance).first.should be_within(0.0001).of(61.85669195123871) 
       end
     end
     

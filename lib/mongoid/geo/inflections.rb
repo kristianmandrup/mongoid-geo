@@ -15,12 +15,14 @@ module Mongoid #:nodoc:
         def geoNear
           Criterion::Complex.new(:operator => 'geoNearSphere', :key => self)          
         end
+        alias_method :geo_near, :geoNear
 
         def nearSphere
           Mongoid::Geo.spherical_mode do
             Criterion::Complex.new(:operator => 'nearSphere', :key => self)          
           end
         end
+        alias_method :near_sphere, :nearSphere
 
         def nearMax *calcs
           calcs = (!calcs || calcs.empty?) ? [:flat] : calcs
@@ -33,14 +35,17 @@ module Mongoid #:nodoc:
             raise "method nearMax takes one or two symbols as arguments, each symbol must be either :flat or :sphere"
           end
         end
+        alias_method :near_max, :nearMax
 
         def withinBox calc = :flat
           Criterion::OuterOperator.new(:outer_op => 'within', :operator => get_op(calc, 'box'), :key => self)
         end
+        alias_method :within_box, :withinBox
 
         def withinCenter calc = :flat
           Criterion::OuterOperator.new(:outer_op => 'within', :operator => get_op(calc, 'center'), :key => self)
         end 
+        alias_method :within_center, :withinCenter
         
         private
         
