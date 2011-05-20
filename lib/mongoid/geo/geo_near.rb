@@ -1,6 +1,5 @@
 #require 'net/http'
 require 'active_support'
-require 'hashie'
 require 'mongoid/geo/haversine'
 
 module Mongoid
@@ -29,49 +28,45 @@ module Mongoid
       def geoNear(center, location_attribute, options = {})
         center = center.respond_to?(:collection) ? eval("center.#{location_attribute}") : center
         query = create_query(self, center, options)
-        create_result(query_result(self, query, center, location_attribute, options))
+        query_result(self, query, center, location_attribute, options)
       end
       alias_method :geo_near, :geoNear
 
       protected
 
       def create_query klass, center, options = {}
-        num                 = options[:num]
-        maxDistance         = options[:maxDistance]
-        query               = options[:query]        
-        mode                = options[:mode] || :plane
-
         nq = BSON::OrderedHash.new.tap do |near_query|
           near_query["geoNear"]      = klass.to_s.tableize
           near_query["near"]         = center
-          near_query["num"]          = num if num
-          near_query["maxDistance"]  = maxDistance if maxDistance
+          near_query["num"]          = options[:num] if options[:num]
+          near_query["maxDistance"]  = options[:maxDistance] if options[:maxDistance]
 
           # mongodb < 1.7 returns degrees but with earth flat. in Mongodb 1.7 you can set sphere and let mongodb calculate the distance in Miles or KM
           # for mongodb < 1.7 we need to run Haversine first before calculating degrees to Km or Miles. See below.
           near_query["distanceMultiplier"]  = distance_multiplier(options)
-          near_query["query"]               = query if query
+          near_query["query"]               = options[:query] if options[:query]
 
           # works in mongodb 1.7 but still in beta and not supported by mongodb
-          near_query["spherical"]  = true if mode == :sphere && Mongoid::Geo.mongo_db_version >= 1.7
+          near_query["spherical"]  = (options[:spherical] && Mongoid::Geo.mongo_db_version >= 1.7)
         end
         nq
       end
 
       def query_result klass, query, center, location_attribute, options = {}  
         results = exec_query(klass, query)
+        ids = []
         results = (results['results'].kind_of?(Array)&& results['results'].size > 0) ? results['results'].map do |qr|
           hash = qr['obj'].to_hash
           res = klass.instantiate(hash)
+          ids << res.id
           res.fromPoint = qr['fromPoint']
-          # res.fromHash = qr['fromHash']
-          res[distance_meth] ||= calc_distance(r, center, location_attribute, options) if Mongoid::Geo.mongo_db_version < 1.7          
+          res.fromHash = qr['fromHash']
+          res.distance = (Mongoid::Geo.mongo_db_version >= 1.7) ? qr['dis'] : calc_distance(qr, center, location_attribute, options)
           res._id = qr['obj']['_id'].to_s
           res.new_record = false
           res
         end : []
-        
-        results.sort_by!{ |r| r[distance_meth] }
+        Mongoid::Criteria.new(klass).where(:_id.in => ids)
         results
       end
 
@@ -96,10 +91,6 @@ module Mongoid
         dist    = Mongoid::Geo::Haversine.distance(center.first, center.last, loc.first, loc.last) 
         dist    *= distanceMultiplier if distanceMultiplier
         dist
-      end
-
-      def distance_meth
-        Mongoid::Geo.mongo_db_version >= 1.7 ? 'dis' : 'distance'
       end
     end
   end
