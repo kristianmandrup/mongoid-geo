@@ -9,9 +9,9 @@ gem "bson",           '>= 1.3' # for non jruby apps, require bson_ext in your Ge
 gem 'activesupport',  '> 3'
 gem 'hashie',         '>= 0.4.0'   # https://github.com/okiess/mongo-hashie ???  
 
-
 group :test, :development do
-  gem "rspec",    '> 2.4'
+  gem 'rspec',    '> 2.4'
+  gem 'bundler',  '> 1'
   gem 'jeweler',  '> 1.5'
   gem 'rdoc'  
 end
