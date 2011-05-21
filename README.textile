@@ -13,6 +13,16 @@ h2. Status update (May 18, 2011)
 
 Created alias methods such as _#near_sphere_ for _#nearSphere_ etc. to make the DSL much more 'rubyish'!
 
+h2. You need help?
+
+Post questions in the "mongoid-geo":http://groups.google.com/group/mongoid-geo group. Here I (and other uses of mongoid-geo) will 
+try to help out and answer any questions. 
+
+h2. Suggestions, improvements and bugs?
+
+Please raise issues or suggestions for improvements in the "Issues" section on github. 
+I would recommend that you try to branch the project, try to fix it yourself and make a pull request. 
+
 h2. Mongoid 2 geo features
 
 The following summarized what geo functionality is already provided by Mongoid 2.0 (as far as I could tell, May 9th, 2011)
@@ -328,7 +338,6 @@ Or use an object (which must have the methods #center and #radius that return th
   places.where(:location.within_center => circle)
 </pre>
                
-
 h2. Note on the specs
 
 The specs still use the old "Javascript" like method convention, such as _#nearSphere_ 
