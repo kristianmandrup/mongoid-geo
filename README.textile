@@ -7,11 +7,13 @@ A Geo extension for Mongoid.
 * Supports Mongo DB 1.7+ sphere distance calculations
 * Extra geo calculation methods such as #near_sphere etc.
 * Add concept of a special "geo" field (for setting the location point)
+* Configure and create geo indexes
 * Calculate locations near a given point and return as criteria, sorted by distance
 
-h2. Status update (May 18, 2011)
+h2. Status update (May 21, 2011)
 
-Created alias methods such as _#near_sphere_ for _#nearSphere_ etc. to make the DSL much more 'rubyish'!
+* Created alias methods such as _#near_sphere_ for _#nearSphere_ etc. to make the DSL much more 'rubyish'!
+* Added #create_index! method (see 'Geo index' section below).
 
 h2. You need help?
 
@@ -71,6 +73,23 @@ Usage example:
 @geo_index :location@
 
 Note: For embedded documents, you must define the index in the root collection class. (davemitchell)
+
+Calling geo_index also adds a #create_index! method to the class to enable construction of the index (on the instances/data in the DB). 
+
+<pre>
+  class Address
+    ...
+    geo_index :location
+  end
+  
+  Address.create_index!
+</pre>
+
+I also added a nice little Array macro so you can do this:
+
+<pre>
+  [Address, Location].create_geo_indexes!
+</pre>
 
 h2. Geo option for Array GPS location field
 
