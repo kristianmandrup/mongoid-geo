@@ -7,14 +7,14 @@ module Mongoid
     class << self
       attr_accessor :mongo_db_version
       attr_accessor :spherical
-      
+
       def spherical_mode mode = true, &block
         @spherical, old_spherical, result = mode, @spherical, @spherical
         result = yield if block
         @spherical = old_spherical
         result
       end
-      
+
       def lat_index
         @spherical ? 1 : 0
       end
@@ -53,17 +53,17 @@ module Mongoid
       end
 
       def query_result klass, query, center, location_attribute, options = {}  
-        results = exec_query(klass, query)
+        results = klass.db.command(query) # raw query
         ids = []
         results = (results['results'].kind_of?(Array)&& results['results'].size > 0) ? results['results'].map do |qr|
           hash = qr['obj'].to_hash
-          res = klass.instantiate(hash)
+          res = klass.instantiate(hash) # loading up data from db with parsing
+          res.new_record = false # not new record at all.
           ids << res.id
           res.fromPoint = qr['fromPoint']
           res.fromHash = qr['fromHash']
           res.distance = (Mongoid::Geo.mongo_db_version >= 1.7) ? qr['dis'] : calc_distance(qr, center, location_attribute, options)
           res._id = qr['obj']['_id'].to_s
-          res.new_record = false
           res
         end : []
         Mongoid::Criteria.new(klass).where(:_id.in => ids)
@@ -77,10 +77,6 @@ module Mongoid
         return distanceMultiplier if distanceMultiplier && Mongoid::Geo.mongo_db_version >= 1.7
         return Mongoid::Geo::Unit.distMultiplier(options[:unit]) if options[:unit]
         1
-      end
-
-      def exec_query klass, query
-        klass.collection.db.command(query)
       end
 
       def calc_distance r, center, location_attribute, options     

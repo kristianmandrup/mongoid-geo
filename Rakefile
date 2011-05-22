@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 require 'rubygems'
 require 'bundler'
 begin
@@ -13,16 +15,12 @@ require 'jeweler'
 Jeweler::Tasks.new do |gem|
   # gem is a Gem::Specification... see http://docs.rubygems.org/read/chapter/20 for more options
   gem.name = "mongoid_geo"
-  gem.homepage = "http://github.com/kristianmandrup/mongoid-geo"
+  gem.homepage = "http://github.com/kristianmandrup/mongoid_geo"
   gem.license = "MIT"
-  gem.summary                     = "Adds extra convenience methods for geo-spatial operations etc."
-  gem.description                 = "Geo spatial extension on Mongoid 2, to add more geo-spatial capabilities"
-  gem.email = ["kmandrup@gmail.com"]
+  gem.summary = %Q{Mongoid geo extensions with support for native Mongo DB calculations}
+  gem.description = %Q{Makes it easy to use geo calculations with Mongoid}
+  gem.email = "kmandrup@gmail.com"
   gem.authors = ["Kristian Mandrup"]
-  # Include your dependencies below. Runtime dependencies are required when using your gem,
-  # and development dependencies are only needed for development (ie running rake tasks, tests, etc)
-  #  gem.add_runtime_dependency 'jabber4r', '> 0.1'
-  #  gem.add_development_dependency 'rspec', '> 1.2.3'
 end
 Jeweler::RubygemsDotOrgTasks.new
 
@@ -44,8 +42,7 @@ Rake::RDocTask.new do |rdoc|
   version = File.exist?('VERSION') ? File.read('VERSION') : ""
 
   rdoc.rdoc_dir = 'rdoc'
-  rdoc.title = "mongoid-geo #{version}"
+  rdoc.title = "mongoid_geo #{version}"
   rdoc.rdoc_files.include('README*')
-  rdoc.options << '--line-numbers' << '--inline-source'
   rdoc.rdoc_files.include('lib/**/*.rb')
 end

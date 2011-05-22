@@ -1,3 +1,5 @@
+puts "Address"
+
 class Address
   include Mongoid::Document
   extend Mongoid::Geo::Near
@@ -16,5 +18,6 @@ class Address
 
   # key :street
 
+  puts "call geo_index :location"
   geo_index :location
 end

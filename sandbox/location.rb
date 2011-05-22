@@ -1,4 +1,5 @@
 require 'mongoid'
+require 'mongoid_geo'
 require 'net/http'
 require 'active_support'
 require 'haversine'
@@ -16,9 +17,9 @@ class Location
 
   field :lon_lat, :type => Array
 
-  extend Mongoid::GeoNear
+  extend Mongoid::Geo::Near
 
-  # index [[:lon_lat, Mongo::GEO2D]], :min => -180, :max => 180
+  geo_index :lon_lat, :create
 
   def self.search(loc)
     country = "The Netherlands"

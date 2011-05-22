@@ -1,7 +1,10 @@
 require "mongoid/spec_helper"
 
 Mongoid::Geo.mongo_db_version = 1.8
-Address.collection.create_index([['location', Mongo::GEO2D]], :min => -180, :max => 180)
+
+# Address.collection.create_index([['location', Mongo::GEO2D]], :min => -180, :max => 180)
+
+[Address].create_geo_indexes!
 
 class Place
  include Mongoid::Document
