@@ -26,7 +26,7 @@ module Mongoid
 
     module Near
       def geoNear(center, location_attribute, options = {})
-        center = center.respond_to?(:collection) ? eval("center.#{location_attribute}") : center
+        center = (center.respond_to?(:collection) && center.respond_to?(location_attribute)) ? center.public_send(location_attribute) : center
         query = create_query(self, center, options)
         query_result(self, query, center, location_attribute, options)
       end
