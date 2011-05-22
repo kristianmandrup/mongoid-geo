@@ -21,13 +21,6 @@ Jeweler::Tasks.new do |gem|
   gem.description = %Q{Makes it easy to use geo calculations with Mongoid}
   gem.email = "kmandrup@gmail.com"
   gem.authors = ["Kristian Mandrup"]
-  # Include your dependencies below. Runtime dependencies are required when using your gem,
-  # and development dependencies are only needed for development (ie running rake tasks, tests, etc)
-  gem.add_runtime_dependency      'mongoid',        '> 2'
-  gem.add_runtime_dependency      'bson',           '>= 1.3' 
-  gem.add_runtime_dependency      'activesupport',  '> 3'
-  gem.add_runtime_dependency      'hashie',         '>= 0.4.0'   # https://github.com/okiess/mongo-hashie ???  
-  gem.add_development_dependency  'rspec',          '> 2.4'
 end
 Jeweler::RubygemsDotOrgTasks.new
 

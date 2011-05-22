@@ -135,7 +135,7 @@ describe 'Mongoid Spherical geonear distance calculations' do
         Mongoid::Geo.mongo_db_version.should == 1.8
         Mongoid::Geo.spherical.should be_true
         
-        results = Address.geoNear @center.location, :location, :unit => :km, :mode => :sphere
+        results = Address.geoNear @center.location, :location, :unit => :km, :spherical => true
         distances = results.map(&:distance)
         puts "distances: #{distances}"  
         hd =  Mongoid::Geo::Haversine.distance(@center.lat, @center.lng, @icc.lat, @icc.lng) * 6371

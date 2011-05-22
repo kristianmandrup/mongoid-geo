@@ -4,14 +4,20 @@ source "http://rubygems.org"
 # gem 'ruby-debug'
 # gem 'ruby-debug19'
 
-gem 'mongoid',        '> 2'
-gem "bson",           '>= 1.3' # for non jruby apps, require bson_ext in your Gemfile to boost performance
-gem 'activesupport',  '> 3'
-gem 'hashie',         '>= 0.4.0'   # https://github.com/okiess/mongo-hashie ???  
+gem 'mongoid',        '>=2'
+gem "bson",           '>= 1.3', :platform => :jruby # for non jruby apps, require bson_ext in your Gemfile to boost performance
+gem "bson_ext",       '>=1.3',  :platform => :mri
+gem 'activesupport',  '>=3'
 
 group :test, :development do
-  gem 'rspec',    '> 2.4'
-  gem 'bundler',  '> 1'
-  gem 'jeweler',  '> 1.5'
-  gem 'rdoc'  
+  gem 'rspec',    '>=2.4'
+  gem 'bundler',  '>=1'
+  gem 'jeweler',  '>=1.5'
+  gem 'rdoc',     '>=3.6'
+end
+
+group :test do
+  gem 'rails',        '>=3.0'
+  gem 'rspec-rails',  '>=2.6'
+  gem 'capybara',     '>=0.4'
 end
