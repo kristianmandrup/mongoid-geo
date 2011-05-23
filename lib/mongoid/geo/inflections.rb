@@ -12,33 +12,19 @@ module Mongoid #:nodoc:
         # withinCenter
         # - {"$within" : {"$center" : [center, radius]}}})          
 
-        def geoNear
-          Criterion::Complex.new(:operator => 'geoNearSphere', :key => self)          
-        end
-        alias_method :geo_near, :geoNear
-
         def nearSphere
-          Mongoid::Geo.spherical_mode do
-            Criterion::Complex.new(:operator => 'nearSphere', :key => self)          
-          end
+          raise "method nearSphere only works on mongoDB version 1.7 or above" if Mongoid::Geo.mongo_db_version < 1.7
+          Criterion::Complex.new(:operator => 'nearSphere', :key => self)          
         end
         alias_method :near_sphere, :nearSphere
 
-        def nearMax *calcs
-          calcs = (!calcs || calcs.empty?) ? [:flat] : calcs
-          case calcs.size
-          when 1
-            Criterion::TwinOperators.new(:op_a => get_op(calcs.first, 'near'), :op_b => get_op(calcs.first, 'maxDistance'), :key => self)
-          when 2
-            Criterion::TwinOperators.new(:op_a => get_op(calcs.first, 'near'), :op_b => get_op(calcs.last, 'maxDistance'), :key => self)            
-          else
-            raise "method nearMax takes one or two symbols as arguments, each symbol must be either :flat or :sphere"
-          end
+        def nearMax calc = :flat
+          Criterion::TwinOperators.new(:op_a => get_op(calc, 'near'), :op_b =>'maxDistance', :key => self)            
         end
         alias_method :near_max, :nearMax
 
-        def withinBox calc = :flat
-          Criterion::OuterOperator.new(:outer_op => 'within', :operator => get_op(calc, 'box'), :key => self)
+        def withinBox
+          Criterion::OuterOperator.new(:outer_op => 'within', :operator => 'box', :key => self)
         end
         alias_method :within_box, :withinBox
 
@@ -50,7 +36,12 @@ module Mongoid #:nodoc:
         private
         
         def get_op calc, operator
-          calc.to_s == 'sphere' ? "#{operator}Sphere" : operator
+          if calc.to_sym == :sphere
+            raise "method #{operator}Sphere only works on mongoDB version 1.7 or above" if Mongoid::Geo.mongo_db_version < 1.7
+            "#{operator}Sphere"
+          else
+            operator
+          end
         end
       end
     end
