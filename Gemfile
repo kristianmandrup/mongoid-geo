@@ -14,6 +14,8 @@ group :test, :development do
   gem 'bundler',  '>=1'
   gem 'jeweler',  '>=1.5'
   gem 'rdoc',     '>=3.6'
+  gem 'geo_calc', '~> 0.6.1'
+  gem 'geo_vectors', '~> 0.5.1'  
 end
 
 group :test do

@@ -1,3 +1,16 @@
+h3. May 31, 2011
+
+- removed date field from gemspec
+
+h2. May 25, 2011
+
+* Fixed major bug which stored coordinate in [:lat, :lng]. This is incorrect. Coordinates must be stored with :lng as the first value in order for geospatial queries to work properly.
+
+- Excerpt from MongoDB GeoSpatial Indexing
+'The code assumes that you are using decimal degrees in (longitude, latitude) order. This is the same order used for the GeoJSON spec. 
+Using (latitude, longitude) will result in very incorrect results, but is often the ordering used elsewhere, so it is good to double-check.  
+The names you assign to a location object (if using an object and not an array) are completely ignored, only the ordering is detected.'
+
 h3. May 19, 2011
 
 - removed date field from gemspec

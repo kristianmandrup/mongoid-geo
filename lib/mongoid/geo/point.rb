@@ -12,6 +12,7 @@ module Mongoid::Geo
         return [self[:longitude], self[:latitude]] if self.has_key?(:longitude) && self.has_key?(:latitude)
         raise "Hash must contain either :lat, :lng or :latitude, :longitude keys to be converted to a geo point"
       else
+        return self.to_lng_lat if self.respond_to?(:to_lng_lat) # GeoPoint from geo_calc gem
         raise "Invalid Geo Input. Please use either a Hash or an Array. Remember that Longitude must always be the first value in an Array."
       end
     end

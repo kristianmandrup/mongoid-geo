@@ -10,6 +10,10 @@ A Geo extension for Mongoid.
 * Configure and create geo indexes
 * Calculate locations near a given point and return as criteria, sorted by distance
 
+h2. Status Update (May 31, 2011)
+
+Added support for using GeoPoint from "geo_calc":https://github.com/kristianmandrup/geo_calc to pass around location points. Also makes it easy to use GeoVectors from "geo_vectors":https://github.com/kristianmandrup/geo_vectors
+
 h2. Status Update (May 25, 2011)
 * Fixed major bug which stored coordinate in [:lat, :lng]. This is incorrect. Coordinates must be stored with :lng as the first value in order for geospatial queries to work properly.
 - Excerpt from MongoDB GeoSpatial Indexing
@@ -31,14 +35,6 @@ h2. Suggestions, improvements and bugs?
 
 Please raise issues or suggestions for improvements in the "Issues" section on github. 
 I would recommend that you try to branch the project, try to fix it yourself and make a pull request. 
-
-h3. Improvements and integrations (planned)
-
-I have recently created a new "geo_calc":https://github.com/kristianmandrup/geo_calc gem, with common geo-calculation functionality. 
-It also includes the concept of a GeoPoint. The GeoPoint implementation that is much more powerful than the current _#to_point_ implementation used in the _mongoid_geo_ gem. 
-Mongoid geo will have support for GeoPoints in the near future (June, 2011).
-
-I also plan to include support for "geo_vectors":https://github.com/kristianmandrup/geo_vectors, a gem under development.
 
 h3. Current integrations
 
