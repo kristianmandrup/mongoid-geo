@@ -1,6 +1,9 @@
 h3. May 31, 2011
 
-- removed date field from gemspec
+- Compatibility with GeoPoint (from geo_calc gem) in _point.rb_ (see _use_geo_calc_spec.rb_)
+- GeoVectors extension to allow adding vectors to locations _ext/geo_vectors.rb_ (see _use_geo_vectors_spec.rb_)
+
+I'm not sure if #lat and #lng methods still work as they should given May 25 update and reverse of location array!
 
 h2. May 25, 2011
 

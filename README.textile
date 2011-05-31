@@ -12,7 +12,10 @@ A Geo extension for Mongoid.
 
 h2. Status Update (May 31, 2011)
 
-Added support for using GeoPoint from "geo_calc":https://github.com/kristianmandrup/geo_calc to pass around location points. Also makes it easy to use GeoVectors from "geo_vectors":https://github.com/kristianmandrup/geo_vectors
+Added support for using GeoPoint from "geo_calc":https://github.com/kristianmandrup/geo_calc to pass around location points. Also makes it easy to use GeoVectors from "geo_vectors":https://github.com/kristianmandrup/geo_vectors    
+
+Please see new specs _use_geo_calc_ and _use_geo_vectors_ in the /spec folder to see how this is used. Please help make sure the functionality works in the right way!
+Thanks :)
 
 h2. Status Update (May 25, 2011)
 * Fixed major bug which stored coordinate in [:lat, :lng]. This is incorrect. Coordinates must be stored with :lng as the first value in order for geospatial queries to work properly.
