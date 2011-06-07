@@ -2,7 +2,6 @@ puts "Address"
 
 class Address
   include Mongoid::Document
-  extend Mongoid::Geo::Near
   
   attr_accessor :mode
 
@@ -14,10 +13,7 @@ class Address
   field :post_code
   field :location, :type => Array, :geo => true
 
-  field :pos, :type => Array, :geo => true, :lat => :latitude, :lng => :longitude
+  field :pos, :type => Array, :geo => {:lat => :latitude, :lng => :longitude}
 
   # key :street
-
-  puts "call geo_index :location"
-  geo_index :location
 end
