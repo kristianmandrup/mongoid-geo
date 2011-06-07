@@ -2,7 +2,7 @@ require "mongoid/spec_helper"
 
 Address.collection.create_index([['location', Mongo::GEO2D]], :min => -180, :max => 180)
 
-describe Mongoid::Geo::Near do
+describe Mongoid::Contexts::Mongo do
 
   let(:address) do
     Address.new        
@@ -14,13 +14,13 @@ describe Mongoid::Geo::Near do
     Address.create(:location => [46, 11], :city => 'Berlin')
   end
 
-  describe "geoNear" do
+  describe "geo_near" do
     describe 'Mongo DB version 1.7+ uses internal distance calculations' do
       it "should return models with distances not calculated by haversine" do
         Mongoid::Geo.mongo_db_version = 1.7
         
         address.location = "23.5, -47"
-        results = Address.geoNear(address, :location)
+        results = Address.geo_near(address, :location)
         results.first.lat.should == 45
         
         # if Mongo DB < 1.7 installed but Mongoid Geo configured for 1.7 
@@ -36,7 +36,7 @@ describe Mongoid::Geo::Near do
       before(:each) do
         Mongoid::Geo.mongo_db_version = 1.5
         address.location = "23.5, -47"
-        @hashies = Address.geoNear(address, :location)
+        @hashies = Address.geo_near(address, :location)
       end
       describe '#to_models' do
         it "should return models" do
@@ -64,7 +64,7 @@ describe Mongoid::Geo::Near do
           my_model.distance.should > 1        
 
           address.location = "27.5, 12"        
-          my_model = Address.geoNear(address, :location, :num => 1).first.to_model
+          my_model = Address.geo_near(address, :location, :num => 1).first.to_model
           my_model.distance.should_not == first_dist        
         end
       end

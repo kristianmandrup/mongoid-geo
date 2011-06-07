@@ -21,19 +21,19 @@ end
 
 module Mongoid::GeoPoint
   def lat= value
-    self[Mongoid::Geo.lat_index] = value
+    self[1] = value
   end            
 
   def lng= value
-    self[Mongoid::Geo.lng_index] = value
+    self[0] = value
   end            
 
   def lat
-    self[Mongoid::Geo.lat_index]
+    self[1]
   end            
   
   def lng
-    self[Mongoid::Geo.lng_index]
+    self[0]
   end            
 end
          

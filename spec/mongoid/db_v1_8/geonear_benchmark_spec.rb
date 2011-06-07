@@ -7,7 +7,7 @@ def delta
   (rand(10000) / 10000.0) - 0.5
 end
 
-describe 'Mongoid spherical geoNear distance calculations' do
+describe 'Mongoid spherical geo_near distance calculations' do
   context "Spherical mode distance" do
     before do
       Mongoid::Geo.spherical = true
@@ -18,30 +18,10 @@ describe 'Mongoid spherical geoNear distance calculations' do
       end      
     end
 
-    context 'Mongo DB < 1.7' do
-      before do
-        Mongoid::Geo.mongo_db_version = 1.6
-      end
-    
-      it "calculates distance using ruby Haversine code" do
-        Mongoid::Geo.mongo_db_version.should == 1.6
-        Mongoid::Geo.spherical.should be_true
-
-        puts Benchmark.measure { Address.geoNear @center.location, :location, :unit => :km }
-      end      
-    end
     
     context 'Mongo DB 1.8' do
-      before do
-        Mongoid::Geo.mongo_db_version = 1.8
-        Mongoid::Geo.spherical = true
-      end
-
       it "calculate distance using Mongo 1.8 native distance calculation" do    
-        Mongoid::Geo.mongo_db_version.should == 1.8
-        Mongoid::Geo.spherical.should be_true
-        
-        puts Benchmark.measure { Address.geoNear @center.location, :location, :unit => :km, :mode => :sphere }
+        puts Benchmark.measure { Address.geo_near @center.location, :location, :unit => :km, :mode => :sphere }
       end      
     end
   end
