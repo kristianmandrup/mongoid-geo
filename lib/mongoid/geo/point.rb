@@ -8,7 +8,7 @@ module Mongoid::Geo
     def to_point
       case self
       when Hash
-        return [self[:lng]], self[:lat] if self[:lat] && self.has_key?(:lat) && self.has_key?(:lng)
+        return [self[:lng], self[:lat]] if self[:lat] && self.has_key?(:lat) && self.has_key?(:lng)
         return [self[:longitude], self[:latitude]] if self.has_key?(:longitude) && self.has_key?(:latitude)
         raise "Hash must contain either :lat, :lng or :latitude, :longitude keys to be converted to a geo point"
       else
