@@ -1,4 +1,4 @@
-require "mongoid/spec_helper"
+require "mongoid_geo/spec_helper"
 
 describe Mongoid::Fields do
 
