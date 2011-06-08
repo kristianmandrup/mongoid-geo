@@ -11,7 +11,7 @@ module Mongoid #:nodoc:
     # <tt> { :field.lt => "value }</tt>
     class Complex
       
-      def make_hash v
+      def to_query v
         {"$#{operator}" => v}
       end
     end

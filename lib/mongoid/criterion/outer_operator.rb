@@ -18,7 +18,7 @@ module Mongoid #:nodoc:
         @outer_op = opts[:outer_op]        
       end
 
-      def make_hash v                               
+      def to_query v                               
         if operator =~ /box/
           v = extract_box(v) if !v.kind_of?(Array)
           v = [to_point(v.first), to_point(v.last)]

@@ -18,7 +18,7 @@ module Mongoid #:nodoc:
         @op_b = opts[:op_b]        
       end
 
-      def make_hash v     
+      def to_query v     
         v = extract_nearMax(v) if !v.kind_of?(Array) && op_b =~ /max/i
         {"$#{op_a}" => to_point(v.first), "$#{op_b}" => to_point(v.last) }
       end
