@@ -5,9 +5,10 @@ source "http://rubygems.org"
 # gem 'ruby-debug19'
 
 gem 'mongoid',        '>=2'
-gem "bson",           '>= 1.3',  :platforms => :jruby # for non jruby apps, require bson_ext in your Gemfile to boost performance
-gem "bson_ext",       '>= 1.3',  :platforms => :mri
+gem "bson",           '>= 1.3',  :platforms => [:jruby] # for non jruby apps, require bson_ext in your Gemfile to boost performance
+gem "bson_ext",       '>= 1.3',  :platforms => [:mri]
 gem 'activesupport',  '>= 3'
+gem 'geo_calc',       '>=0.6.1'
 
 group :test, :development do
   gem 'rspec',        '>=2.4'

@@ -5,33 +5,29 @@ module Mongoid #:nodoc:
       module Inflections #:nodoc:
         
         # $nearSphere $centerSphere        
-        # nearMax
+        # near_max
         # - { $near : [50,50] , $maxDistance : 5 }
-        # withinBox
+        # within_box
         # - {"$within" : {"$box" : box}
-        # withinCenter
+        # within_center
         # - {"$within" : {"$center" : [center, radius]}}})          
 
-        def nearSphere
+        def near_sphere
           raise "method nearSphere only works on mongoDB version 1.7 or above" if Mongoid::Geo.mongo_db_version < 1.7
           Criterion::Complex.new(:operator => 'nearSphere', :key => self)          
         end
-        alias_method :near_sphere, :nearSphere
 
-        def nearMax calc = :flat
+        def near_max calc = :flat
           Criterion::TwinOperators.new(:op_a => get_op(calc, 'near'), :op_b =>'maxDistance', :key => self)            
         end
-        alias_method :near_max, :nearMax
 
-        def withinBox
+        def within_box
           Criterion::OuterOperator.new(:outer_op => 'within', :operator => 'box', :key => self)
         end
-        alias_method :within_box, :withinBox
 
-        def withinCenter calc = :flat
+        def within_center calc = :flat
           Criterion::OuterOperator.new(:outer_op => 'within', :operator => get_op(calc, 'center'), :key => self)
         end 
-        alias_method :within_center, :withinCenter
         
         private
         

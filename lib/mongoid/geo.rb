@@ -1,9 +1,15 @@
 module Mongoid
   module Geo
+    autoload :Config,     'mongoid/geo/config'
+    autoload :Formula,    'mongoid/geo/formula'
+    autoload :Shapes,     'mongoid/geo/shapes'
+    autoload :Unit,       'mongoid/geo/unit'    
+    
+    def self.configure &block
+      yield Config if block
+      Config
+    end
+    
   end
 end
 
-require 'mongoid/geo/point'
-require 'mongoid/geo/unit'
-require 'mongoid/geo/criteria'
-require 'mongoid/geo/index'

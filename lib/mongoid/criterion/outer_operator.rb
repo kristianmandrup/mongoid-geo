@@ -18,14 +18,13 @@ module Mongoid #:nodoc:
         @outer_op = opts[:outer_op]        
       end
 
+      # this is called by CriteriaHelpers#expand_complex_criteria in order to generate
+      # the command hash sent to the mongo DB to be executed
+      # depending on whether the operator is some kind of box or center command, the
+      # operator will point to a different type of array  
       def make_hash v                               
-        if operator =~ /box/
-          v = extract_box(v) if !v.kind_of?(Array)
-          v = [to_point(v.first), to_point(v.last)]
-        end
-        
-        v = extract_circle(v) if !v.kind_of?(Array) && operator =~ /center/
-        {"$#{outer_op}" => {"$#{operator}" => v } }
+        points = circle? ? circle(v) : box(v)        
+        {"$#{outer_op}" => {"$#{operator}" => points.to_a } }
       end
 
       def hash
@@ -42,25 +41,21 @@ module Mongoid #:nodoc:
       end
       
       protected
-      
-      include Mongoid::Geo::PointConversion
-      
-      def extract_circle(v)
-        case v
-        when Hash
-          [v[:center], v[:radius]]
-        else
-          v.respond_to?(:center) ? [v.center, v.radius] : raise("Can't extract box from: #{v}, must have :center and :radius methods or equivalent hash keys in Hash")
-        end
+
+      def circle?
+        operator =~ /center/
       end
-      
-      def extract_box v
-        box = case v
-        when Hash
-          [v[:lower_left], v[:upper_right]]
-        else
-          v.respond_to?(:lower_left) ? [v.lower_left, v.upper_right] : raise("Can't extract box from: #{v}, must have :lower_left and :upper_right methods or equivalent hash keys in Hash")
-        end        
+
+      def box?
+        operator =~ /box/
+      end
+
+      def circle(v)
+        Mongoid::Geo::Shapes::Circle.new(v)
+      end
+
+      def box(v)
+        Mongoid::Geo::Shapes::Box.new(v)
       end
     end
   end

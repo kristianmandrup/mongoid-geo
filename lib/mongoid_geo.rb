@@ -9,7 +9,7 @@ require 'mongoid/criterion/twin_operators'
 require 'mongoid/criterion/complex'
 require 'mongoid/extentions/hash/criteria_helpers'
 require 'mongoid/extentions/symbol/inflections'
-
+require 'mongoid/indexes/class_methods'
 
 Mongoid::Field.option :geo do |model,field,options|
   model.index [[ field, Mongo::GEO2D ]], :min => -180, :max => 180

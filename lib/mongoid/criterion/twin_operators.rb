@@ -19,7 +19,7 @@ module Mongoid #:nodoc:
       end
 
       def make_hash v     
-        v = extract_nearMax(v) if !v.kind_of?(Array) && op_b =~ /max/i
+        v = distance(v).to_a if max?
         {"$#{op_a}" => to_point(v.first), "$#{op_b}" => to_point(v.last) }
       end
 
@@ -38,17 +38,13 @@ module Mongoid #:nodoc:
             
       protected
 
-      include Mongoid::Geo::PointConversion
-      
-      def extract_nearMax(v)
-        case v
-        when Hash
-          [v[:point], v[:distance]]
-        else
-          v.respond_to?(:point) ? [v.point, v.distance] : raise("Can't extract nearMax values from: #{v}, must have :point and :maxDistance methods or equivalent hash keys in Hash")
-        end
+      def max?
+        op_b =~ /max/i
       end
-      
+
+      def distance(v)
+        Mongoid::Geo::Shapes::Distance.new(v)
+      end
     end
   end
 end

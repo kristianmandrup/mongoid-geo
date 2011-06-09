@@ -10,20 +10,8 @@ module Mongoid
           raise ArgumentError, "Unknown unit key: #{unit}"
         end
 
-        def distMultiplier unit = :km
-          unit_key = key(unit)
-          return radian_multiplier[unit_key] if unit_key && Mongoid::Geo.mongo_db_version >= 1.7      
-          unit_multiplier[unit_key] if unit_key
-        end
-
-        def precision
-          {
-            :feet => 0,
-            :meters => 2,
-            :kms => 4,
-            :miles => 4,
-            :radians => 4
-          }
+        def radian_multiplier unit = :km
+          radian_multiplier[key(unit)]
         end
 
         # from mongoid-geo, as suggested by niedhui :)
@@ -34,25 +22,6 @@ module Mongoid
             :kms => 111.17,
             :miles => 69.407,
             :radians => 1
-          }
-        end
-
-        def unit_multiplier
-          {
-            :feet => 0.305,
-            :meters => 1,
-            :kms => 6371,
-            :miles => 3959
-          }
-        end
-
-        def meters_map
-          {
-           :feet => 3.2808,
-           :meters => 1,
-           :kms => 0.001,
-           :miles => 0.00062137,
-           :radians => 111170
           }
         end
       
