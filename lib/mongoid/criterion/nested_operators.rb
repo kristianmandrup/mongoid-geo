@@ -33,11 +33,11 @@ module Mongoid #:nodoc:
       end
 
       def center?
-        operator =~ /center/
+        inner_operator =~ /center/
       end
 
       def box?
-        operator =~ /box/
+        inner_operator =~ /box/
       end
 
       def circle(v)
@@ -47,6 +47,16 @@ module Mongoid #:nodoc:
       def box(v)
         Mongoid::Geo::Shapes::Box.new(v)
       end
+
+      # aliases  - use alias_method ??
+      
+      def outer_operator
+        op_a
+      end
+
+      def inner_operator
+        op_b
+      end      
     end
   end
 end

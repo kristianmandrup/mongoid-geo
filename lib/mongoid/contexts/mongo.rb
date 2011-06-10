@@ -46,7 +46,7 @@ module Mongoid #:nodoc:
               dist_options = {}
               dist_options.merge!(:units => args[:units]) if args[:units]
               dist_options.merge!(:formula => args[:formula]) if args[:formula]
-              res.distance = Mongoid::Geo::Formula::Haversine.distance(center[1], center[0], loc[1], loc[0], dist_options)
+              res.distance = Mongoid::Geo::Config.distance_calculator.distance(center[1], center[0], loc[1], loc[0], dist_options)
             end
             res
           end

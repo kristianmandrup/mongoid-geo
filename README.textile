@@ -20,6 +20,7 @@ h2. Status Update (June 11, 2011)
 
 - Refactored and created a whole new spec infrastructure to adhere to the latest refactoring/structuring of the files in the gem etc.
 - Note: Extracting logic into Shapes, Config etc. should facilitate unit testing!
+- Added #distance_calculator Config attribute to set the Module to use for distance calculation  
 
 h2. Status Update (June 10, 2011) 
 
@@ -35,8 +36,28 @@ TODO:
 - add #to_point functionality somehow using GeoPoint
 - make sure GeoPoint supports modes :lng_lat and lat_lng
 - debug/test to make sure all functionality still works
+
+Haversine
 - consider using 'haversine' gem (or extract) for haversine calculation, or use internal distance calculation of GeoPoint?
-- consider extracting Unit class into _geo_calc_, which now has a geo_units namespace. Maybe extract this into separate gem? 
+- See https://github.com/kristianmandrup/haversine
+- consider extracting Unit class into _geo_calc_, which now has a _geo_units_ namespace. Maybe extract this into separate gem? 
+- I think much of Unit is already part of Haversine in hversine gem!
+
+- See the _alternative_alg_ branch, where I extracted the _Haversine_ from _mongoid_geo_ into. 
+
+Alternatively there is the _geo_distance_ gem with multiple spherical distance calculations included.
+
+<pre>
+  require 'haversine'
+
+  distance = Haversine.distance(35.61488, 139.5813, 48.85341, 2.3488)
+
+  distance.class => Haversine::Distance
+  distance.to_miles => 6032.71091869803
+  distance.to_kilometers => 9715.47049115903
+  distance.to_meters => 9715470.49115903
+  distance.to_feet => 31852713.6507256  
+</pre>
 
 h2. Status Update (May 31, 2011)
 

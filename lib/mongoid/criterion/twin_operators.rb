@@ -32,10 +32,15 @@ module Mongoid #:nodoc:
 
       def ==(other)
         return false unless other.is_a?(self.class)        
-        self.op_a == other.op_a && self.op_b == other.op_b && self.key == other.key 
+        # self.op_a == other.op_a && self.op_b == other.op_b && self.key == other.key 
+        compare(other, :op_a, :op_b, :key)        
       end
             
       protected
+
+      def compare(other, *methods)
+        methods.all? {|meth| self.send(meth) == other.send(meth) }         
+      end
 
       def shape(v) 
         return distance(v) if max?

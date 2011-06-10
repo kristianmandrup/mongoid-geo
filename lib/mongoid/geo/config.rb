@@ -4,6 +4,15 @@ module Mongoid
       class << self
         attr_accessor :server_version
 
+        def distance_calculator
+          @distance_calculator ||= Haversine
+        end
+
+        def distance_calculator= clazz
+          raise "Distance calculator must be a Class with a class method called #distance" unless clazz.kind_of?(Class) && clazz.respond_to?(:distance)
+          @distance_calculator = clazz
+        end
+
         def server_version
           @server_version ||= 1.8
         end
@@ -13,7 +22,7 @@ module Mongoid
         end          
 
         def coord_mode= coord_mode
-          raise "Input mode must be one of: #{supported_coord_modes}, was: #{coord_mode}" unless supported_coord_modes.include?(coord_mode)
+          raise "Coordinate mode must be one of: #{supported_coord_modes}, was: #{coord_mode}" unless supported_coord_modes.include?(coord_mode)
           @coord_mode = mode
         end
         

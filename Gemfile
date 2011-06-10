@@ -9,6 +9,9 @@ gem "bson",           '>= 1.3',  :platforms => [:jruby] # for non jruby apps, re
 gem "bson_ext",       '>= 1.3',  :platforms => [:mri]
 gem 'activesupport',  '>= 3'
 gem 'geo_calc',       '>=0.6.1'
+gem 'haversine',      '>=0.3'
+
+# gem 'geo_distance' ?? maybe better than haversine?
 
 group :test, :development do
   gem 'rspec',        '>=2.4'
