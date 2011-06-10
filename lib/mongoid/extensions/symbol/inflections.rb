@@ -21,11 +21,11 @@ module Mongoid #:nodoc:
         end
 
         def within_box
-          outer_operators(:op_a => 'within', :op_b => 'box', :key => self)
+          nested_operators(:op_a => 'within', :op_b => 'box', :key => self)
         end
 
         def within_center calc = :flat
-          outer_operators(:op_a  => 'within', :op_b => get_op(calc, 'center'), :key => self)
+          nested_operators(:op_a  => 'within', :op_b => get_op(calc, 'center'), :key => self)
         end 
         
         private
@@ -34,8 +34,8 @@ module Mongoid #:nodoc:
           Criterion::TwinOperators.new
         end
 
-        def outer_operators options
-          Criterion::OuterOperators.new options
+        def nested_operators options
+          Criterion::NestedOperators.new options
         end
         
         def get_op calc, operator

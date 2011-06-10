@@ -8,7 +8,7 @@ module Mongoid #:nodoc:
     
     # {:outer_operator => 'within', :operator => 'center' }
     # { :location => { "$within" => { "$center" => [ [ 50, -40 ], 1 ] } } }
-    class OuterOperators < TwinOperators
+    class NestedOperators < TwinOperators
       # Create the new complex criterion.
       def initialize(opts = {})
         super

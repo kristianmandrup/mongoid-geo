@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'dummy_spec_helper'
 
 describe "Navigation" do
   include Capybara

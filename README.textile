@@ -16,6 +16,11 @@ This is a Geo extension for Mongoid 2.
 * Configure and create geo indexes
 * Calculate locations near a given point and return as criteria, sorted by distance
 
+h2. Status Update (June 11, 2011) 
+
+- Refactored and created a whole new spec infrastructure to adhere to the latest refactoring/structuring of the files in the gem etc.
+- Note: Extracting logic into Shapes, Config etc. should facilitate unit testing!
+
 h2. Status Update (June 10, 2011) 
 
 Major refactoring trying to structure the code even better. 

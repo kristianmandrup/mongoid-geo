@@ -1,4 +1,4 @@
-require "mongoid/spec_helper"
+require "mongoid/geo_spec_helper"
 
 describe Mongoid::Criterion::Inclusion do
 

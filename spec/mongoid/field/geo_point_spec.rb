@@ -1,4 +1,4 @@
-require "mongoid/spec_helper"
+require "mongoid/geo_spec_helper"
 require "geo_calc"
 # require "geo_calc/macros"
 
