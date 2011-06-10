@@ -12,10 +12,10 @@ module Mongoid #:nodoc:
       attr_accessor :key, :op_a, :op_b
 
       # Create the new complex criterion.
-      def initialize(opts = {})
-        @key = opts[:key]
-        @op_a = opts[:op_a]
-        @op_b = opts[:op_b]        
+      def initialize(options = {})
+        @key =  options[:key]
+        @op_a = options[:op_a]
+        @op_b = options[:op_b]        
       end
 
       def to_query v        
