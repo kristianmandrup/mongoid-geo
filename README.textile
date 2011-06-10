@@ -13,16 +13,18 @@ A Geo extension for Mongoid.
 h2. Status Update (June 9, 2011) 
 
 Major refactoring trying to structure the code even better. 
-- Created Shape classes to encapsulate the shape/array logic for OuterOperator
-- Removed the point.rb file (the goal is to substitute this using GeoPoint of geo_calc)
+- Created Shape classes to encapsulate the shape/array logic for Outer- and TwinOperators (geo criterions)
+- Removed the point.rb file for now! (the goal is to substitute this using GeoPoint of geo_calc)
+- OuterOperators and TwinOperators are very similar, now OuterOperators inherits from TwinOperators
+- Added Mongoid::Geo::Config object with macro: Mongoid::Geo.config do |c| ...
+- Using autoload
 
 TODO:
 - add #to_point functionality using GeoPoint
 - make sure GeoPoint supports modes :lng_lat and lat_lng
 - debug/test to make sure all functionality still works
-- consider using haversine gem (or extract) for haversine calc
+- consider using 'haversine' gem (or extract) for haversine calculation
 - consider extracting Unit class into geo_calc 
-- OuterOperator and TwinOperators are very similar, both have a key and two operators - should be merged somehow?
 
 h2. Status Update (May 31, 2011)
 

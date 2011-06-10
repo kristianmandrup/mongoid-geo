@@ -8,14 +8,10 @@ module Mongoid #:nodoc:
     
     # {:outer_operator => 'within', :operator => 'center' }
     # { :location => { "$within" => { "$center" => [ [ 50, -40 ], 1 ] } } }
-    class OuterOperator
-      attr_accessor :key, :outer_op, :operator
-
+    class OuterOperators < TwinOperators
       # Create the new complex criterion.
       def initialize(opts = {})
-        @key = opts[:key]
-        @operator = opts[:operator]
-        @outer_op = opts[:outer_op]        
+        super
       end
 
       # this is called by CriteriaHelpers#expand_complex_criteria in order to generate
@@ -28,16 +24,7 @@ module Mongoid #:nodoc:
       end
 
       def hash
-        [@outer_op, [@operator, @key]].hash
-      end
-
-      def eql?(other)
-        self == (other)
-      end
-
-      def ==(other)
-        return false unless other.is_a?(self.class)        
-        self.outer_op == other.outer_op && self.key == other.key && self.operator == other.operator
+        [@op_a, [@op_b, @key]].hash
       end
       
       protected
