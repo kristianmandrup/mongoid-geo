@@ -8,13 +8,13 @@ module Mongoid
           @server_version ||= 1.8
         end
 
-        def input_mode
-          @input_mode ||= default_input_mode
+        def coord_mode
+          @coord_mode ||= default_coord_mode
         end          
 
-        def input_mode= input_mode
-          raise "Input mode must be one of: #{supported_input_modes}, was: #{input_mode}" unless supported_input_modes.include?(input_mode)
-          @input_mode = mode
+        def coord_mode= coord_mode
+          raise "Input mode must be one of: #{supported_coord_modes}, was: #{coord_mode}" unless supported_coord_modes.include?(coord_mode)
+          @coord_mode = mode
         end
         
         def distance_formula
@@ -41,7 +41,7 @@ module Mongoid
           :kms
         end
    
-        def default_input_mode
+        def default_coord_mode
           :lng_lat
         end
 
@@ -57,7 +57,7 @@ module Mongoid
           [:kms, :miles]
         end        
 
-        def supported_input_modes
+        def supported_coord_modes
           [:lat_lng, :lng_lat]
         end        
       end

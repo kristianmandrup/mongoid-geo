@@ -6,6 +6,12 @@ module Mongoid
         super
       end
       
+      # def to_query op_a, op_b
+      #   {"$#{op_a}" => {"$#{op_b}" => to_a } }
+      # end
+
+      protected
+      
       def to_a
         case circle
         when Hash
@@ -15,7 +21,7 @@ module Mongoid
         else
           circle.respond_to?(:center) ? [circle.center, circle.radius] : parse_error!
         end
-      end        
+      end      
 
       private
       

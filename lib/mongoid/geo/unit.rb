@@ -2,16 +2,9 @@ module Mongoid
   module Geo
     class Unit
       class << self
-        def key unit = :km
-          unit = unit.to_sym
-          methods.grep(/_unit/).each do |meth|
-            return meth.to_s.chomp('_unit').to_sym if send(meth).include? unit
-          end
-          raise ArgumentError, "Unknown unit key: #{unit}"
-        end
-
         def radian_multiplier unit = :km
-          radian_multiplier[key(unit)]
+          raise ArgumentError, "Unknown unit key: #{unit}" if !supported_unit? unit
+          radian_multiplier[unit.to_sym]
         end
 
         # from mongoid-geo, as suggested by niedhui :)
@@ -27,24 +20,12 @@ module Mongoid
       
         protected
 
-        def feet_unit 
-          [:ft, :feet, :foot]
-        end
-      
-        def meters_unit 
-          [:m, :meter, :meters]
+        def supported_unit? unit
+          supported_units.include? unit.to_sym          
         end
 
-        def kms_unit 
-          [:km, :kms, :kilometer, :kilometers]
-        end
-
-        def miles_unit 
-          [:mil, :mile, :miles]
-        end
-
-        def radians_unit 
-          [:rad, :radians]
+        def supported_units
+          [:feet, :meters, :kms, :miles, :radians]
         end
       end
     end

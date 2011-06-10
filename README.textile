@@ -10,20 +10,21 @@ A Geo extension for Mongoid.
 * Configure and create geo indexes
 * Calculate locations near a given point and return as criteria, sorted by distance
 
-h2. Status Update (June 9, 2011) 
+h2. Status Update (June 10, 2011) 
 
 Major refactoring trying to structure the code even better. 
-- Created Shape classes to encapsulate the shape/array logic for Outer- and TwinOperators (geo criterions)
+- Created Shape classes (Box, Circle, Distance) to encapsulate the shape/array logic for Outer- and TwinOperators (geo criterions)
 - Removed the point.rb file for now! (the goal is to substitute this using GeoPoint of geo_calc)
 - OuterOperators and TwinOperators are very similar, now OuterOperators inherits from TwinOperators
 - Added Mongoid::Geo::Config object with macro: Mongoid::Geo.config do |c| ...
-- Using autoload
+- Added globals #coord_mode (:lat_lng, :lng_lat), #distance_formulas (:sphere, :flat) and #units (:kms, :miles) for Mongoid::Geo::Config object  
+- Use autoload to lazy load files when needed
 
 TODO:
-- add #to_point functionality using GeoPoint
+- add #to_point functionality somehow using GeoPoint
 - make sure GeoPoint supports modes :lng_lat and lat_lng
 - debug/test to make sure all functionality still works
-- consider using 'haversine' gem (or extract) for haversine calculation
+- consider using 'haversine' gem (or extract) for haversine calculation, or use internal distance calculation of GeoPoint?
 - consider extracting Unit class into geo_calc 
 
 h2. Status Update (May 31, 2011)

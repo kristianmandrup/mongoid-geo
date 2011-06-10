@@ -17,6 +17,12 @@ module Mongoid
         end        
       end        
 
+      protected
+      
+      # def to_query op_a, op_b
+      #   {"$#{op_a}" => {"$#{op_b}" => to_a } }
+      # end      
+
       private
       
       def parse_error!

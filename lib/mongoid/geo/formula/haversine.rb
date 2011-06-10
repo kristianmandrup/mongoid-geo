@@ -18,6 +18,10 @@ module Mongoid
         KMS_PER_LATITUDE_DEGREE = MILES_PER_LATITUDE_DEGREE * KMS_PER_MILE
         LATITUDE_DEGREES = EARTH_RADIUS_IN_MILES / MILES_PER_LATITUDE_DEGREE
 
+        # Returns the distance from points (lat1, lng1) to (lat2, lng2)
+        # The distance unit is either the default unit set on the Config object or 
+        # using the :units option as part of the arguments 
+        # The formula likewise
         def self.distance(lat1, lng1, lat2, lng2, options = {})
           from = {:lat => lat1, :lng => lng1}
           to =   {:lat => lat2, :lng => lng2}

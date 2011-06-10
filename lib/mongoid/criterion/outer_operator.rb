@@ -14,13 +14,12 @@ module Mongoid #:nodoc:
         super
       end
 
-      # this is called by CriteriaHelpers#expand_complex_criteria in order to generate
+      # called by CriteriaHelpers#expand_complex_criteria in order to generate
       # the command hash sent to the mongo DB to be executed
-      # depending on whether the operator is some kind of box or center command, the
-      # operator will point to a different type of array  
-      def make_hash v                               
-        points = circle? ? circle(v) : box(v)        
-        {"$#{outer_op}" => {"$#{operator}" => points.to_a } }
+      # Determines if the operator is some kind of 'box' or 'center' command
+      # Rhe operator will use a different type of array for each command type
+      def to_query v        
+        shape(v).to_query(op_a, op_b)
       end
 
       def hash
@@ -29,7 +28,11 @@ module Mongoid #:nodoc:
       
       protected
 
-      def circle?
+      def shape(v) 
+        center? ? circle(v) : box(v)
+      end
+
+      def center?
         operator =~ /center/
       end
 

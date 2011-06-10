@@ -4,7 +4,13 @@ module Mongoid
       def initialize near
         super
       end
-      
+            
+      def to_query
+        {"$#{op_a}" => to_point(v.first), "$#{op_b}" => to_point(v.last) }
+      end
+
+      protected
+
       def to_a
         case v
         when Hash
@@ -14,7 +20,7 @@ module Mongoid
         else
           near.respond_to?(:point) ? [near.point, near.distance] : parse_error!
         end
-      end
+      end      
 
       private
       

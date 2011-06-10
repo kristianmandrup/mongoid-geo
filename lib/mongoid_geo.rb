@@ -13,7 +13,7 @@ require 'mongoid/indexes/class_methods'
 
 Mongoid::Field.option :geo do |model,field,options|
   model.index [[ field, Mongo::GEO2D ]], :min => -180, :max => 180
-  model.instance_eval {
+  model.class_eval {
     options = {} unless options.kind_of?(Hash)
     lat_meth = options[:lat] || "#{field}_lat"
     lng_meth = options[:lng] || "#{field}_lng"

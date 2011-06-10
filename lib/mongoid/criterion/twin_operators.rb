@@ -18,9 +18,8 @@ module Mongoid #:nodoc:
         @op_b = opts[:op_b]        
       end
 
-      def make_hash v     
-        v = distance(v).to_a if max?
-        {"$#{op_a}" => to_point(v.first), "$#{op_b}" => to_point(v.last) }
+      def to_query v        
+        shape(v).to_query(op_a, op_b)        
       end
 
       def hash
@@ -37,6 +36,10 @@ module Mongoid #:nodoc:
       end
             
       protected
+
+      def shape(v) 
+        return distance(v) if max?
+      end
 
       def max?
         op_b =~ /max/i
