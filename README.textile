@@ -1,6 +1,12 @@
 h1. Mongoid geo
 
-A Geo extension for Mongoid.
+h2. IMPOTANT: THIS IS A PRE-BETA BRANCH AS OF JUNE 10, NOT WORKING - BUT PLEASE CHIP IN TO HELP!
+
+Also I just created a _1_0_beta_ branch of _geo_calc_ which supports changing the :coords_mode. Also not tested yet.
+
+h2. Intro
+
+This is a Geo extension for Mongoid 2.
 
 "MongoDB Geospatial Indexing":http://www.mongodb.org/display/DOCS/Geospatial+Indexing
 
@@ -25,7 +31,7 @@ TODO:
 - make sure GeoPoint supports modes :lng_lat and lat_lng
 - debug/test to make sure all functionality still works
 - consider using 'haversine' gem (or extract) for haversine calculation, or use internal distance calculation of GeoPoint?
-- consider extracting Unit class into geo_calc 
+- consider extracting Unit class into _geo_calc_, which now has a geo_units namespace. Maybe extract this into separate gem? 
 
 h2. Status Update (May 31, 2011)
 
