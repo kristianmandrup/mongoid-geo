@@ -11,8 +11,8 @@ gem "bson_ext",       '>= 1.3',  :platforms => [:mri]
 gem 'activesupport',  '>= 3'
 
 # experimenting here.. these gems need updated releases soon to play along as nice kids!
-gem 'geo_calc',       '~> 0.6.1'
-gem 'geo-distance',   '0.1.2'  
+gem 'geo_calc',       '~> 0.7.0'
+gem 'geo-distance',   '~> 0.1.2'  
 gem 'haversine',      '>=0.3'
 
 # gem 'geo_distance' ?? maybe better than haversine?
@@ -23,7 +23,7 @@ group :test, :development do
   gem 'jeweler',      '>=1.5'
   gem 'rdoc',         '>=3.6'
   # gem 'geo_calc',     '~> 0.6.1'
-  gem 'geo_vectors',  '~> 0.5.3'  
+  gem 'geo_vectors',  '~> 0.6.1'  
 end
 
 group :test do
