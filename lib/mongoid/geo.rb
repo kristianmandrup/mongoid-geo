@@ -5,7 +5,7 @@ module Mongoid
     autoload :Shapes,     'mongoid/geo/shapes'
     autoload :Unit,       'mongoid/geo/unit'    
     
-    def self.configure &block
+    def self.config &block
       yield Config if block
       Config
     end

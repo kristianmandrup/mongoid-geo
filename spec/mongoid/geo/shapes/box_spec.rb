@@ -1,4 +1,4 @@
-require "mongoid/geo_spec_helper"
+require "mongoid/spec_helper"
 
 def box_class
   Mongoid::Geo::Shapes::Box

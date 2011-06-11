@@ -1,8 +1,24 @@
 h1. Mongoid geo
 
-h2. IMPOTANT: THIS IS A PRE-BETA BRANCH AS OF JUNE 10, NOT WORKING - BUT PLEASE CHIP IN TO HELP!
+h2. IMPORTANT: THIS IS A PRE-BETA BRANCH AS OF JUNE 10, NOT WORKING - BUT PLEASE CHIP IN TO HELP!
 
 Also I just created a _1_0_beta_ branch of _geo_calc_ which supports changing the :coords_mode. Also not tested yet.
+
+h3. Running specs
+
+The goal of this branch is to define a good specs structure and build up a good design of this 'geo' add-on this way.
+
+<pre>
+$ bundle
+$ bundle exec rspec spec/mongoid/geo/config_spec.rb  
+</pre>
+
+h3. Spec status: June 11, 2011
+
+I've started working on new specs, starting from those in the mongoid/geo folder. These can and should be tested in isolation from the rest.
+The mongoid/geo/spec_helper.rb avoid loading in the entire mongoid_geo, but only the files in lib/mongoid/geo.
+
+* config_spec.rb passes!
 
 h2. Intro
 

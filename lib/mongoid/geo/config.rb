@@ -5,11 +5,11 @@ module Mongoid
         attr_accessor :server_version
 
         def distance_calculator
-          @distance_calculator ||= Haversine
+          @distance_calculator ||= default_distance_calculator
         end
 
         def distance_calculator= clazz
-          raise "Distance calculator must be a Class with a class method called #distance" unless clazz.kind_of?(Class) && clazz.respond_to?(:distance)
+          raise "Distance calculator must be a Class with a class method called #distance" unless clazz.kind_of?(Module) && clazz.respond_to?(:distance)
           @distance_calculator = clazz
         end
 
@@ -23,15 +23,15 @@ module Mongoid
 
         def coord_mode= coord_mode
           raise "Coordinate mode must be one of: #{supported_coord_modes}, was: #{coord_mode}" unless supported_coord_modes.include?(coord_mode)
-          @coord_mode = mode
+          @coord_mode = coord_mode
         end
         
         def distance_formula
-          @default_distance_formula ||= default_distance_formula
+          @distance_formula ||= default_distance_formula
         end          
         
         def distance_formula= distance_formula 
-          raise "Default distance formula must be one of: #{supported_formulas}, was: #{distance_formula}" unless formulas.include?(distance_formula)
+          raise "Default distance formula must be one of: #{supported_distance_formulas}, was: #{distance_formula}" unless supported_distance_formulas.include?(distance_formula)
           @distance_formula = distance_formula 
         end
 
@@ -45,6 +45,11 @@ module Mongoid
         end
       
         protected
+
+        def default_distance_calculator
+          require 'haversine'
+          Haversine
+        end
 
         def default_units
           :kms

@@ -1,4 +1,4 @@
-require "mongoid/geo_spec_helper"
+require "mongoid/spec_helper"
 
 describe Mongoid::Extensions::Symbol::Inflections do
   describe "#withinBox" do  

@@ -1,4 +1,4 @@
-require "mongoid/geo_spec_helper"
+require "mongoid/spec_helper"
 
 Address.collection.create_index([['location', Mongo::GEO2D]], :min => -180, :max => 180)
 
