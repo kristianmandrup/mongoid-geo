@@ -1,18 +1,18 @@
 module Mongoid
-  module Geo::Shapes
+  module Geo
     class Distance < Shape 
       def initialize near
         super
       end
             
-      def to_query
-        {"$#{op_a}" => to_point(v.first), "$#{op_b}" => to_point(v.last) }
+      def to_query op_a, op_b
+        {"$#{op_a}" => to_point(to_a.first), "$#{op_b}" => to_a.last }
       end
 
-      protected
+      # protected
 
       def to_a
-        case v
+        case near
         when Hash
           [near[:point], near[:distance]]
         when Array

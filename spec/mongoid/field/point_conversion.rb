@@ -1,8 +1,8 @@
 require "mongoid/spec_helper"
-require "mongoid/helper/field"
 
 describe Mongoid::Field do
-  include FieldHelper
+  extend FieldHelper
+  configure!
 
   describe "Point conversions" do
     it "should work with point object has #lat and #lng methods" do

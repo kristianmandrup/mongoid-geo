@@ -10,14 +10,14 @@ module Mongoid
       #   {"$#{op_a}" => {"$#{op_b}" => to_a } }
       # end
 
-      protected
+      # protected
       
       def to_a
         case circle
         when Hash
           [circle[:center], circle[:radius]]
         when Array
-          [to_point(circle.first), to_point(circle.last)]          
+          [to_point(circle.first), circle.last]          
         else
           circle.respond_to?(:center) ? [circle.center, circle.radius] : parse_error!
         end

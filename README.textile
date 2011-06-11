@@ -18,7 +18,12 @@ h3. Spec status: June 11, 2011
 I've started working on new specs, starting from those in the mongoid/geo folder. These can and should be tested in isolation from the rest.
 The mongoid/geo/spec_helper.rb avoid loading in the entire mongoid_geo, but only the files in lib/mongoid/geo.
 
-* config_spec.rb passes!
+* config_spec.rb pass!
+* specs for shapes (box, circle and distance) pass! - maybe should rename to GeoConstraint or GeoCondition ? 
+* geo field works for simple case, but doesn't currently handle parsing (should use .geo_point from geo_calc!)
+
+Bugs:
+* Error "stack level too deep" when using geo inflections!
 
 h2. Intro
 

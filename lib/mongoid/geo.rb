@@ -1,8 +1,9 @@
+require 'mongoid/geo/shapes'
+
 module Mongoid
   module Geo
     autoload :Config,     'mongoid/geo/config'
-    autoload :Formula,    'mongoid/geo/formula'
-    autoload :Shapes,     'mongoid/geo/shapes'
+    autoload :Formula,    'mongoid/geo/formula'    
     autoload :Unit,       'mongoid/geo/unit'    
     
     def self.config &block

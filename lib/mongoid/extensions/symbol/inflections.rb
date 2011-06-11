@@ -30,8 +30,8 @@ module Mongoid #:nodoc:
         
         private
 
-        def twin_operators
-          Criterion::TwinOperators.new
+        def twin_operators options
+          Criterion::TwinOperators.new options
         end
 
         def nested_operators options

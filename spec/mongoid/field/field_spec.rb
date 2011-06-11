@@ -1,8 +1,8 @@
 require "mongoid/spec_helper"
-require "mongoid/helper/field"
 
-describe Mongoid::Fields do
-  include FieldHelper  
+describe Mongoid::Field do
+  extend FieldHelper  
+  configure!
 
   describe "Normal behavior" do       
     it "should default to normal behavior" do

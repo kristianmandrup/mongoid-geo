@@ -1,4 +1,0 @@
-h1. Mongoig::Field :geo assignment
-
-We should leverage the parsing capabilities og geo_calc and GeoPoint. A GeoPoint can have a #coord_mode set to :lng_lat. 
-Also, it extends various core classes with a #geo_point method which converts to a 2-element array and takes into account the global #coord_mode setting for this!

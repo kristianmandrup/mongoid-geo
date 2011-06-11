@@ -1,12 +1,15 @@
-require "mongoid/spec_helper"
+require "mongoid/geo/spec_helper"
 
 def box_class
-  Mongoid::Geo::Shapes::Box
+  Mongoid::Geo::Box
 end
 
 describe box_class do
+
   let(:hash_box) do
-    box_class.new {:lower_left => [1,1], :upper_right => [2,2] }
+    ll = [1,1]
+    ur = [2,2]
+    box_class.new :lower_left => ll, :upper_right => ur
   end
 
   let(:array_box) do
@@ -29,8 +32,10 @@ describe box_class do
 
   describe '#to_query' do
     describe ':within :box' do
-      op_a, op_b = :within, :box
-      hash_box.to_query.should == {"$#{op_a}" => {"$#{op_b}" => hash_box.to_a } }
+      it 'should return mongo query hash' do
+        op_a, op_b = :within, :box
+        hash_box.to_query(op_a, op_b).should == {"$#{op_a}" => {"$#{op_b}" => hash_box.to_a } }
+      end
     end
   end
 end

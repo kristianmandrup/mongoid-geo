@@ -1,8 +1,8 @@
 require "mongoid/spec_helper"
-require "mongoid/helper/field"
 
 describe Mongoid::Field do
-  include FieldHelper  
+  extend FieldHelper
+  configure!
 
   describe "Nil handling" do
     it "should drop nils" do

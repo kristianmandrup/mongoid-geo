@@ -1,5 +1,7 @@
 module InflectionsHelper
-  let(:base) do
-    Mongoid::Criteria.new(Address)
+  def configure!
+    let(:base) do
+      Mongoid::Criteria.new(Address)
+    end
   end
 end

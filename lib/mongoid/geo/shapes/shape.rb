@@ -1,3 +1,5 @@
+require 'geo_calc'
+
 module Mongoid
   module Geo
     class Shape
@@ -14,6 +16,12 @@ module Mongoid
       def hash?
         !shape.kind_of?(Array)
       end      
+      
+      protected
+      
+      def to_point v
+        v.geo_point.to_lng_lat
+      end
     end
   end
 end

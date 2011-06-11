@@ -4,6 +4,21 @@ module Mongoid
       class << self
         attr_accessor :server_version
 
+        def enable_extensions! *names
+          names = names.flatten.uniq
+          names = supported_extensions if names == [:all]
+          names.each {|name| enable_extension! name }
+        end
+
+        def enable_extension! name
+          case name.to_sym
+          # when :geo_array
+          #   require 'mongoid/geo/extensions/geo_array'
+          when :geo_vectors, :geo_vector
+            require 'mongoid/geo/extensions/geo_vectors'
+          end
+        end
+
         def distance_calculator
           @distance_calculator ||= default_distance_calculator
         end
