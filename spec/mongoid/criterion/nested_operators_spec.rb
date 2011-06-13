@@ -35,7 +35,7 @@ describe Mongoid::Criterion::TwinOperators do
         point_a = [72, -44]
         point_b = [74, 47]
 
-        arg = {:lower_left => point_a, :upper_right => point_b]
+        arg = {:lower_left => point_a, :upper_right => point_b}
 
         nested_op.to_query(arg).should == { :location => { "$within" => { "$box" => [point_a, point_b] } } }
       end
