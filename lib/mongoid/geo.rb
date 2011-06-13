@@ -1,3 +1,4 @@
+require 'geo_point'
 require 'mongoid/geo/shapes'
 
 module Mongoid

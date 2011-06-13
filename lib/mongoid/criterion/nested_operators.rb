@@ -41,11 +41,11 @@ module Mongoid #:nodoc:
       end
 
       def circle(v)
-        Mongoid::Geo::Shapes::Circle.new(v)
+        Mongoid::Geo::Circle.new(v)
       end
 
       def box(v)
-        Mongoid::Geo::Shapes::Box.new(v)
+        Mongoid::Geo::Box.new(v)
       end
 
       # aliases  - use alias_method ??

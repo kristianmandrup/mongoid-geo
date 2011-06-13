@@ -51,7 +51,7 @@ module Mongoid #:nodoc:
       end
 
       def distance(v)
-        Mongoid::Geo::Shapes::Distance.new(v)
+        Mongoid::Geo::Distance.new(v)
       end
     end
   end

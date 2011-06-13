@@ -11,7 +11,7 @@ gem "bson_ext",       '>= 1.3',  :platforms => [:mri]
 gem 'activesupport',  '>= 3'
 
 # experimenting here.. these gems need updated releases soon to play along as nice kids!
-gem 'geo_calc',       '~> 0.7.0'
+gem 'geo_point',      '>= 0.1.0'
 gem 'geo-distance',   '~> 0.1.2'  
 gem 'haversine',      '>=0.3'
 

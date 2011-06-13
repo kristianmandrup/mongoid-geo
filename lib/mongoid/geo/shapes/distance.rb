@@ -9,8 +9,6 @@ module Mongoid
         {"$#{op_a}" => to_point(to_a.first), "$#{op_b}" => to_a.last }
       end
 
-      # protected
-
       def to_a
         case near
         when Hash
@@ -22,7 +20,7 @@ module Mongoid
         end
       end      
 
-      private
+      protected
       
       def parse_error!
         raise("Can't extract nearMax values from: #{near}, must have :point and :maxDistance methods or equivalent hash keys in Hash")

@@ -9,8 +9,6 @@ module Mongoid
       # def to_query op_a, op_b
       #   {"$#{op_a}" => {"$#{op_b}" => to_a } }
       # end
-
-      # protected
       
       def to_a
         case circle
@@ -23,7 +21,7 @@ module Mongoid
         end
       end      
 
-      private
+      protected
       
       def parse_error!
         raise("Can't extract circle from: #{circle}, must have :center and :radius methods or equivalent hash keys in Hash")
