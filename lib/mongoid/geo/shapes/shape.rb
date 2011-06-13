@@ -1,5 +1,7 @@
 require 'geo_calc'
 
+GeoPoint.coord_mode = :lng_lat
+
 module Mongoid
   module Geo
     class Shape
