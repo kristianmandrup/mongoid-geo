@@ -13,13 +13,21 @@ module Mongoid #:nodoc:
           :geoNear  => klass.to_s.tableize,
           :near     => center, 
         }
-        
-        # optional query fields
-        query[:num]           = options[:limit] if options[:limit]
-        query[:num]           = args[:num].to_i if args[:num]
         query[:maxDistance]   = args[:max_distance] if args[:max_distance]
-        query[:query]         = selector
-        query[:query]         = selector.merge(args[:query]) if args[:query]
+        
+        # account for skip
+        if args[:num] 
+          query[:num]         = args[:num].to_i          
+        elsif self.options[:limit] > 0
+          query[:num]         = (self.options[:skip] || 0) + self.options[:limit]
+        end
+        
+
+        if args[:query]
+          query[:query]         = args[:query]
+        elsif self.selector
+          query[:query]         = self.selector
+        end
 
         if klass.connection.server_version >= 1.7          
           query["spherical"]  = args[:spherical] if args[:spherical]
@@ -34,24 +42,29 @@ module Mongoid #:nodoc:
         end
         results = klass.db.command(query)
         if results['results'].kind_of?(Array) && results['results'].size > 0
-          results['results'].collect do |result|
+          rows = results['results'].collect do |result|
             res = Mongoid::Factory.from_db(klass, result['obj'])
 
             # camel case is awkward in ruby when using variables...
             res.from_point = result['fromPoint'] || center
             res.from_hash = result['fromHash'] if result['fromHash']
             if klass.connection.server_version >= 1.7
-              res.distance = result['dis']
+              res.distance = result['dis'].to_f
             else
               dist_options = {}
-              dist_options.merge!(:units => args[:units]) if args[:units]
-              dist_options.merge!(:formula => args[:formula]) if args[:formula]
+              dist_options[:units] = args[:units] if args[:units]
+              dist_options[:formula] = args[:formula] if args[:formula]
               res.distance = Mongoid::Geo::Config.distance_calculator.distance(center[1], center[0], loc[1], loc[0], dist_options)
             end
             res
           end
         else
-          []
+          rows = []
+        end
+        if rows.size < self.options[:skip]
+          rows[self.options[:skip]..rows.size]
+        else
+          rows
         end
       end
     end
