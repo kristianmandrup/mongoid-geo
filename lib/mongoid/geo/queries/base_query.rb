@@ -1,11 +1,9 @@
-require 'geo_point'
-
 module Mongoid
   module BaseQuery
-      attr_reader :shape
+      attr_reader :value
       
-      def initialize shape
-        @shape = shape
+      def initialize value
+        @value = value
       end
 
       def to_mongo_query
@@ -13,13 +11,13 @@ module Mongoid
       end
       
       def hash?
-        !shape.kind_of?(Array)
+        !value.kind_of?(Array)
       end      
       
       protected
 
       def to_point v
-        v.geo_point.to_lng_lat
+        v.to_lng_lat if v.respond_to? :to_lng_lat
       end
     end
   end

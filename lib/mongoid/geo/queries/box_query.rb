@@ -30,7 +30,7 @@ module Mongoid
       end
       
       def box
-        shape
+        value
       end      
     end
   end

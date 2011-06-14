@@ -1,11 +1,10 @@
 require "mongoid/spec_helper"
-require "geo_calc"
-require "mongoid/geo/ext/geo_vectors"
-
-# This will also be required for using macros in geo_calc in the near future!
-require 'geo_vectors/macros' # USE MACROS!!! - 
 
 describe 'Using Geo Vectors' do
+  before do
+    Mongoid::Geo::Config.enable_extension! :geo_vectors
+  end
+
   let(:address) do
     Address.new        
   end

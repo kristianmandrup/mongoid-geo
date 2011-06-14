@@ -12,11 +12,22 @@ module Mongoid
 
         def enable_extension! name
           case name.to_sym
-          # when :geo_array
-          #   require 'mongoid/geo/extensions/geo_array'
+          when :geo_point
+            require 'mongoid/geo/extensions/geo_point'
           when :geo_vectors, :geo_vector
             require 'mongoid/geo/extensions/geo_vectors'
+            require 'mongoid/geo/extensions/geo_point'
           end
+        end
+        
+        def radian_multiplier
+          {
+            :feet => 364491.8,
+            :meters => 111170,
+            :kms => 111.17,
+            :miles => 69.407,
+            :radians => 1
+          }
         end
 
         def distance_calculator

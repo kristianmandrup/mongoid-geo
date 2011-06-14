@@ -1,19 +1,19 @@
 require "mongoid/geo/spec_helper"
 
 def box_class
-  Mongoid::Geo::Box
+  Mongoid::Geo::BoxQuery
 end
 
-describe box_class do
+describe box_query_class do
 
   let(:hash_box) do
     ll = [1,1]
     ur = [2,2]
-    box_class.new :lower_left => ll, :upper_right => ur
+    box_query_class.new :lower_left => ll, :upper_right => ur
   end
 
   let(:array_box) do
-    box_class.new [ [1,1], [2,2] ]
+    box_query_class.new [ [1,1], [2,2] ]
   end
   
   describe '#to_a' do

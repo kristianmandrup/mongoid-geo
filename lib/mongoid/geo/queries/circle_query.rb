@@ -30,7 +30,7 @@ module Mongoid
       end
       
       def circle
-        shape
+        value
       end
     end
   end

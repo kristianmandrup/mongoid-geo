@@ -37,7 +37,7 @@ module Mongoid #:nodoc:
           if args[:distance_multiplier]
             query["distanceMultiplier"] = args[:distance_multiplier]
           elsif args[:unit]
-            query["distanceMultiplier"] = Mongoid::Geo::Unit.distance_multiplier(args[:unit]) 
+            query["distanceMultiplier"] = Mongoid::Geo::Config.radian_multiplier(args[:unit])
           end
         end
         results = klass.db.command(query)

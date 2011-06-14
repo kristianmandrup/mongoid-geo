@@ -4,26 +4,25 @@ source "http://rubygems.org"
 # gem 'ruby-debug'
 # gem 'ruby-debug19'
 
-gem 'mongoid',        '>= 2.0.1', :git => 'git://github.com/mongoid/mongoid.git' # added Field.option recently (https://github.com/mongoid/mongoid/pull/921)
+gem 'mongoid',        '>= 2.0.1' #, :git => 'git://github.com/mongoid/mongoid.git' # added Field.option recently (https://github.com/mongoid/mongoid/pull/921)
 
 gem "bson",           '>= 1.3',  :platforms => [:jruby] # for non jruby apps, require bson_ext in your Gemfile to boost performance
 gem "bson_ext",       '>= 1.3',  :platforms => [:mri]
 gem 'activesupport',  '>= 3'
 
-# experimenting here.. these gems need updated releases soon to play along as nice kids!
-gem 'geo_point',      '>= 0.1.0'
-gem 'geo-distance',   '~> 0.1.2'  
+# default distance calculator
 gem 'haversine',      '>=0.3'
 
-# gem 'geo_distance' ?? maybe better than haversine?
-
 group :test, :development do
+  gem 'geo_point',    '>= 0.2.1'
+  gem 'geo-distance', '~> 0.1.2'  
+  gem 'geo_vectors',  '~> 0.6.1'  
+  
+  
   gem 'rspec',        '>=2.4'
   gem 'bundler',      '>=1'
   gem 'jeweler',      '>=1.5'
   gem 'rdoc',         '>=3.6'
-  # gem 'geo_calc',     '~> 0.6.1'
-  gem 'geo_vectors',  '~> 0.6.1'  
 end
 
 group :test do

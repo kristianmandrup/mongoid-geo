@@ -33,7 +33,7 @@ module Mongoid
       end
       
       def near
-        shape
+        value
       end
     end
   end

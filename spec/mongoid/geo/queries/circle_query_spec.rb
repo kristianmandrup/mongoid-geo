@@ -1,18 +1,18 @@
 require "mongoid/geo/spec_helper"
 
-def circle_class
-  Mongoid::Geo::Circle
+def circle_query_class
+  Mongoid::Geo::CircleQuery
 end
 
-describe circle_class do
+describe circle_query_class do
   let(:center) { [1,1] }
 
   let(:hash_circle) do               
-    circle_class.new :center => center, :radius => 5
+    circle_query_class.new :center => center, :radius => 5
   end
   
   let(:array_circle) do
-    circle_class.new [ center, 5 ]
+    circle_query_class.new [ center, 5 ]
   end
   
   describe '#to_a' do

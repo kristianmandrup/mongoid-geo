@@ -4,12 +4,7 @@ describe Mongoid::Field do
   extend FieldHelper
   configure!
 
-  describe "Nil handling" do
-    it "should drop nils" do
-      address.location = [nil, point, {:lat => 72, :lng => -49}]
-      address.location.should == [72, -44]
-    end
-        
+  describe "Nil handling" do        
     it "should handle nil values" do
       address.location = nil
       address.location.should be_nil
