@@ -21,6 +21,59 @@ Specs are currently being reworked to align with the new simplified design.
 - Creation of Mpongo query hashes for Twin- and NestedOperators have been extracted into Query classes (see mongoid/geo/queries folder)
 - #geo_near now uses configuration from Mongoid::Geo::Config, such as the #distance_calculator (if Mongo server doesn't support this) and the #radians_multiplier etc.
 
+h2. Example Usage 1.0.beta (goal)
+
+<pre>
+class Address
+  field :location, :type => Array, :geo => true
+end
+
+my_home = Address.new :location => {:lat => 10, :lng => 12}.to_lng_lat
+my_job = Address.new :location => [10.2, "12.1"].to_lng_lat
+my_club = Address.new :location => [10.2, 12.1]
+my_club.location_lat == 12.1 # true
+my_club.location_lng == 10.2 # true
+
+nearest_locations = Address.geo_near my_club
+nearest_locations.first.
+
+# find near point, max distance
+Address.where :location.near_max => [{:latitude => 10, :longitude => 12 }, 5] # 5 km?
+Address.where :location.near_max => [my_club, 5]
+
+Address.where(:location.within_box => [my_job, my_club])
+Address.where(:location.within_center(:sphere) => [my_home, 5])
+
+# geo_point integration (using GeoPoint class)
+
+Mongoid::Geo::Config.enable_extension! :geo_point
+
+p1 = "58 38 38N, 003 04 12W".geo_point # DMS format support!
+my_home = Address.new :location => p1.to_lng_lat
+
+# a GeoPoint includes some nice geo calculation methods, that are calculated relative to itself !
+p1.bearing_to my_club.geo_point # => 60 deg ?
+p1.distance_to my_home.geo_point # => 2341 kms ?
+
+# geo_vectors integration
+
+Mongoid::Geo::Config.enable_extension! :geo_vectors
+
+my_home = Address.new :location => p1.to_lng_lat
+my_home.add [2, 4].vector # add lng/lat vector
+my_home.add [20, 4.km].vector # add vector of 4km at 20 degrees
+
+</pre>
+
+h2. Example Usage 1.0 (goal)
+
+# Here I would like some kind of location repository key/value storage and allow use/integration of unit distances (see gem 'geo_magic' fx)
+
+<pre>
+Address.where(:location.within_box => [:my_job, :my_club]) # each point should be looked up in the repo using the symbol as key  
+Address.where :location.near_max => [:my_home, 5000.meters] # use geo_magic distance here!
+</pre>
+
 h2. Intro
 
 This is a Geo extension for Mongoid 2.

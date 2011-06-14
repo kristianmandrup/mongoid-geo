@@ -1,12 +1,12 @@
 require "mongoid/spec_helper"
 
 describe Mongoid::Extensions::Symbol::Inflections do
-  describe "#withinBox" do  
+  describe "#within_box" do  
     let(:point_a) { [ 72, -44 ] }
     let(:point_b) { [ 71, -45 ] }      
     
     let(:criteria) do
-      base.where(:location.withinBox => [point_a, point_b])
+      base.where(:location.within_box => [point_a, point_b])
     end
   
     it "adds the $near and $maxDistance modifiers to the selector" do
@@ -15,14 +15,14 @@ describe Mongoid::Extensions::Symbol::Inflections do
     end
   end  
 
-  describe "#withinBox, one hash point" do  
+  describe "#within_box, one hash point" do  
     let(:point_a) do 
       {:lat => 72, :lng => -44 }
     end
     let(:point_b) { [ 71, -45 ] }      
     
     let(:criteria) do
-      base.where(:location.withinBox => [point_a, point_b])
+      base.where(:location.within_box => [point_a, point_b])
     end
   
     it "adds the $near and $maxDistance modifiers to the selector" do
@@ -32,7 +32,7 @@ describe Mongoid::Extensions::Symbol::Inflections do
   end  
 
 
-  describe "#withinBox hash box" do  
+  describe "#within_box hash box" do  
     let(:point_a) { [ 72, -44 ] }
     let(:point_b) { [ 71, -45 ] }      
     let(:box) do
@@ -40,7 +40,7 @@ describe Mongoid::Extensions::Symbol::Inflections do
     end
     
     let(:criteria) do
-      base.where(:location.withinBox => box)
+      base.where(:location.within_box => box)
     end
   
     it "adds the $near and $maxDistance modifiers to the selector" do
@@ -49,7 +49,7 @@ describe Mongoid::Extensions::Symbol::Inflections do
     end
   end  
 
-  describe "#withinBox Struct box" do  
+  describe "#within_box Struct box" do  
     let(:point_a) { [ 72, -44 ] }
     let(:point_b) { [ 71, -45 ] }      
     let(:box) do
@@ -60,7 +60,7 @@ describe Mongoid::Extensions::Symbol::Inflections do
     end
     
     let(:criteria) do
-      base.where(:location.withinBox => box)
+      base.where(:location.within_box => box)
     end
   
     it "adds the $near and $maxDistance modifiers to the selector" do
@@ -69,12 +69,12 @@ describe Mongoid::Extensions::Symbol::Inflections do
     end
   end  
 
-  describe "#withinBox sphere" do  
+  describe "#within_box sphere" do  
     let(:point_a) { [ 72, -44 ] }
     let(:point_b) { [ 71, -45 ] }      
     
     let(:criteria) do
-      base.where(:location.withinBox(:sphere) => [point_a, point_b])
+      base.where(:location.within_box(:sphere) => [point_a, point_b])
     end
   
     it "adds the $near and $maxDistance modifiers to the selector" do
@@ -83,7 +83,7 @@ describe Mongoid::Extensions::Symbol::Inflections do
     end
   end
   
-  describe "#withinBox Struct circle" do  
+  describe "#within_box Struct circle" do  
     let(:center) { [ 71, -45 ] }      
     let(:box) do
       b = (Struct.new :center, :radius).new
@@ -93,7 +93,7 @@ describe Mongoid::Extensions::Symbol::Inflections do
     end
     
     let(:criteria) do
-      base.where(:location.withinCenter => [[ 72, -44 ], 5])
+      base.where(:location.within_center => [[ 72, -44 ], 5])
     end
   
     it "adds the $within and $center modifiers to the selector" do

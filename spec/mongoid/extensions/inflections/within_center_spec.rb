@@ -1,9 +1,9 @@
 require "mongoid/spec_helper"
 
 describe Mongoid::Extensions::Symbol::Inflections do  
-  describe "#withinCenter" do  
+  describe "#within_center" do  
     let(:criteria) do
-      base.where(:location.withinCenter => [[ 72, -44 ], 5])
+      base.where(:location.within_center => [[ 72, -44 ], 5])
     end
   
     it "adds the $within and $center modifiers to the selector" do
@@ -12,14 +12,14 @@ describe Mongoid::Extensions::Symbol::Inflections do
     end
   end  
 
-  describe "#withinCenter hash circle" do  
+  describe "#within_center hash circle" do  
     let(:center) { [ 72, -44 ] }
     let(:circle) do
       {:center => center, :radius => 5}
     end
     
     let(:criteria) do
-      base.where(:location.withinCenter => circle)
+      base.where(:location.within_center => circle)
     end
   
     it "adds the $within and $center modifiers to the selector" do
@@ -28,9 +28,9 @@ describe Mongoid::Extensions::Symbol::Inflections do
     end
   end 
   
-  describe "#withinCenter sphere" do  
+  describe "#within_center sphere" do  
     let(:criteria) do
-      base.where(:location.withinCenter(:sphere) => [[ 72, -44 ], 5])
+      base.where(:location.within_center(:sphere) => [[ 72, -44 ], 5])
     end
   
     it "adds the $within and $center modifiers to the selector" do
