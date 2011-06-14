@@ -19,7 +19,7 @@ module Mongoid #:nodoc:
       # Determines if the operator is some kind of 'box' or 'center' command
       # Rhe operator will use a different type of array for each command type
       def to_query v        
-        shape(v).to_query(op_a, op_b)
+        query(v).to_query_hash
       end
 
       def hash
@@ -28,8 +28,8 @@ module Mongoid #:nodoc:
       
       protected
 
-      def shape(v) 
-        center? ? circle(v) : box(v)
+      def query(v) 
+        center? ? circle_query(v) : box_query(v)
       end
 
       def center?
@@ -41,11 +41,11 @@ module Mongoid #:nodoc:
       end
 
       def circle(v)
-        Mongoid::Geo::Circle.new(v)
+        Mongoid::Geo::CircleQuery.new(v)
       end
 
       def box(v)
-        Mongoid::Geo::Box.new(v)
+        Mongoid::Geo::BoxQuery.new(v)
       end
 
       # aliases  - use alias_method ??

@@ -1,14 +1,12 @@
+require 'mongoid/geo/queries/twin_query'
+
 module Mongoid
   module Geo
-    class Distance < Shape 
+    class DistanceQuery < TwinQuery
       def initialize near
         super
       end
-            
-      def to_query op_a, op_b
-        {"$#{op_a}" => to_point(to_a.first), "$#{op_b}" => to_a.last }
-      end
-
+                  
       def to_a
         case near
         when Hash
@@ -21,6 +19,14 @@ module Mongoid
       end      
 
       protected
+
+      def first_operator
+        :near
+      end
+
+      def second_operator
+        :maxDistance
+      end
       
       def parse_error!
         raise("Can't extract nearMax values from: #{near}, must have :point and :maxDistance methods or equivalent hash keys in Hash")

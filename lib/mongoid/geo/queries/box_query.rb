@@ -1,14 +1,12 @@
+require 'mongoid/geo/queries/nested_query'
+
 module Mongoid
   module Geo
-    class Box < Shape
+    class BoxQuery < NestedQuery
 
       def initialize box
         super
       end
-
-      # def to_query op_a, op_b
-      #   {"$#{op_a}" => {"$#{op_b}" => to_a } }
-      # end
       
       def to_a
         case box
@@ -22,6 +20,10 @@ module Mongoid
       end        
 
       protected
+
+      def inner_operator
+        :box
+      end      
       
       def parse_error!
         raise("Can't extract box from: #{box}, must have :lower_left and :upper_right methods or equivalent hash keys in Hash")          

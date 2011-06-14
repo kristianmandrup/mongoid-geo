@@ -19,7 +19,7 @@ module Mongoid #:nodoc:
       end
 
       def to_query v        
-        shape(v).to_query(op_a, op_b)        
+        query(v).to_mongo_query
       end
 
       def hash
@@ -42,8 +42,9 @@ module Mongoid #:nodoc:
         methods.all? {|meth| self.send(meth) == other.send(meth) }         
       end
 
-      def shape(v) 
+      def query(v) 
         return distance(v) if max?
+        raise "Query could not be formed from: #{v}, for operators: #{op_a}, #{op_b}"
       end
 
       def max?
@@ -51,7 +52,7 @@ module Mongoid #:nodoc:
       end
 
       def distance(v)
-        Mongoid::Geo::Distance.new(v)
+        Mongoid::Geo::DistanceQuery.new(v)
       end
     end
   end

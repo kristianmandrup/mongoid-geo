@@ -1,15 +1,13 @@
+require 'mongoid/geo/queries/nested_query'
+
 module Mongoid
   module Geo
-    class Circle < Shape      
+    class CircleQuery < NestedQuery
 
       def initialize circle
         super
       end
-      
-      # def to_query op_a, op_b
-      #   {"$#{op_a}" => {"$#{op_b}" => to_a } }
-      # end
-      
+            
       def to_a
         case circle
         when Hash
@@ -22,6 +20,10 @@ module Mongoid
       end      
 
       protected
+
+      def inner_operator
+        :center
+      end
       
       def parse_error!
         raise("Can't extract circle from: #{circle}, must have :center and :radius methods or equivalent hash keys in Hash")
