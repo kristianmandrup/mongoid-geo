@@ -13,19 +13,13 @@ $ bundle
 $ bundle exec rspec spec/mongoid/geo/config_spec.rb  
 </pre>
 
-h3. Spec status: June 11, 2011
+h3. Spec status: June 14, 2011
 
-I've started working on new specs, starting from those in the mongoid/geo folder. These can and should be tested in isolation from the rest.
-The mongoid/geo/spec_helper.rb avoid loading in the entire mongoid_geo, but only the files in lib/mongoid/geo.
-
-* config_spec.rb pass!
-* specs for shapes (box, circle and distance) pass! - maybe should rename to GeoConstraint or GeoCondition ? 
-* geo field works for simple case, but doesn't currently handle parsing (should use .geo_point from geo_calc!)
-
-Note: From release 0.7.0, geo_calc now supports coords mode and #to_lng_lat and #to_lat_lng!
-
-Bugs:
-* Error "stack level too deep" when using geo inflections!
+Specs are currently being reworked to align with the new simplified design.
+- A Mongoid::Geo::Config object has been added which you use to configure Mongoid::Geo, see mongoid/geo/config_spec.rb
+- GeoPoints and GeoVectors can be integrated using the new #enable_extensions! method on Mongoid::Geo::Config, specs in mongoid/geo/extensions demonstrate how to use this
+- Creation of Mpongo query hashes for Twin- and NestedOperators have been extracted into Query classes (see mongoid/geo/queries folder)
+- #geo_near now uses configuration from Mongoid::Geo::Config, such as the #distance_calculator (if Mongo server doesn't support this) and the #radians_multiplier etc.
 
 h2. Intro
 
