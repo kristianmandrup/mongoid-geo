@@ -1,16 +1,16 @@
-module String
+class String
   def to_lng_lat
     self.split(',').map(&:strip).map(&:to_f)
   end
 end
 
-module Array
+class Array
   def to_lng_lat
     self[0..1].map(&:to_f)
   end
 end  
 
-module Hash
+class Hash
   def to_lng_lat
     [to_lng, to_lat]
   end

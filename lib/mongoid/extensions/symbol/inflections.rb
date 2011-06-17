@@ -39,7 +39,7 @@ module Mongoid #:nodoc:
         end
         
         def get_op calc, operator
-          if calc.to_sym == :sphere && Mongoid::Geo::Config.server_version >= 1.7            
+          if calc.to_sym == :sphere && Mongoid.master.connection.server_version >= '1.7'
             "#{operator}Sphere"
           else
             operator

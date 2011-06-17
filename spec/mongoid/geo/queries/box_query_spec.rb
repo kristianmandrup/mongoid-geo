@@ -4,7 +4,7 @@ def box_class
   Mongoid::Geo::BoxQuery
 end
 
-describe box_query_class do
+describe box_class do
 
   let(:hash_box) do
     ll = [1,1]

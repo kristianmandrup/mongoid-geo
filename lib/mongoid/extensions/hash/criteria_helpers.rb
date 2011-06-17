@@ -6,9 +6,9 @@ module Mongoid #:nodoc:
         def expand_complex_criteria
           hsh = {}
           each_pair do |k,v|
-            if k.respond_to?(:key) && k.respond_to?(:to_query)
+            if k.respond_to?(:key) && k.respond_to?(:to_mongo_query)
               hsh[k.key] ||= {}              
-              hsh[k.key].merge!(k.to_query(v))
+              hsh[k.key].merge!(k.to_mongo_query(v))
             else
               hsh[k] = v
             end

@@ -2,7 +2,6 @@ require "mongoid/spec_helper"
 
 describe Mongoid::Extensions::Symbol::Inflections do
   include InflectionsHelper
-  configure!
   
   describe "#nearSphere" do
     let(:criteria) do

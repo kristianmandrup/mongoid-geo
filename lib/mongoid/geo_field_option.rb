@@ -5,11 +5,12 @@
 #   handlers when that option is provided.
 
 Mongoid::Field.option :geo do |model,field,options|
-  model.index [[ field, Mongo::GEO2D ]], :min => -180, :max => 180
+  options = {} unless options.kind_of?(Hash)
+  model.index([[ field.name, Mongo::GEO2D ]]) unless options[:index] == false
   model.class_eval {
-    options = {} unless options.kind_of?(Hash)
-    lat_meth = options[:lat] || "#{field}_lat"
-    lng_meth = options[:lng] || "#{field}_lng"
+    attr_accessor :from_point, :from_hash, :distance
+    lat_meth = options[:lat] || "#{field.name}_lat"
+    lng_meth = options[:lng] || "#{field.name}_lng"
 
     define_method(lng_meth) { read_attribute(field)[0] }
     define_method(lat_meth) { read_attribute(field)[1] }
@@ -23,5 +24,14 @@ Mongoid::Field.option :geo do |model,field,options|
       write_attribute(field, [nil,nil]) if read_attribute(field).empty?
       send(field)[1] = value
     end
+
+    define_method field.name do |*args|
+      if args.size == 2
+        [read_attribute(field.name)[Mongoid::Geo::LNG_LAT[args[0]]],read_attribute(field.name)[Mongoid::Geo::LNG_LAT[args[1]]]]
+      else
+        read_attribute(field.name)
+      end
+    end
+
   }
 end

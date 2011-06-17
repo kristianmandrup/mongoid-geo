@@ -2,24 +2,6 @@ module Mongoid
   module Geo
     module Config 
       class << self
-        attr_accessor :server_version
-
-        def enable_extensions! *names
-          names = names.flatten.uniq
-          names = supported_extensions if names == [:all]
-          names.each {|name| enable_extension! name }
-        end
-
-        def enable_extension! name
-          case name.to_sym
-          when :geo_point
-            require 'mongoid/geo/extensions/geo_point'
-          when :geo_vectors, :geo_vector
-            require 'mongoid/geo/extensions/geo_vectors'
-            require 'mongoid/geo/extensions/geo_point'
-          end
-        end
-        
         def radian_multiplier
           {
             :feet => 364491.8,
@@ -39,19 +21,6 @@ module Mongoid
           @distance_calculator = clazz
         end
 
-        def server_version
-          @server_version ||= 1.8
-        end
-
-        def coord_mode
-          @coord_mode ||= default_coord_mode
-        end          
-
-        def coord_mode= coord_mode
-          raise "Coordinate mode must be one of: #{supported_coord_modes}, was: #{coord_mode}" unless supported_coord_modes.include?(coord_mode)
-          @coord_mode = coord_mode
-        end
-        
         def distance_formula
           @distance_formula ||= default_distance_formula
         end          
@@ -81,10 +50,6 @@ module Mongoid
           :kms
         end
    
-        def default_coord_mode
-          :lng_lat
-        end
-
         def default_distance_formula
           :sphere
         end
@@ -96,10 +61,7 @@ module Mongoid
         def supported_units
           [:kms, :miles]
         end        
-
-        def supported_coord_modes
-          [:lat_lng, :lng_lat]
-        end        
+      
       end
     end
   end

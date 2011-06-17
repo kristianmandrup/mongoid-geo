@@ -1,5 +1,6 @@
 module Mongoid
-  module BaseQuery
+  module Geo
+    class BaseQuery
       attr_reader :value
       
       def initialize value

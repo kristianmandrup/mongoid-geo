@@ -13,7 +13,7 @@ class Address
   field :post_code
   field :location, :type => Array, :geo => true
 
-  field :pos, :type => Array, :geo => {:lat => :latitude, :lng => :longitude}
+  field :pos, :type => Array, :geo => {:lat => :latitude, :lng => :longitude, :index => false}
 
   # key :street
 end

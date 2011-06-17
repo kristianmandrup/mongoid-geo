@@ -18,7 +18,7 @@ module Mongoid #:nodoc:
       # the command hash sent to the mongo DB to be executed
       # Determines if the operator is some kind of 'box' or 'center' command
       # Rhe operator will use a different type of array for each command type
-      def to_query v        
+      def to_mongo_query v        
         query(v).to_query_hash
       end
 

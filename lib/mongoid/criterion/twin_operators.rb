@@ -18,7 +18,7 @@ module Mongoid #:nodoc:
         @op_b = options[:op_b]        
       end
 
-      def to_query v        
+      def to_mongo_query v        
         query(v).to_mongo_query
       end
 

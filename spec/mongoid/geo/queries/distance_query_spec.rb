@@ -1,7 +1,7 @@
 require "mongoid/geo/spec_helper"
 
 def distance_class
-  Mongoid::Geo::Distance
+  Mongoid::Geo::DistanceQuery
 end
 
 describe distance_class do

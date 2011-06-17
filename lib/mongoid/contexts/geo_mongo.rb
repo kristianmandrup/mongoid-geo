@@ -1,13 +1,7 @@
 module Mongoid #:nodoc:
   module Contexts #:nodoc:
     class Mongo
-      def geo_near(center, location_attribute, args = {})
-        Mongoid::Geo.config do |c|
-          c.server_version ||= klass.connection.server_version
-        end
-
-        center = (center.respond_to?(location_attribute)) ? center.send(location_attribute) : center
-
+      def geo_near(center, args = {})
         # minimum query
         query = {
           :geoNear  => klass.to_s.tableize,
@@ -18,19 +12,19 @@ module Mongoid #:nodoc:
         # account for skip
         if args[:num] 
           query[:num]         = args[:num].to_i          
-        elsif self.options[:limit] > 0
+        elsif self.options[:limit].kind_of?(Numeric) && self.options[:limit] > 0
           query[:num]         = (self.options[:skip] || 0) + self.options[:limit]
         end
         
 
         if args[:query]
           query[:query]         = args[:query]
-        elsif self.selector
+        elsif self.selector != {}
           query[:query]         = self.selector
         end
 
-        if klass.connection.server_version >= 1.7          
-          query["spherical"]  = args[:spherical] if args[:spherical]
+        if klass.db.connection.server_version >= '1.7'          
+          query["spherical"]  = true if args[:spherical]
 
           # mongodb < 1.7 returns degrees but with earth flat. in Mongodb 1.7 you can set sphere and let mongodb calculate the distance in Miles or KM
           # for mongodb < 1.7 we need to run Haversine first before calculating degrees to Km or Miles. See below.
@@ -48,7 +42,7 @@ module Mongoid #:nodoc:
             # camel case is awkward in ruby when using variables...
             res.from_point = result['fromPoint'] || center
             res.from_hash = result['fromHash'] if result['fromHash']
-            if klass.connection.server_version >= 1.7
+            if klass.db.connection.server_version >= '1.7'
               res.distance = result['dis'].to_f
             else
               dist_options = {}
@@ -61,8 +55,8 @@ module Mongoid #:nodoc:
         else
           rows = []
         end
-        if rows.size < self.options[:skip]
-          rows[self.options[:skip]..rows.size]
+        if self.options[:skip] && rows.size > self.options[:skip]
+          rows[self.options[:skip]..rows.size-1]
         else
           rows
         end

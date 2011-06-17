@@ -9,5 +9,5 @@ require "mongoid/helper/field"
 # require 'mongoid/geo/fields'
 require 'models/address'
 require 'models/person'
-
+Address.create_indexes
 require 'geo_calc'
