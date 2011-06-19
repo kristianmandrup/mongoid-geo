@@ -10,7 +10,7 @@ describe 'Using Geo Point' do
   end
 
   let(:p1) do
-    GeoPoint.new "58 38 38N, 003 04 12W"
+    GeoPoint.new "58 38 38N", "003 04 12W"
   end
 
   it 'should work' do

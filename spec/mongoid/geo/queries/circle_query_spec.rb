@@ -32,8 +32,7 @@ describe circle_query_class do
   describe '#to_query' do
     describe ':within :center' do
       it 'should return mongo query hash' do      
-        op_a, op_b = :within, :center
-        hash_circle.to_query(op_a, op_b).should == {"$#{op_a}" => {"$#{op_b}" => hash_circle.to_a } }
+        hash_circle.to_mongo_query.should == {"$within" => {"$center" => hash_circle.to_a } }
       end
     end
   end

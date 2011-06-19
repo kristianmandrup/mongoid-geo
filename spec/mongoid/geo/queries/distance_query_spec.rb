@@ -32,9 +32,8 @@ describe distance_class do
   describe '#to_query' do
     describe ':within :center' do
       it 'should return mongo query hash' do
-        op_a, op_b = :point, :distance
-        expected_res = {"$#{op_a}" => hash_distance.to_a.first, "$#{op_b}" => hash_distance.to_a.last }      
-        hash_distance.to_query(op_a, op_b).should == expected_res
+        expected_res = {"$near" => hash_distance.to_a.first, "$maxDistance" => hash_distance.to_a.last }      
+        hash_distance.to_mongo_query.should == expected_res
       end
     end
   end

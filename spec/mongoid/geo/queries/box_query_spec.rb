@@ -9,11 +9,11 @@ describe box_class do
   let(:hash_box) do
     ll = [1,1]
     ur = [2,2]
-    box_query_class.new :lower_left => ll, :upper_right => ur
+    box_class.new :lower_left => ll, :upper_right => ur
   end
 
   let(:array_box) do
-    box_query_class.new [ [1,1], [2,2] ]
+    box_class.new [ [1,1], [2,2] ]
   end
   
   describe '#to_a' do
@@ -33,8 +33,7 @@ describe box_class do
   describe '#to_query' do
     describe ':within :box' do
       it 'should return mongo query hash' do
-        op_a, op_b = :within, :box
-        hash_box.to_query(op_a, op_b).should == {"$#{op_a}" => {"$#{op_b}" => hash_box.to_a } }
+        hash_box.to_mongo_query.should == {"$within" => {"$box" => hash_box.to_a } }
       end
     end
   end
