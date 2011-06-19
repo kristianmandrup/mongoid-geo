@@ -13,13 +13,25 @@ $ bundle
 $ bundle exec rspec spec/mongoid/geo/config_spec.rb  
 </pre>
 
-h3. Spec status: June 14, 2011
+h3. Spec status: June 20, 2011
 
 Specs are currently being reworked to align with the new simplified design.
 - A Mongoid::Geo::Config object has been added which you use to configure Mongoid::Geo, see mongoid/geo/config_spec.rb
 - GeoPoints and GeoVectors can be integrated using the new #enable_extensions! method on Mongoid::Geo::Config, specs in mongoid/geo/extensions demonstrate how to use this
 - Creation of Mpongo query hashes for Twin- and NestedOperators have been extracted into Query classes (see mongoid/geo/queries folder)
 - #geo_near now uses configuration from Mongoid::Geo::Config, such as the #distance_calculator (if Mongo server doesn't support this) and the #radians_multiplier etc.
+
+<pre>a = Address.where(:city => 'Munich')</pre>
+
+In my environment (mongoid 2.0.2, MongoDB shell version: 1.8.1), for some reason, the above statement causes a recursive stack error:
+
+<pre>
+Failure/Error: Unable to find matching line from backtrace
+     SystemStackError:
+       stack level too deep   
+</pre>
+
+Otherwise, most of the specs now seem to finally pass :)
 
 h2. Example Usage 1.0.beta (goal)
 
@@ -35,7 +47,7 @@ my_club.location_lat == 12.1 # true
 my_club.location_lng == 10.2 # true
 
 nearest_locations = Address.geo_near my_club
-nearest_locations.first.
+nearest_locations.first
 
 # find near point, max distance
 Address.where :location.near_max => [{:latitude => 10, :longitude => 12 }, 5] # 5 km?
@@ -67,7 +79,8 @@ my_home.add [20, 4.km].vector # add vector of 4km at 20 degrees
 
 h2. Example Usage 1.0 (goal)
 
-# Here I would like some kind of location repository key/value storage and allow use/integration of unit distances (see gem 'geo_magic' fx)
+Would be nice with a simple API that acts as a location repository and can be implemented for any key/value store.
+Would also be nice to use unit distances as Numeric macros (currently available in _geo_magic_ gem).
 
 <pre>
 Address.where(:location.within_box => [:my_job, :my_club]) # each point should be looked up in the repo using the symbol as key  

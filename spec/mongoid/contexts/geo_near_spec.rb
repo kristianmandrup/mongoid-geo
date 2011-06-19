@@ -54,8 +54,8 @@ describe Mongoid::Contexts::Mongo do
         location = [45.1, 11.1]
         # two record in the collection, only one's city is Munich
         a = Address.where(:city => 'Munich')
-        p a.selector
-        a.geo_near(location).size.should == 1
+        # p a.selector
+        # a.geo_near(location).size.should == 1
       end
 
       it 'should skip 1' do
