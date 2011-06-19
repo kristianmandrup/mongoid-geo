@@ -13,13 +13,13 @@ module Mongoid #:nodoc:
 
       # Create the new complex criterion.
       def initialize(options = {})
-        @key =  options[:key]
+        @key =  options[:key].to_s.to_sym
         @op_a = options[:op_a]
         @op_b = options[:op_b]        
       end
 
-      def to_mongo_query v        
-        query(v).to_mongo_query
+      def to_mongo_query v
+        {key => query(v).to_mongo_query}
       end
 
       def hash

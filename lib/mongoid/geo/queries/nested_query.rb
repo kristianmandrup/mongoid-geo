@@ -2,10 +2,8 @@ require 'mongoid/geo/queries/base_query'
 
 module Mongoid
   module Geo
-    class NestedQuery < BaseQuery
-      attr_reader :shape
-      
-      def initialize shape
+    class NestedQuery < BaseQuery      
+      def initialize value
         super
       end
 

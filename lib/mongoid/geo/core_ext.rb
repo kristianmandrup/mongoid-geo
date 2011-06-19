@@ -26,4 +26,14 @@ class Hash
     return self[v.first].to_lng if !v.empty?
     raise "Hash must contain either of the keys: [:lon, :long, :lng, :longitude] to be converted to a longitude"
   end
+end 
+
+class Object
+  def to_lng_lat
+    return [lng, lat] if respond_to?(:lat) && respond_to?(:lng)
+    return [longitude, latitude] if respond_to?(:latitude) && respond_to?(:longitude)
+    return position.to_lng_lat if respond_to? :position
+    location.to_lng_lat if respond_to? :location
+  end
 end
+

@@ -8,7 +8,9 @@ describe Mongoid::Field do
     pending 'Will work in next release of geo_calc or geo_point gems'
     
     it "should split a String into parts and convert to floats" do
-      address.location = "23.5, -47".to_lng_lat
+      arg = "23.5, -47".to_lng_lat
+      puts "arg: #{arg}"       
+      address.location = arg
       address.location.should == [23.5, -47]
     end
     

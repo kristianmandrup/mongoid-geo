@@ -37,7 +37,7 @@ describe Mongoid::Contexts::Mongo do
     describe 'option :distanceMultiplier' do
       it "should multiply returned distance with multiplier" do
         location = [45.1, 11.1]
-        Address.geo_near(location, :distance_multiplier => 4).map(&:distance).first.should > 0
+        Address.geo_near(location, :distance_multiplier => 4).map(&:distance).first.to_kilometers.should > 0
       end
     end
     

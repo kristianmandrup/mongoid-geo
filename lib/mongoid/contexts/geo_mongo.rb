@@ -48,7 +48,9 @@ module Mongoid #:nodoc:
               dist_options = {}
               dist_options[:units] = args[:units] if args[:units]
               dist_options[:formula] = args[:formula] if args[:formula]
-              res.distance = Mongoid::Geo::Config.distance_calculator.distance(center[1], center[0], loc[1], loc[0], dist_options)
+              # TODO: Should find and use the first field marked as :geo
+              loc = res.location              
+              res.distance = Mongoid::Geo::Config.distance_calculator.distance(center[1], center[0], loc[1], loc[0]) # , dist_options
             end
             res
           end

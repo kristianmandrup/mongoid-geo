@@ -18,9 +18,10 @@ module Mongoid #:nodoc:
       # the command hash sent to the mongo DB to be executed
       # Determines if the operator is some kind of 'box' or 'center' command
       # Rhe operator will use a different type of array for each command type
-      def to_mongo_query v        
-        query(v).to_query_hash
-      end
+
+      # inherited
+      # def to_mongo_query v        
+      # end
 
       def hash
         [@op_a, [@op_b, @key]].hash
@@ -40,15 +41,15 @@ module Mongoid #:nodoc:
         inner_operator =~ /box/
       end
 
-      def circle(v)
+      def circle_query(v)
         Mongoid::Geo::CircleQuery.new(v)
       end
 
-      def box(v)
+      def box_query(v)
         Mongoid::Geo::BoxQuery.new(v)
       end
 
-      # aliases  - use alias_method ??
+      private
       
       def outer_operator
         op_a

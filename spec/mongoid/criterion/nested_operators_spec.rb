@@ -26,7 +26,7 @@ describe Mongoid::Criterion::TwinOperators do
 
         arg = [point_a, point_b]
 
-        nested_op.to_query(arg).should == { :location => { "$within" => { "$box" => [point_a, point_b] } } }
+        nested_op.to_mongo_query(arg).should == { :location => { "$within" => { "$box" => [point_a, point_b] } } }
       end
     end
 
@@ -37,7 +37,7 @@ describe Mongoid::Criterion::TwinOperators do
 
         arg = {:lower_left => point_a, :upper_right => point_b}
 
-        nested_op.to_query(arg).should == { :location => { "$within" => { "$box" => [point_a, point_b] } } }
+        nested_op.to_mongo_query(arg).should == { :location => { "$within" => { "$box" => [point_a, point_b] } } }
       end
     end
   end # to_query

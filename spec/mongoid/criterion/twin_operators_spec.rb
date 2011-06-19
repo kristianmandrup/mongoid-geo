@@ -22,14 +22,14 @@ describe Mongoid::Criterion::TwinOperators do
     describe 'array arg' do
       it "should return the mongo query hash" do
         arg = [[72, -44], 5]
-        twin_op.to_query(arg).should == { :location => { "$near" => [ 72, -44 ], "$maxDistance" => 5 } }
+        twin_op.to_mongo_query(arg).should == { :location => { "$near" => [ 72, -44 ], "$maxDistance" => 5 } }
       end
     end
 
     describe 'hash arg' do
       it "should return the mongo query hash" do
         arg = {:point => [72, -44], :distance => 5}
-        twin_op.to_query(arg).should == { :location => { "$near" => [ 72, -44 ], "$maxDistance" => 5 } }
+        twin_op.to_mongo_query(arg).should == { :location => { "$near" => [ 72, -44 ], "$maxDistance" => 5 } }
       end
     end
   end # to_query

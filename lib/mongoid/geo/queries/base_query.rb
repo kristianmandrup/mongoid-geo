@@ -18,7 +18,8 @@ module Mongoid
       protected
 
       def to_point v
-        v.to_lng_lat if v.respond_to? :to_lng_lat
+        return v.to_lng_lat if v.respond_to? :to_lng_lat
+        v
       end
     end
   end

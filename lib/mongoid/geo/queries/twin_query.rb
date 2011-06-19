@@ -2,14 +2,13 @@ require 'mongoid/geo/queries/base_query'
 
 module Mongoid
   module Geo
-    class TwinQuery < BaseQuery
-      attr_reader :shape
-      
-      def initialize shape
+    class TwinQuery < BaseQuery      
+      def initialize value
         super
       end
 
       def to_mongo_query
+        puts "to_mongo_query: #{value}"
         {"$#{first_operator}" => to_point(to_a.first), "$#{second_operator}" => to_a.last }
       end
 

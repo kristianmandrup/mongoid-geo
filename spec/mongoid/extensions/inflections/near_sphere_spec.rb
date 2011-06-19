@@ -1,11 +1,12 @@
 require "mongoid/spec_helper"
 
 describe Mongoid::Extensions::Symbol::Inflections do
-  include InflectionsHelper
+  extend InflectionsHelper
+  configure!
   
-  describe "#nearSphere" do
+  describe "#near_sphere" do
     let(:criteria) do
-      base.where(:location.nearSphere => [ 72, -44 ])
+      base.where(:location.near_sphere => [ 72, -44 ])
     end
 
     it "returns a selector matching a ne clause" do
