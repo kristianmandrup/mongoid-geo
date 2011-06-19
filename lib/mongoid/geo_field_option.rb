@@ -12,22 +12,22 @@ Mongoid::Field.option :geo do |model,field,options|
     lat_meth = options[:lat] || "#{field.name}_lat"
     lng_meth = options[:lng] || "#{field.name}_lng"
 
-    define_method(lng_meth) { read_attribute(field)[0] }
-    define_method(lat_meth) { read_attribute(field)[1] }
+    define_method(lng_meth) { read_attribute(field.name)[0] }
+    define_method(lat_meth) { read_attribute(field.name)[1] }
 
     define_method "#{lng_meth}=" do |value|
-      write_attribute(field, [nil,nil]) if read_attribute(field).empty?
+      write_attribute(field, [nil,nil]) if read_attribute(field.name).empty?
       send(field)[0] = value
     end
 
     define_method "#{lat_meth}=" do |value|
-      write_attribute(field, [nil,nil]) if read_attribute(field).empty?
-      send(field)[1] = value
+      write_attribute(field.name, [nil,nil]) if read_attribute(field.name).empty?
+      send(field.name)[1] = value
     end
 
     define_method field.name do |*args|
       if args.size == 2
-        [read_attribute(field.name)[Mongoid::Geo::LNG_LAT[args[0]]],read_attribute(field.name)[Mongoid::Geo::LNG_LAT[args[1]]]]
+        [read_attribute(field.name)[Mongoid::Geo::lng_lat[args[0]]],read_attribute(field.name)[Mongoid::Geo::lng_lat[args[1]]]]
       else
         read_attribute(field.name)
       end

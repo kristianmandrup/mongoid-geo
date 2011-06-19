@@ -15,11 +15,3 @@ RSpec.configure do |config|
     clean_database!
   end
 end
-
-def set_server_version version
-  Mongoid::Geo::Config.server_version = version
-end
-
-def get_server_version
-  Mongoid::Geo::Config.server_version
-end

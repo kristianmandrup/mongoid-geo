@@ -4,10 +4,6 @@ Address.collection.create_index([['location', Mongo::GEO2D]], :min => -180, :max
 
 describe 'Mongoid Spherical geonear distance calculations: Mongo DB < 1.7' do
   context "Normal mode distance" do    
-    before do
-      set_server_version(1.6)
-    end
-
     after do
       clean_database!
     end
@@ -20,13 +16,9 @@ describe 'Mongoid Spherical geonear distance calculations: Mongo DB < 1.7' do
     end
   
     it "calculate distance" do
-      # d1 = Geokit::LatLng.distance_between(@center.location,@icc.location,{:units=> :kms}) # 1.8078417965905265
-      # d2 = Geokit::LatLng.distance_between(@center.location,@icc.location,{:units=> :kms,:formula => :flat}) # 1.5037404243943175
-
       Mongoid::Geo.mongo_db_version.should == 1.6
       Mongoid::Geo.spherical.should be_false
       
-      # results = Address.geoNear @center.location, :location, :distanceMultiplier => 111.17
       results = Address.geoNear @center.location, :location, :unit => :km
       
       distances = results.asc(:distance).map(&:distance)  
@@ -40,19 +32,12 @@ describe 'Mongoid Spherical geonear distance calculations: Mongo DB < 1.7' do
   end
     
   context "Spherical mode distance" do
-    before do
-      set_server_version(1.6)
-    end
-
     before :each do
       @center = Address.create(:location => {:lat => 31.2010839, :lng => -121.583509}, :city => 'center')
       @icc    = Address.create(:location => {:lat => 31.2026708, :lng => -121.6024088}, :city => 'icc')
     end
 
     it "calculate distance" do
-      # d1 = Geokit::LatLng.distance_between(@center.location,@icc.location,{:units=> :kms}) # 1.8078417965905265
-      # d2 = Geokit::LatLng.distance_between(@center.location,@icc.location,{:units=> :kms,:formula => :flat}) # 1.5037404243943175
-
       Mongoid::Geo.mongo_db_version.should == 1.6
       Mongoid::Geo.spherical.should be_true
 

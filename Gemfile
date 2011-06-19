@@ -14,7 +14,7 @@ gem 'activesupport',  '>= 3'
 gem 'haversine',      '>=0.3'
 
 group :test, :development do
-  gem 'geo_point',    '>= 0.2.1'
+  gem 'geo_point',    '~> 0.2.3'
   gem 'geo-distance', '~> 0.1.2'  
   gem 'geo_vectors',  '~> 0.6.1'  
   

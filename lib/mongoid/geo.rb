@@ -5,19 +5,37 @@ require 'mongoid/geo/queries'
 
 module Mongoid
   module Geo
-    LNG_LAT = {
-      :lng => 0,
-      :long => 0,
-      :longitude => 0,
-      :lat => 1,
-      :latitude => 1,
-    }
-    # autoload :Config,     'mongoid/geo/config'
-    # autoload :Formula,    'mongoid/geo/formula'    
-    # autoload :Unit,       'mongoid/geo/unit'    
+    def self.lng_lat 
+      lng_symbols.inject({}) {|res, s| res.merge(s => 0)}.merge(lat_symbols.inject({}) {|res, s| res.merge(s => 1)})
+    end
+
+    def self.lng_symbols
+      [:lon, :long, :lng, :longitude]  
+    end
+
+    def self.lat_symbols
+      [:lat, :latitude]
+    end
+
     def self.config &block
       yield Config if block
       Config
+    end    
+    
+    def self.enable_extensions! *names
+      names = names.flatten.uniq
+      names = supported_extensions if names == [:all]
+      names.each {|name| enable_extension! name }
+    end
+
+    def self.enable_extension! name
+      case name.to_sym
+      when :geo_point
+        require 'mongoid/geo/extensions/geo_point'
+      when :geo_vectors, :geo_vector
+        require 'mongoid/geo/extensions/geo_vectors'
+        require 'mongoid/geo/extensions/geo_point'
+      end
     end    
   end
 end
