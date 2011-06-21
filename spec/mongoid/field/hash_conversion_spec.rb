@@ -1,7 +1,8 @@
 require "mongoid/spec_helper"
 require 'geo_calc'
+mongoid_field = (defined?(Mongoid::Field)) ? Mongoid::Field : Mongoid::Fields
 
-describe Mongoid::Field do
+describe mongoid_field do
   extend FieldHelper
   configure!
 
