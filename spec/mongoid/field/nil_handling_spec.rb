@@ -1,4 +1,5 @@
 require "mongoid/spec_helper"
+require 'geo_calc'
 
 describe Mongoid::Field do
   extend FieldHelper
@@ -8,22 +9,22 @@ describe Mongoid::Field do
     it "should handle nil values" do
       address.location = nil
       address.location.should be_nil
-      address.lat.should      be_nil
-      address.lng.should      be_nil
+      address.location_lat.should be_nil
+      address.location_lng.should be_nil
     end
     
     it "should allow lat then lon assignment when nil" do
       address.location = nil
-      address.lat = 41
-      address.lng = -71
-      address.location.should == [41, -71]
+      address.location_lat = 41
+      address.location_lng = -71
+      address.location.should == [-71, 41]
     end
     
     it "should allow lon then lat assignment when nil" do
       address.location = nil
-      address.lng = -71
-      address.lat = 41
-      address.location.should == [41, -71]
+      address.location_lng = -71
+      address.location_lat = 41
+      address.location.should == [-71, 41]
     end
   end  
 end

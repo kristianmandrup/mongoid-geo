@@ -1,4 +1,5 @@
 require "mongoid/spec_helper"
+require 'geo_calc'
 
 describe Mongoid::Field do
   extend FieldHelper

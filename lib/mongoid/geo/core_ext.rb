@@ -1,6 +1,6 @@
 class String
-  def to_lng_lat
-    self.split(',').map(&:strip).map(&:to_f)
+  def to_lng_lat 
+    self.split(',').map(&:strip).to_lng_lat
   end
 end
 
