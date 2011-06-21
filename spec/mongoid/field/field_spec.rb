@@ -1,6 +1,6 @@
 require "mongoid/spec_helper"
 
-describe Mongoid::Field do
+describe Mongoid::Fields do
   extend FieldHelper  
   configure!
 

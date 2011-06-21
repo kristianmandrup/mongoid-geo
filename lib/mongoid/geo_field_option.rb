@@ -4,7 +4,7 @@
 # - This allows users of Mongoid to define custom field options, and execute
 #   handlers when that option is provided.
 
-Mongoid::Field.option :geo do |model,field,options|
+Mongoid::Fields.option :geo do |model,field,options|
   options = {} unless options.kind_of?(Hash)
   model.index([[ field.name, Mongo::GEO2D ]]) unless options[:index] == false
   model.class_eval {

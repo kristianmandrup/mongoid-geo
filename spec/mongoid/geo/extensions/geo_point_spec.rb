@@ -2,7 +2,7 @@ require "mongoid/spec_helper"
 
 describe 'Using Geo Point' do
   before do
-    Mongoid::Geo.enable_extension! :geo_point # this used to work!
+    Mongoid::Geo.enable_extension! :geo_point
   end
 
   let(:address) do

@@ -1,8 +1,6 @@
 h1. Mongoid geo
 
-h2. IMPORTANT: THIS IS A PRE-BETA BRANCH AS OF JUNE 10, NOT WORKING - BUT PLEASE CHIP IN TO HELP!
-
-Also I just created a _1_0_beta_ branch of _geo_calc_ which supports changing the :coords_mode. Also not tested yet.
+h2. IMPORTANT: THIS IS A PRE-BETA BRANCH WHICH IS ALMOST WORKING - PLEASE CHIP IN TO HELP GET US TO THE 1.0 RELEASE
 
 h3. Running specs
 
@@ -13,27 +11,31 @@ $ bundle
 $ bundle exec rspec spec/mongoid/geo/config_spec.rb  
 </pre>
 
-h3. Spec status: June 20, 2011
+h3. Status update: June 21, 2011
 
-Specs are currently being reworked to align with the new simplified design.
 - A Mongoid::Geo::Config object has been added which you use to configure Mongoid::Geo, see mongoid/geo/config_spec.rb
 - GeoPoints and GeoVectors can be integrated using the new #enable_extensions! method on Mongoid::Geo::Config, specs in mongoid/geo/extensions demonstrate how to use this
 - Creation of Mpongo query hashes for Twin- and NestedOperators have been extracted into Query classes (see mongoid/geo/queries folder)
 - #geo_near now uses configuration from Mongoid::Geo::Config, such as the #distance_calculator (if Mongo server doesn't support this) and the #radians_multiplier etc.
+- extensions can be enabled using Mongoid::Geo.enabele_extension ; currently supported extensions are :geo_calc, geo_point and geo_vectors (see specs for usage examples)
 
 <pre>a = Address.where(:city => 'Munich')</pre>
 
-In my environment (mongoid 2.0.2, MongoDB shell version: 1.8.1), for some reason, the above statement causes a recursive stack error:
+In my environment (mongoid 2.1.0 (from github mongoid/master), MongoDB shell version: 1.8.2), for some reason, the above statement causes a recursive stack error:
 
 <pre>
-Failure/Error: Unable to find matching line from backtrace
+  1) Mongoid::Extensions::Symbol::Inflections#near_max adds the $near and $maxDistance modifiers to the selector
+     Failure/Error: Unable to find matching line from backtrace
      SystemStackError:
-       stack level too deep   
+       stack level too deep
+     # /Users/kristianconsult/.rvm/gems/ruby-1.9.2-p136/bundler/gems/mongoid-a11e8890461c/lib/mongoid/named_scope.rb:88
 </pre>
+
+This happens even without using _mongoid_geo_ !!! Anyone? Hmm, could be an error in the Address model definition?
 
 Otherwise, most of the specs now seem to finally pass :)
 
-h2. Example Usage 1.0.beta (goal)
+h2. Example Usage 1.0 (goal)
 
 <pre>
 class Address
@@ -77,7 +79,7 @@ my_home.add [20, 4.km].vector # add vector of 4km at 20 degrees
 
 </pre>
 
-h2. Example Usage 1.0 (goal)
+h2. Example Usage 1.1 (goal)
 
 Would be nice with a simple API that acts as a location repository and can be implemented for any key/value store.
 Would also be nice to use unit distances as Numeric macros (currently available in _geo_magic_ gem).
@@ -98,68 +100,6 @@ This is a Geo extension for Mongoid 2.
 * Adds concept of a special "geo" field (for setting the location point)
 * Configure and create geo indexes
 * Calculate locations near a given point and return as criteria, sorted by distance
-
-h2. Status Update (June 11, 2011) 
-
-- Refactored and created a whole new spec infrastructure to adhere to the latest refactoring/structuring of the files in the gem etc.
-- Note: Extracting logic into Shapes, Config etc. should facilitate unit testing!
-- Added #distance_calculator Config attribute to set the Module to use for distance calculation  
-
-h2. Status Update (June 10, 2011) 
-
-Major refactoring trying to structure the code even better. 
-- Created Shape classes (Box, Circle, Distance) to encapsulate the shape/array logic for Outer- and TwinOperators (geo criterions)
-- Removed the point.rb file for now! (the goal is to substitute this using GeoPoint of geo_calc)
-- OuterOperators and TwinOperators are very similar, now OuterOperators inherits from TwinOperators
-- Added Mongoid::Geo::Config object with macro: Mongoid::Geo.config do |c| ...
-- Added globals #coord_mode (:lat_lng, :lng_lat), #distance_formulas (:sphere, :flat) and #units (:kms, :miles) for Mongoid::Geo::Config object  
-- Use autoload to lazy load files when needed
-
-TODO:
-- add #to_point functionality somehow using GeoPoint
-- make sure GeoPoint supports modes :lng_lat and lat_lng
-- debug/test to make sure all functionality still works
-
-Haversine
-- consider using 'haversine' gem (or extract) for haversine calculation, or use internal distance calculation of GeoPoint?
-- See https://github.com/kristianmandrup/haversine
-- consider extracting Unit class into _geo_calc_, which now has a _geo_units_ namespace. Maybe extract this into separate gem? 
-- I think much of Unit is already part of Haversine in hversine gem!
-
-- See the _alternative_alg_ branch, where I extracted the _Haversine_ from _mongoid_geo_ into. 
-
-Alternatively there is the _geo_distance_ gem with multiple spherical distance calculations included.
-
-<pre>
-  require 'haversine'
-
-  distance = Haversine.distance(35.61488, 139.5813, 48.85341, 2.3488)
-
-  distance.class => Haversine::Distance
-  distance.to_miles => 6032.71091869803
-  distance.to_kilometers => 9715.47049115903
-  distance.to_meters => 9715470.49115903
-  distance.to_feet => 31852713.6507256  
-</pre>
-
-h2. Status Update (May 31, 2011)
-
-Added support for using GeoPoint from "geo_calc":https://github.com/kristianmandrup/geo_calc to pass around location points. Also makes it easy to use GeoVectors from "geo_vectors":https://github.com/kristianmandrup/geo_vectors    
-
-Please see new specs _use_geo_calc_ and _use_geo_vectors_ in the /spec folder to see how this is used. Please help make sure the functionality works in the right way!
-Thanks :)
-
-h2. Status Update (May 25, 2011)
-* Fixed major bug which stored coordinate in [:lat, :lng]. This is incorrect. Coordinates must be stored with :lng as the first value in order for geospatial queries to work properly.
-- Excerpt from MongoDB GeoSpatial Indexing
-'The code assumes that you are using decimal degrees in (longitude, latitude) order. This is the same order used for the GeoJSON spec. 
-Using (latitude, longitude) will result in very incorrect results, but is often the ordering used elsewhere, so it is good to double-check.  
-The names you assign to a location object (if using an object and not an array) are completely ignored, only the ordering is detected.'
-
-h2. Status update (May 21, 2011)
-
-* Created alias methods such as _#near_sphere_ for _#nearSphere_ etc. to make the DSL much more 'rubyish'!
-* Added #create_index! method (see 'Geo index' section below).
 
 h2. You need help?
 

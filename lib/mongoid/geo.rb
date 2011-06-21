@@ -30,6 +30,8 @@ module Mongoid
 
     def self.enable_extension! name
       case name.to_sym
+      when :geo_calc
+        require 'geo_calc'
       when :geo_point
         require 'mongoid/geo/extensions/geo_point'
       when :geo_vectors, :geo_vector
