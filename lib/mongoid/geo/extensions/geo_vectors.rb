@@ -1,8 +1,6 @@
 require 'geo_vectors'
 require 'geo_vectors/macros'
 
-GeoPoint.coord_mode = :lng_lat
-
 class Array
   def to_geo_hash
     {:lng => self[0], :lat => self[1] }
