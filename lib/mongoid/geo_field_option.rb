@@ -6,11 +6,20 @@
 
 # Field changes to Fields from mongoid 2.0 to mongoid 2.1
 field = (defined?(Mongoid::Field)) ? Mongoid::Field : Mongoid::Fields
+
 field.option :geo do |model,field,options|
   options = {} unless options.kind_of?(Hash)
-  model.index([[ field.name, Mongo::GEO2D ]]) unless options[:index] == false
   model.class_eval {
-    attr_accessor :from_point, :from_hash, :distance
+    attr_accessor :geo, :geo_fields
+
+    geo_fields ||= []
+    geo_fields_indexed ||= []
+    geo_fields << field.name.to_sym
+
+    unless options[:index] == false
+      index([[ field.name, Mongo::GEO2D ]])
+      geo_fields_indexed << field.name.to_sym
+    end
     lat_meth = options[:lat] || "#{field.name}_lat"
     lng_meth = options[:lng] || "#{field.name}_lng"
 
@@ -35,7 +44,7 @@ field.option :geo do |model,field,options|
 
     define_method field.name do |*args|
       if args.size == 2
-        [read_attribute(field.name)[Mongoid::Geo::lng_lat[args[0]]],read_attribute(field.name)[Mongoid::Geo::lng_lat[args[1]]]]
+        [read_attribute(field.name)[Mongoid::Geo::lng_or_lat?(args[0],true)],read_attribute(field.name)[Mongoid::Geo::lng_or_lat?(args[0],true)]]
       else
         read_attribute(field.name)
       end

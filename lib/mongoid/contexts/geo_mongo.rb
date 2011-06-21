@@ -37,20 +37,28 @@ module Mongoid #:nodoc:
         results = klass.db.command(query)
         if results['results'].kind_of?(Array) && results['results'].size > 0
           rows = results['results'].collect do |result|
-            res = Mongoid::Factory.from_db(klass, result['obj'])
-
+            res = Mongoid::Factory.from_db(klass, result.delete('obj'))
+            res.geo = {}
             # camel case is awkward in ruby when using variables...
-            res.from_point = result['fromPoint'] || center
-            res.from_hash = result['fromHash'] if result['fromHash']
-            if klass.db.connection.server_version >= '1.7'
-              res.distance = result['dis'].to_f
-            else
-              dist_options = {}
-              dist_options[:units] = args[:units] if args[:units]
-              dist_options[:formula] = args[:formula] if args[:formula]
-              # TODO: Should find and use the first field marked as :geo
-              loc = res.location              
-              res.distance = Mongoid::Geo::Config.distance_calculator.distance(center[1], center[0], loc[1], loc[0]) # , dist_options
+            res.geo[:distance] = result.delete('dis').to_f if result['dis']
+            result.each do |key,value|
+              res.geo[key.snakecase.to_sym] = value
+            end
+            dist_options = {}
+            dist_options[:units] = args[:units] if args[:units]
+            dist_options[:formula] = args[:formula] if args[:formula]
+            args[:calculate] = geo_fields_indexed if args[:calculate] == :all
+            if args[:calculate]
+              args[:calculate] = [args[:calculate]] unless args[:calculate].kind_of? Array
+              args[:calculate] = args[:calculate].map(&:to_sym) & geo_fields
+              if geo_fields_indexed.size == 1
+                primary = geo_fields_indexed.first
+              end
+              args[:calculate].each do |key|
+                key = (key.to_s+'_distance').to_s
+                res.geo[key] = res.distance_from(key,center)
+                res.geo[:distance] = res.geo[key] if primary && key == primary
+              end
             end
             res
           end

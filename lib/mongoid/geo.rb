@@ -5,8 +5,14 @@ require 'mongoid/geo/queries'
 
 module Mongoid
   module Geo
-    def self.lng_lat 
-      lng_symbols.inject({}) {|res, s| res.merge(s => 0)}.merge(lat_symbols.inject({}) {|res, s| res.merge(s => 1)})
+    def self.lng_or_lat?(arg, int = false)
+      if lng_symbols.index(arg)
+        (int) ? 0 : :lng
+      elsif lat_symbols.index(arg)
+        (int) ? 1 : :lat
+      else
+        nil
+      end
     end
 
     def self.lng_symbols
