@@ -31,13 +31,15 @@ module Mongoid
     def self.enable_extension! name
       case name.to_sym
       when :geo_calc
-        require 'geo_calc'
+        require 'geo_calc'        
       when :geo_point
-        require 'mongoid/geo/extensions/geo_point'
+        require 'geo_point'
       when :geo_vectors, :geo_vector
         require 'mongoid/geo/extensions/geo_vectors'
         require 'mongoid/geo/extensions/geo_point'
       end
+      
+      GeoPoint.coord_mode = :lng_lat if defined?(GeoPoint) && GeoPoint.respond_to?(:lng_lat)
     end    
   end
 end

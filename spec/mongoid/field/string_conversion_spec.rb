@@ -1,10 +1,12 @@
 require "mongoid/spec_helper"
+mongoid_field = (defined?(Mongoid::Field)) ? Mongoid::Field : Mongoid::Fields
+
 
 class GeoPoint
   mattr_accessor :coord_mode
 end
 
-describe Mongoid::Fields do
+describe mongoid_field do
   extend FieldHelper
   configure!
 
@@ -30,3 +32,4 @@ describe Mongoid::Fields do
     end
   end
 end
+
