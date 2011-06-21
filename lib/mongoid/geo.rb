@@ -2,7 +2,7 @@ require 'mongoid/geo/core_ext'
 require 'mongoid/geo/config'
 require 'mongoid/geo/macros'
 require 'mongoid/geo/queries'
-
+require 'mongoid/geo/document'
 module Mongoid
   module Geo
     def self.lng_or_lat?(arg, int = false)

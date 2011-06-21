@@ -7,7 +7,5 @@ require 'mongoid/geo_criteria'
 require 'mongoid/geo_finders'
 require 'mongoid/geo_criterion'
 require 'mongoid/geo_extensions'
-require 'mongoid/geo_indexes'
-
 require 'mongoid/geo_field_option'
 
