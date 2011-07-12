@@ -1,39 +1,21 @@
 h1. Mongoid geo
 
-h2. IMPORTANT: THIS IS A PRE-BETA BRANCH WHICH IS ALMOST WORKING - PLEASE CHIP IN TO HELP GET US TO THE 1.0 RELEASE
-
 h3. Running specs
 
 The goal of this branch is to define a good specs structure and build up a good design of this 'geo' add-on this way.
 
 <pre>
 $ bundle
-$ bundle exec rspec spec/mongoid/geo/config_spec.rb  
+$ bundle exec rspec spec/mongoid/geo/config_spec.rb
 </pre>
 
-h3. Status update: June 21, 2011
+h3. Status update: June, 2011
 
 - A Mongoid::Geo::Config object has been added which you use to configure Mongoid::Geo, see mongoid/geo/config_spec.rb
 - GeoPoints and GeoVectors can be integrated using the new #enable_extensions! method on Mongoid::Geo::Config, specs in mongoid/geo/extensions demonstrate how to use this
-- Creation of Mpongo query hashes for Twin- and NestedOperators have been extracted into Query classes (see mongoid/geo/queries folder)
+- Creation of Mongo query hashes for Twin- and NestedOperators have been extracted into Query classes (see mongoid/geo/queries folder)
 - #geo_near now uses configuration from Mongoid::Geo::Config, such as the #distance_calculator (if Mongo server doesn't support this) and the #radians_multiplier etc.
 - extensions can be enabled using Mongoid::Geo.enabele_extension ; currently supported extensions are :geo_calc, geo_point and geo_vectors (see specs for usage examples)
-
-<pre>a = Address.where(:city => 'Munich')</pre>
-
-In my environment (mongoid 2.1.0 (from github mongoid/master), MongoDB shell version: 1.8.2), for some reason, the above statement causes a recursive stack error:
-
-<pre>
-  1) Mongoid::Extensions::Symbol::Inflections#near_max adds the $near and $maxDistance modifiers to the selector
-     Failure/Error: Unable to find matching line from backtrace
-     SystemStackError:
-       stack level too deep
-     # /Users/kristianconsult/.rvm/gems/ruby-1.9.2-p136/bundler/gems/mongoid-a11e8890461c/lib/mongoid/named_scope.rb:88
-</pre>
-
-This happens even without using _mongoid_geo_ !!! Anyone? Hmm, could be an error in the Address model definition?
-
-Otherwise, most of the specs now seem to finally pass :)
 
 h2. Example Usage 1.0 (goal)
 

@@ -7,3 +7,4 @@ spec/dummy/tmp/
 *.lock
 *.swp
 *.DS_Store
+bin
