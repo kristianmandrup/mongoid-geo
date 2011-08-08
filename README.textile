@@ -1,5 +1,19 @@
 h1. Mongoid geo
 
+h2. Status update: August, 2011
+
+This project is currently dead, as I can find no time to keep it alive for the time being. The project mostly works, except for
+`monogid/contexts/geo_mongo.rb`, which needs some loove ;)
+
+The project "mongoid_spacial":https://github.com/ryanong/mongoid_spacial by @ryanong has taken many of the ideas and core design of mongoid_geo, improved, reworked and optimized it and added many new features such as pagination intgration etc.
+
+Please use the **mongoid_spacial** gem instead!!
+
+Note: I have created several other "geo" projects in various states, some currently with a "refactor" branch.
+Would be nice to finish those and have it all integrated some time :)
+
+Cheers!
+
 h3. Running specs
 
 The goal of this branch is to define a good specs structure and build up a good design of this 'geo' add-on this way.
