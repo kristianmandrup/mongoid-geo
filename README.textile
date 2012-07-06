@@ -111,6 +111,12 @@ h3. Current integrations
 
 Mongoid geo has now been integrated with "Google-Maps-for-Rails":https://github.com/apneadiving/Google-Maps-for-Rails, thanks to "oli-g":https://github.com/oli-g, see "commit":https://github.com/oli-g/Google-Maps-for-Rails/commit/9ff5c82d33e3fa625e441baa516fee05e9ae979c
 
+h2. Install gem
+
+<pre>
+gem "mongoid_geo"
+</pre>
+
 h2. Mongoid 2 geo features
 
 The following summarized what geo functionality is already provided by Mongoid 2.0 (as far as I could tell, May 9th, 2011)
